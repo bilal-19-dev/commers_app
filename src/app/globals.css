@@ -1,3 +1,7 @@
+html{
+  width: 100%;
+  overflow: hidden;
+}
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -5,24 +9,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: linear-gradient(120deg ,rgba(94, 92, 93, 0.829) 50%, white 90%);
+    --foreground: #edededfb;
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
 * {
   box-sizing: border-box;
@@ -39,4 +30,679 @@ a {
   html {
     color-scheme: dark;
   }
+}
+body {
+  display: grid;
+  max-width: 100%;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header "
+    "main main "
+    "footer footer ";
+  gap: 100px;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+body label , h1{
+  color: black;
+}
+header {
+  grid-area: header;
+}
+header nav {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  padding: 10px;
+  position: fixed;
+  z-index: 4;
+}
+
+header nav .nav-container {
+  display: grid;
+  font-size: clamp(1.3rem, 15vw, 0.8rem);
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.733);
+  width: 90%;
+  padding: 5px;
+  border-radius: 3rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  grid-template-columns: auto auto 1fr;
+  grid-template-areas: 
+    "logo sercher links" ;
+}
+header nav .nav-container .logo {
+  grid-area: logo;
+  color: white;
+  padding: 5px;
+  border-radius: 3rem;
+  border: 1px solid #ccc;
+  background-color: royalblue;
+  width: 10%;
+  text-align: center;
+}
+header nav .nav-container .content {
+  grid-area: sercher;
+  width: 100%;
+  margin-left: 10px;
+}
+header nav .nav-container .content .search-bar {
+  color: black; 
+  padding: 5px;
+  border-radius: 3rem;
+  border: 1px solid #ccc;
+  background-color: white;
+}
+
+header nav .nav-links {
+  grid-area: links;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 40%;
+  padding: 0 10px;
+}
+header nav .nav-links ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+header nav .search-input {
+  color: black;
+  padding: 5px;
+  border-radius: 3rem;
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 90%;
+  font-size: clamp(0.9rem, 0.6vw, 0.65rem);
+}
+
+main {
+  grid-area: main;
+  width: 100%;
+  padding: 20px;
+}
+main .prodect-container {
+  grid-area: main;
+  display: grid;
+  grid-template-areas: 
+    "sidebar middle " ; 
+  grid-template-columns: 260px  1fr;
+  grid-template-rows: auto;
+  gap: 20px; 
+  padding: 15px;
+}
+
+.sidebar {
+  font-weight: 800;
+  grid-area: sidebar;
+  color: #22223b;
+  background: linear-gradient(135deg, #f8fafc63 40%, #e0e7ff 80%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(60,72,88,0.10);
+  width: 100%;
+  font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+  font-size: clamp(0.7rem, 0.6vw, 1rem);
+  padding: 32px 24px;
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+  border: 1px solid #e0e7ef;
+}
+
+.sidebar .sidebar-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 73vh;
+  overflow-y: scroll;
+}
+.sidebar .sidebar-content ::-webkit-scrollbar {
+  display: none;
+}
+
+.middle {
+  grid-area: middle;
+}
+
+.middle .container {
+  display: grid;
+  gap: 5px;
+  padding-top: 0px;
+  grid-template-columns: repeat(auto-fill, minmax(211px, 1fr));
+  grid-template-rows: 1fr;
+  grid-auto-flow: dense ;
+  border-radius: 30px;
+}
+
+.ProductCard {
+  aspect-ratio: 6/7.4;
+  color: #171717;
+  padding: 0.4rem;
+  background-color: rgba(255, 255, 255, 0.877);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.ProductCard .description {
+  height: 20%;
+}
+.ProductCard .image {
+  height: 70%;
+  object-fit: cover;
+  overflow: hidden;
+  width: 100%;
+  border-radius: 10%;
+  object-position: center;
+}
+.ProductCard .image img {
+  height: 100%;
+  width: 100%;
+}
+.ProductCard .description .description_content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.ProductCard .description .description_content .name h2 {
+  margin-right: 2px;
+  font-weight: 700;
+  color: #22223b;
+}
+
+.ProductCard .description .description_content .price {
+  text-align: center;
+}
+.ProductCard .description .description_content .price span {
+  color: #2d6a4f;
+  font-weight: 600;
+  font-size: 100%;
+  margin-left: 3px;
+}
+
+.ProductCard_discount {
+  grid-row: span 2;
+  background: linear-gradient(135deg, #f8fafc 60%, #aca90aff 100%);
+  padding: 0.4rem;
+  color: #171717;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+}
+.ProductCard_special {
+  grid-column: 1/-1;
+  height: 247px;
+  color: #171717;
+  display: flex;
+  flex-direction: row;
+  padding: 0.4rem;
+  background-color: rgba(255, 255, 255, 0.877);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ProductCard_special .image {
+  object-fit: cover;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1); 
+  border-radius: 1rem;
+}
+
+.ProductCard_discount .description {
+  
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(60,60,120,0.08);
+  padding: 24px 20px;
+  margin: 10px 0;
+}
+
+.ProductCard_special .description {
+  display: flex;
+  width: 50%;
+  height: 100%;
+  flex-direction: column;
+  align-items: start;
+  padding: 10px;
+}
+.ProductCard_discount .description .description-content .name_and_color h2 {
+  font-size: clamp(1.3rem, 0.9vw, 0.8rem);
+  font-weight: 700;
+  color: #22223b;
+  margin: 0;
+}
+.ProductCard_discount .description .description-content .name_and_color span {
+  font-size: clamp(1rem, 0.7vw, 0.6rem);
+  display: inline-block;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  padding: 2px 10px;
+  color: #3b3b3b;
+  margin-top: 6px;
+}
+.ProductCard_discount .description .description-content .size_and_price .Size {
+  font-size: clamp(1rem, 0.7vw, 0.6rem);
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 8px;
+  color: #3b3b3b;
+  margin-top: 6px;
+}
+.ProductCard_discount .description .description-content .size_and_price div .new_price {
+  font-size: clamp(1.4rem, 1vw, 0.9rem);
+  color: #2d6a4f;
+  font-weight: 700;
+}
+.ProductCard_discount .description .description-content .size_and_price div .old_price {
+  font-size: clamp(1.1rem, 0.7vw, 0.7rem);
+  text-decoration: line-through;
+  color: #b0b0b0;
+  margin-right: 8px;
+}
+.ProductCard_discount .description .discount {
+  background-color: #fef9c3 ;
+  color : #b45309;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: clamp(1.1rem, 0.7vw, 0.7rem);
+  font-weight: 600;
+}  
+.ProductCard_discount .description .discount-start {
+  display: inline-block;
+  background-color:#e0e7ff;
+  color : #3b3b3b;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: clamp(0.92rem, 0.6vw, 0.6rem);
+  margin-right: 8px;
+}
+.ProductCard_discount .description .discount-end {
+  display: inline-block;
+  background-color:#ffe0e0;
+  color : #b91c1c;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: clamp(0.92rem, 0.6vw, 0.6rem);
+  margin-right: 8px;
+}
+.ProductCard_discount .description button {
+  background-color: gold;
+  color: black;
+  border: none;
+  border-radius: 0px 10px;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: clamp(1.1rem, 0.7vw, 0.7rem);
+  transition: var(--background) 0.2s;
+}
+.description button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.login_contener {
+  width: 100vw;
+  height: 100vh;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.404);
+  position: fixed;
+  z-index: 100;
+  font-weight: 800;
+  animation: var(--login) 0.5s ;
+}
+.login_contener .Form_contener {
+  width: auto;
+  height: auto;
+  color: black;
+  background-color: white;
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_contener .Form_contener .Sign_in {
+  animation: var(--in) 2s ;
+  display: var(--in_display);
+  width: 100%;
+}
+.login_contener .Form_contener .Sign_up {
+  animation: var(--up) 2s ;
+  display: var(--up_display);
+  width: 100%;
+}
+@keyframes opacity_1 {
+  from {
+    opacity: 1 ;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes opacity_2 {
+  from {
+    opacity: 0 ;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.login_contener .Form_contener .Btn_close {
+  width: 250px;
+  display: flex;
+  justify-content: flex-end;
+}
+.login_contener .Form_contener .Btn_close button {
+  border: none;
+  background-color: white;
+  color: black;
+}
+.login_contener .Form_contener form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.login_contener .Form_contener form button {
+  background-color: rgb(0, 128, 0);
+  padding: 10px;
+  border-radius: 30px;
+}
+.login_contener .Form_contener form button:hover {
+  background-color: rgba(0, 128, 0, 0.479);
+}
+.login_contener input {
+  border: black solid 2px;
+  width: 100%;
+  display: block;
+  border-radius: 30px;
+  padding: 5px;
+}
+
+.login_contener .Form_contener .Accont button {
+  background-color: #6b7280b6;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 30px;
+  width: 100%;
+  margin-top: 20px;
+  border: none;
+}
+.login_contener .Form_contener .Accont :hover{
+  background-color: #6b7280;
+  
+}
+.login_contener .method {
+  all: initial;
+  margin-top: 20px;
+}
+.login_contener .method a {
+  color: #3b82f6;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 3px;
+}
+.login_contener .Form_contener .Accont  {
+  width: 100%;
+}
+@media screen and (max-width: 1023px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "header"
+      "main"
+      "footer";
+  }
+  .sidebar {
+    top: 32px;
+    align-items: center;
+    padding: 15px 9px 0px;
+  }
+  .sidebar .sidebar-content {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    height: fit-content;
+    overflow-y: hidden;
+  }
+  main .prodect-container {
+    grid-template-areas: 
+      "sidebar" 
+      "middle";
+    grid-template-columns: auto;
+  }
+  header nav .nav-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ProductCard_discount .description {
+    padding: 0px ;
+  }
+  .ProductCard_discount .description .description-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+  }
+  .ProductCard_discount.description .description-content .name_and_color {
+    display: flex;
+    flex-direction: column;
+  }
+  .ProductCard_discount .description .description-content h2 {
+    margin-bottom: 5px;
+  }
+  .ProductCard_discount .description .description-content span {
+    font-size: 0.9rem;
+    padding: 0px;
+    margin-bottom: 10px;
+  }
+  .ProductCard_discount.description .description-content .size_and_price {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ProductCard_discount .description .description-content .discount-start {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2px 7px;
+  }
+  .ProductCard_discount .description .description-content .discount-end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+}
+@media screen and (max-width: 560px) {
+  .ProductCard .description .description_content .name_and_color h2 {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+  .ProductCard .description .description_content .name_and_color span {
+    font-size: small;
+    padding: 0px;
+    margin-bottom: 10px;
+  }
+  .ProductCard .description .description_content .size_and_price {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+  }
+  header nav .search-input {
+    width: 75%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3rem;
+    background-color: white;
+  }
+}
+@media screen and (max-width: 400px) {
+  .ProductCard .description .description_content {
+    display: flex ;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0px;
+  }
+  .ProductCard .description .description_content .name_and_color h2 {
+    font-size: x-small;
+    margin-bottom: 5px;
+  }
+  .ProductCard .description .description_content .name_and_color span {
+    font-size: xx-small;
+    padding: 0px;
+    margin-bottom: 10px;
+  }
+  .ProductCard .description .description_content .size_and_price {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ProductCard .description .description_content .size_and_price span {
+    font-size: medium;
+  }
+  header nav .nav-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  header nav .search-input {
+    width: 60%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3rem;
+    background-color: white;
+  }
+  .ProductCard_discount .description .description-content .name_and_color h2 {
+    font-size: 0.5rem;
+  }
+  .ProductCard_discount .description .description-content .name_and_color span {
+    font-size: 0.3rem;
+  }
+  .ProductCard_discount .description .description-content .size_and_price .Size {
+    font-size: 0.5rem;
+  }
+  .ProductCard_discount .description .description-content .size_and_price div .new_price {
+    font-size: 0.7rem;
+  }
+  .ProductCard_discount .description .description-content .size_and_price div .old_price {
+    font-size: 0.7rem;
+  }
+  .ProductCard_discount .description .discount {
+    font-size: 0.5rem;
+  }  
+  .ProductCard_discount .description .discount-start {
+    font-size: 0.4rem;
+  }
+  .ProductCard_discount .description .discount-end {
+    font-size: 0.4rem;
+  }
+  .ProductCard_discount .description button {
+    font-size: 0.4rem;
+  }
+}
+@media screen and (max-width: 320px) {
+  .ProductCard .description .description_content .name_and_color h2 {
+    font-size: xx-small;
+    margin-bottom: 5px;
+  }
+  .ProductCard .description .description_content .name_and_color span {
+    font-size: x-small;
+    padding: 0px;
+    margin-bottom: 10px;
+  }
+  .ProductCard .description .description_content .size_and_price {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ProductCard .description .description_content .size_and_price span {
+    font-size: x-small;
+    margin-bottom: 11px;
+    padding: 0px 5px;
+  }
+  header nav .nav-links {
+    width: 40%;
+  }
+  header nav .content {
+    min-width: none;
+    width: 50%;
+  }
+  header nav .search-input {
+    width: 74%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3rem;
+    background-color: white;
+  }
+
+  .ProductCard_discount .description .description-content .name_and_color h2 {
+    font-size: 0.5rem;
+  }
+  .ProductCard_discount .description .description-content .name_and_color span {
+    font-size: 0.3rem;
+  }
+  .ProductCard_discount .description .description-content .size_and_price .Size {
+    font-size: 0.5rem;
+  }
+  .ProductCard_discount .description .description-content .size_and_price div .new_price {
+    font-size: 0.7rem;
+  }
+  .ProductCard_discount .description .description-content .size_and_price div .old_price {
+    font-size: 0.7rem;
+  }
+  .ProductCard_discount .description .discount {
+    font-size: 0.5rem;
+  }  
+  .ProductCard_discount .description .discount-start {
+    font-size: 0.4rem;
+  }
+  .ProductCard_discount .description .discount-end {
+    font-size: 0.4rem;
+  }
+  .ProductCard_discount .description button {
+    font-size: 0.4rem;
+  }
+
+}
+
+.footer {
+  grid-area: footer;
+  background-color: rgba(0, 0, 0, 0.733);
+  width: 100%;
+  padding: 5px;
+  border-radius: 3rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
