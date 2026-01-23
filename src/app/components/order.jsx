@@ -1,7 +1,23 @@
 'use client';
 import Link from "next/link"
-
+import { useState , useEffect  } from "react"
+import {Account} from '../data/FETCH.js'
 export default function Order_component () {
+    const [info , setinfo] = useState({})
+    const [loding , setloding] = useState(true)
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const orders = await Account();
+                setinfo(orders.orders);
+            } catch (error) {
+                console.error("Error fetching orders:", error);
+            } finally {
+                setloding(false);
+            }
+        };
+        fetchOrders();
+    }, []);
     return (
         <main>
             <div className="Order_contener">
@@ -17,109 +33,33 @@ export default function Order_component () {
                         </tr>
                     </thead>
                 </table>
-                <table className="body">
-                    <tbody style={{backgroundColor : "white"}}>
-                        <Link href="/order_detail">
-                            <tr>
-                                <td className="img">
-                                    <img className="img1" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img2" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img3" src="/ph.jpg" alt="Product Image" />
-                                </td>
-                                <td>Smith</td>
-                                <td>50</td>
-                                <td>Jill</td>
-                                <td>Smith</td>
-                                <td>50</td>
-                            </tr>
-                        </Link>
-                        <Link href="/order_detail">
-                            <tr>
-                                <td className="img">
-                                    <img className="img1" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img2" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img3" src="/ph.jpg" alt="Product Image" />
-                                </td>
-                                <td>Smith</td>
-                                <td>50</td>
-                                <td>Jill</td>
-                                <td>Smith</td>
-                                <td>50</td>
-                            </tr>
-                        </Link>
-                        <Link href="/order_detail">
-                            <tr>
-                                <td className="img">
-                                    <img className="img1" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img2" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img3" src="/ph.jpg" alt="Product Image" />
-                                </td>
-                                <td>Smith</td>
-                                <td>50</td>
-                                <td>Jill</td>
-                                <td>Smith</td>
-                                <td>50</td>
-                            </tr>
-                        </Link>
-                        <Link href="/order_detail">
-                            <tr>
-                                <td className="img">
-                                    <img className="img1" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img2" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img3" src="/ph.jpg" alt="Product Image" />
-                                </td>
-                                <td>Smith</td>
-                                <td>50</td>
-                                <td>Jill</td>
-                                <td>Smith</td>
-                                <td>50</td>
-                            </tr>
-                        </Link>
-                        <Link href="/order_detail">
-                            <tr>
-                                <td className="img">
-                                    <img className="img1" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img2" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img3" src="/ph.jpg" alt="Product Image" />
-                                </td>
-                                <td>Smith</td>
-                                <td>50</td>
-                                <td>Jill</td>
-                                <td>Smith</td>
-                                <td>50</td>
-                            </tr>
-                        </Link>
-                        <Link href="/order_detail">
-                            <tr>
-                                <td className="img">
-                                    <img className="img1" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img2" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img3" src="/ph.jpg" alt="Product Image" />
-                                </td>
-                                <td>Smith</td>
-                                <td>50</td>
-                                <td>Jill</td>
-                                <td>Smith</td>
-                                <td>50</td>
-                            </tr>
-                        </Link>
-                        <Link href="/order_detail">
-                            <tr>
-                                <td className="img">
-                                    <img className="img1" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img2" src="/ph.jpg" alt="Product Image" />
-                                    <img className="img3" src="/ph.jpg" alt="Product Image" />
-                                </td>
-                                <td>Smith</td>
-                                <td>50</td>
-                                <td>Jill</td>
-                                <td>Smith</td>
-                                <td>50</td>
-                            </tr>
-                        </Link>
-                    </tbody>
-                </table>
-                
+                {loding ? <div className='loading_contener'><div className="loader"></div></div> : (
+                    <table className="body">
+                        <tbody style={{backgroundColor : "white"}}>
+                            {info && info.length > 0 ? info.map((order, i) => (
+                                <Link href={"/order_detail/" + order.id}>
+                                    <tr key={i} className="clickable-row">
+                                        <td className="img">
+                                            {order.items.slice(0, 3).map((item, i) => (
+                                                <img
+                                                    key={i}
+                                                    className={"img" + i}
+                                                    src={item.product.primary_image}
+                                                    alt="Product Image"
+                                                />
+                                            ))}
+                                        </td>
+                                        <td>{order.order_date.substring(0,10)}</td>
+                                        <td>{order.id}</td>
+                                        <td>{order.total_price}</td>
+                                        <td>{order.status}</td>
+                                        <td>{order.items_count}</td>
+                                    </tr>
+                                </Link>
+                            )) : <div className="no_data">No Orders Yet</div>}                               
+                        </tbody>
+                    </table>
+                )}
             </div> 
         </main>
     )

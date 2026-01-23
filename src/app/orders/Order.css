@@ -4,9 +4,27 @@
     color: black;
     padding: 20px;
     width: 100%;
-    height: auto;
+    min-height: 100vh;
     border-radius: 30px;
     font-weight: 600;
+}
+.Order_contener .loading_contener {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Order_contener .no_data {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 70px;
+    font-weight: 600;
+    background-color: rgb(75, 75, 75);
+    border-radius: 30px;
 }
 .Order_contener table {
     width: 100%;
@@ -50,15 +68,15 @@
     border: 2px solid white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.Order_contener .body .img .img1 {
+.Order_contener .body .img .img0 {
     z-index: 1;
     left: 10%;
 }
-.Order_contener .body .img .img2 {
+.Order_contener .body .img .img1 {
     z-index: 2;
     left: 25%;
 }
-.Order_contener .body .img .img3 {
+.Order_contener .body .img .img2 {
     z-index: 3;
     left: 40%;
 }

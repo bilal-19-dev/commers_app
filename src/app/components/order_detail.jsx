@@ -1,7 +1,23 @@
-"use Clint"
+"use client"
 import Link from "next/link"
-
-export default function Order_detail_component (){
+import { useState , useEffect  } from "react"
+import {Account} from '../data/FETCH.js'
+export default function Order_detail_component ({id}){
+    const [info , setinfo] = useState({})
+    const [loding , setloding] = useState(true)
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const orders = await Account();
+                setinfo(orders.orders.find(order => order.id == id));
+            } catch (error) {
+                console.error("Error fetching orders:", error);
+            } finally {
+                setloding(false);
+            }
+        };
+        fetchOrders();
+    }, []);
     return (
         <main>
             <div className="Order_detail_contener">
@@ -17,80 +33,36 @@ export default function Order_detail_component (){
                         </tr>
                     </thead>
                 </table>
-                <table className="body">
-                    <tbody style={{backgroundColor : "white"}}>
-                        
-                        <tr>
-                            <td className="img">
-                                <img className="img1" src="/ph.jpg" alt="Product Image" />
-                            </td>
-                            <td>Smith</td>
-                            <td>50</td>
-                            <td>Jill</td>
-                            <td>Smith</td>
-                            <td>50</td>
-                        </tr>
-                        <tr>
-                            <td className="img">
-                                <img className="img1" src="/ph.jpg" alt="Product Image" />
-                            </td>
-                            <td>Smith</td>
-                            <td>50</td>
-                            <td>Jill</td>
-                            <td>Smith</td>
-                            <td>50</td>
-                        </tr>
-                        <tr>
-                            <td className="img">
-                                <img className="img1" src="/ph.jpg" alt="Product Image" />
-                            </td>
-                            <td>Smith</td>
-                            <td>50</td>
-                            <td>Jill</td>
-                            <td>Smith</td>
-                            <td>50</td>
-                        </tr>
-                        <tr>
-                            <td className="img">
-                                <img className="img1" src="/ph.jpg" alt="Product Image" />
-                            </td>
-                            <td>Smith</td>
-                            <td>50</td>
-                            <td>Jill</td>
-                            <td>Smith</td>
-                            <td>50</td>
-                        </tr>
-                        <tr>
-                            <td className="img">
-                                <img className="img1" src="/ph.jpg" alt="Product Image" />
-                            </td>
-                            <td>Smith</td>
-                            <td>50</td>
-                            <td>Jill</td>
-                            <td>Smith</td>
-                            <td>50</td>
-                        </tr>
-                        <tr>
-                            <td className="img">
-                                <img className="img1" src="/ph.jpg" alt="Product Image" />
-                            </td>
-                            <td>Smith</td>
-                            <td>50</td>
-                            <td>Jill</td>
-                            <td>Smith</td>
-                            <td>50</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table className="fotter">
-                    <tfoot>
-                        <tr>
-                            <td>Prodect Quantity : 20</td>
-                            <td>Total Price : 1203 $</td>
-                            <td className="btn"><button>Order Again</button></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                {loding ? <div className='loading_contener'><div className="loader"></div></div> : (
+                    <>
+                        <table className="body">
+                            <tbody style={{backgroundColor : "white"}}>
+                                {info.items.map((item , i) => (
+                                        <tr key={i}>
+                                            <td className="img">
+                                                <img className="img1" src={item.product.primary_image} alt="Product Image" />
+                                            </td>
+                                            <td>{item.product.name}</td>
+                                            <td>{item.product.price}</td>
+                                            <td>{item.product.color ? item.color : "/"}</td>
+                                            <td>{item.product.size ? item.size : "/"}</td>
+                                            <td>{item.quantity}</td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+                        <table className="fotter">
+                            <tfoot>
+                                <tr>
+                                    <td>Prodect Quantity : {info.items_count}</td>
+                                    <td>Total Price : {info.total_price} DA</td>
+                                    <td className="btn"><button>Order Again</button></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </>
+                )}
             </div>
         </main>
     )

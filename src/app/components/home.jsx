@@ -1,5 +1,6 @@
 'use client';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
+import { useRouter } from "next/navigation";
 import Collapse from '@mui/material/Collapse';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,8 +13,16 @@ import {
   getPerformanceSettings 
 } from '../utils/deviceUtils';
 import Link from "next/link"
-import Cookies from 'js-cookie';
-import path from 'path';
+import {WILAYAS_DATA} from '../data/Wilaya.js'
+import {URL} from '../data/URL.js'
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import {Use_them} from '../hooks/ThemProvider'
+import { useTheme } from '@emotion/react';
+
+const SnackbarAlert = React.forwardRef(function SnackbarAlert(props, ref) {
+    return <Alert elevation={6} ref={ref} variant="filled" {...props} />
+})
 
 export default function Home_component({data}) {
   const prodect = data
@@ -85,8 +94,12 @@ export default function Home_component({data}) {
 
 function Header_content({setvalue,deviceDimensions, viewportSize }){
   const [open, setOpen] = useState(null);
+  const [car , setcar] = useState(0)
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const { cart } = Use_them()
+  useEffect (() => {
+    setcar(cart.reduce((sum, item) => sum + item.quantity, 0))
+  })
   const handleClicklang = (event) => {
     setOpen(event.currentTarget);
   };
@@ -130,7 +143,7 @@ function Header_content({setvalue,deviceDimensions, viewportSize }){
                   <button style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer', marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
                     <span className="material-symbols-outlined" style={{ color: '#3b82f6', fontSize: '2rem' }}>
                       shopping_cart_checkout
-                    </span><span style={{ marginLeft: '5px' }}>0</span>
+                    </span><span style={{ marginLeft: '5px' }}>{car}</span>
                   </button>
                 </Link>
                 <button style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer', marginLeft: '10px' }}>
@@ -158,7 +171,7 @@ function Header_content({setvalue,deviceDimensions, viewportSize }){
                     <MenuItem onClick={handleClose} component="a">Orders</MenuItem>
                   </Link>
                   <Link href="/profile">
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
                   </Link>
                   <MenuItem onClick={() => { handleClose(); setvalue('flex'); }}>Login</MenuItem>
                 </Menu>
@@ -187,11 +200,12 @@ function Header_content({setvalue,deviceDimensions, viewportSize }){
                 <button style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer', marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
                   <span className="material-symbols-outlined" style={{ color: '#3b82f6', fontSize: '2rem' }}>
                       shopping_cart_checkout
-                  </span><span style={{ marginLeft: '5px' }}>0</span>                </button>
+                  </span><span style={{ marginLeft: '5px' }}>{car}</span>                
+                </button>
               </Link>
               <button style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer', marginLeft: '10px' }}>
                 <span className="material-symbols-outlined" onClick={handleClicklang} style={{ color: '#3b82f6', fontSize: '2rem' }}> 
-                translate
+                  translate
                 </span>
               </button>
               <button
@@ -417,7 +431,7 @@ function Sidebar({ isMobile, setIsMobile, deviceDimensions }) {
 
   }else {
     return (
-      <Collapse in={Collapsed} collapsedSize={50} className="sidebar-content" style={{}}>
+      <Collapse in={Collapsed} collapsedSize={50} className="sidebar-content" >
         <div style={{width: "100%", display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "24px"}}>
           <h2
               style={{
@@ -590,12 +604,11 @@ function Sidebar({ isMobile, setIsMobile, deviceDimensions }) {
 }
 
 function ProductCard({ value }) {
-  const primaryImage = value.images.find(img => img.TypeIs === "Primary");
   return (
     <Link href={`/prodect_detail/${value.id}`}>
       <div className='ProductCard'>
         <div className='image'>
-          <img src={primaryImage.image !== undefined ? primaryImage.image: "/ph.jpg" } alt="Placeholder" />
+          <img src={value.primary_image} alt="Placeholder" />
         </div>
         <hr style={{ border: '1px solid rgba(0, 0, 0, 0.1)', margin: '10px 0' }} />
         <div className='description'>
@@ -739,34 +752,144 @@ function Footer_content({ deviceDimensions ,value }) {
     </div>
   );
 }
-const Login = ({ setvalue, value }) => {
-  const [data, setdata] = useState({ username: '', password: '' });
+const Login = ({ setvalue, value ,token }) => {
+  const [data, setdata] = useState({ username: '@Anonimo', password: '@A.123456' });
   const [form, setform] = useState({Sign_up : 'none', Sign_in : 'flex'})
+  const [wrong , setwrong] = useState({color:"red", input :""})
+  const [confirm_password, setconfirm_password] = useState("")
+  const [Sign_up , setSign_up] = useState({
+    first_name : "",
+    last_name : "", 
+    phone_numbers: [],
+    password: "",
+    email : ""  ,
+    address_line: {wilaya:"0"}
+  })
+  const [warning , setwarning] = useState({status:"",display :"none"})
+  const [loding , setloding] = useState({value: false , hight : "356px" , width : "247.5px"})
+  const [wilaya, setwilaya] = useState("0")
+  const router = useRouter();
   console.log(form , "*****")
   useEffect(() => {
     document.documentElement.style.setProperty("--in", form.Sign_in === "flex" ? "opacity_2" : "opacity_1");
-    document.documentElement.style.setProperty("--login", form.Sign_in === "flex" || form.Sign_up === "flex" ? "opacity_2" : null);
-    document.documentElement.style.setProperty("--up", form.Sign_up === "flex" ? "opacity_2" : "opacity_1");
+    document.documentElement.style.setProperty("--login", form.Sign_in === "flex" || form.Sign_up === "grid" ? "opacity_2" : null);
+    document.documentElement.style.setProperty("--up", form.Sign_up === "grid" ? "opacity_2" : "opacity_1");
     document.documentElement.style.setProperty("--in_display", form.Sign_in);
     document.documentElement.style.setProperty("--up_display", form.Sign_up);
   }, [form]);
+  useEffect (() => {
+    const default_account = async () => {
+      await fetch(`http://${URL}:8000/api/token/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        credentials : 'include'
+        });
+    }
+    if (!token) {
+      default_account()
+    }
+  },[])
   const handleSubmit = async (e) => {
-    const res = await fetch('http://192.168.1.192:3000/api/auth', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data),
-    cache: "no-store"
-  });
-
-  // الرد من Route Handler (يمكن أن يحتوي بيانات أخرى إذا أردت)
-    const responseData = await res.json();
-    console.log("Response from /api/auth:", responseData);
-    e.preventDefault()
-    Cookies.set('Loged_in', JSON.stringify(true), { expires: 1/1440});
-    window.location.reload();
+    try {
+      e.preventDefault()
+      setloding({value: true , hight : "356px" , width : "247.5px"})
+      const res = await fetch(`http://${URL}:8000/api/token/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+      credentials : 'include'
+      });
+      if (res.status === 401) {
+        setwarning({status:"401",display :"flex"})
+      }else if (res.status === 500){
+        setwarning({status:"500",display :"flex"})
+      }else {
+        setvalue('none')
+      }
+      if (!res.ok){
+        const errorData = await res.json();
+        throw new Error(JSON.stringify(errorData));
+      }
+    } catch (error) {
+      console.log("خطأفي أحد المعطيات" , error);
+      return;
+    }finally{
+      setloding({value: false , hight : "356px" , width : "247.5px"})
+      window.location.reload()
+      router.push('/profile');
+    }
   };
+  const handleregister = async (e) => {
+    e.preventDefault()
+    if(Sign_up.first_name.length < 3){
+      setwrong({...wrong , input:'first_name'})
+    }else if(Sign_up.last_name.length < 3){
+      setwrong({...wrong , input:'last_name'})
+    }else if(!Sign_up.email.endsWith("@gmail.com")){
+      setwrong({...wrong , input:'email'})
+    }else if(!Sign_up.email.includes(".")){
+      setwrong({...wrong , input:'email'})
+    }else if(Sign_up.password != confirm_password){
+      setwrong({...wrong , input:'password'})
+    } else if (Sign_up.phone_numbers[0] && !/^(05|06|07|02)\d{8}$/.test(Sign_up.phone_numbers[0])) {
+      setwrong({ ...wrong, input: 'Phone1' });
+    } else if (Sign_up.phone_numbers[1] && !/^(05|06|07|02)\d{8}$/.test(Sign_up.phone_numbers[1])) {
+      setwrong({ ...wrong, input: 'Phone2' });
+    }else {
+      setwrong({...wrong , input:''})
+      console.log(Sign_up , '55555555555')
+      try {
+        setloding({value: true , hight : "524px" , width : "350px"})
+        const res = await fetch(`http://${URL}:8000/api/register/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(Sign_up),
+          credentials : 'include'
+        });
+        if (!res.ok){
+          const errorData = await res.json();
+          console.log("Response from /api/auth:", errorData.error);
+          setwarning({status:"400" , display :"flex" , message : errorData.error})
+          throw new Error(JSON.stringify(errorData));
+        }else {
+          try {
+            const response = await res.json()
+            const login = { username: response.username, password: Sign_up.password }
+            const log = await fetch(`http://${URL}:8000/api/token/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(login),
+              credentials : 'include'
+            });
+            if (!log.ok){
+              const errorData = await log.json();
+              console.log("Response from /api/auth:", errorData.error , login);
+              throw new Error(JSON.stringify(errorData));
+            }
+          }catch (error) {
+            console.log("خطأفي أحد المعطيات" , error);
+          }
+          setvalue('none')
+        }
+      } catch (error) {
+        console.log("خطأفي أحد المعطيات" , error);
+      } finally {
+        setloding({value: false , hight : "356px" , width : "247.5px"})
+        setform({ Sign_in: "flex", Sign_up: "none" });
+        router.push('/profile');
+        window.location.reload();
+      }
+    }
+  }
   return (
     <div className="login_contener" style={{display : value}}>
       <div className="Form_contener">
@@ -780,68 +903,215 @@ const Login = ({ setvalue, value }) => {
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
-        <form className='Sign_in' onSubmit={handleSubmit} >
-          <label>Name :</label>
-          <input onChange={ e => setdata({...data , username : e.target.value })} type="text" />
-          <label>Password :</label>
-          <input onChange={ e => setdata({...data , password : e.target.value })} type="password" />
-          <button>Go</button>
-        </form>
-        <form className='Sign_up'>
-            <label>Full Name :</label>
-            <input type="text" />
-            <label>Email :</label>
-            <input type="email" />
-            <label>Password :</label>
-            <input type="password" />
-            <label>Check Password :</label>
-            <input type="password" />
-            <button>Registration</button>
-          </form>
-        <p>________or________</p>
-        <div className="Accont">
-          <button>
-            <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_dark_1x_rtl_r5.png" />
-          </button>
-        </div>
-        <p className="method">
-          {form.Sign_in === "flex" ? "If you do not have an account" : "If you have an account" }
-          { form.Sign_in === "flex" ? 
-            <a
-              href="#"
-              onClick={() => {
-                setform({Sign_in : "none" , Sign_up: "flex" });
-                
-              }}
-              style={{ cursor: "pointer", marginLeft: "5px" }}
-            >
-              Sign up
-            </a>
-            :
-            <a
-              href="#"
-              onClick={() => {
-                setform({Sign_in : "flex" , Sign_up: "none"});
-                
-              }}
-              style={{ cursor: "pointer", marginLeft: "5px" }}
-            >
-              Sign in
-            </a>
+        {loding.value === true ? (
+          <div className='loading_contener' style={{height: loding.hight, width: loding.width}}><div className="loader"></div></div>
+        ) : (
+          <>
+            <form className='Sign_in' onSubmit={handleSubmit} >
+              <label>Name :</label>
+              <input onChange={ e => setdata({...data , username : e.target.value })} type="text" required/>
+              <label>Password :</label>
+              <input onChange={ e => setdata({...data , password : e.target.value })} type="password" required/>
+              <button>Go</button>
+            </form>
+            <form className='Sign_up' onSubmit={handleregister}>
+              <div className='Ferst_Name'>
+                <label>Ferst Name :</label>
+                <input
+                  type="text"
+                  value={Sign_up.first_name || ""}
+                  onChange={e => setSign_up({ ...Sign_up, first_name: e.target.value })}
+                  style={{borderColor : wrong.input === 'first_name' ? wrong.color : 'black'}}
+                  required
+                />
+              </div>
+              <div className='Last_Name' >
+                <label>Last Name :</label>
+                <input
+                  type="text"
+                  value={Sign_up.last_name || ""}
+                  onChange={e => setSign_up({ ...Sign_up, last_name: e.target.value })}
+                  style={{borderColor : wrong.input === 'last_name' ? wrong.color : 'black'}}
+                  required
+                />
+              </div>
+              <div className='Email'>
+                <label>Email :</label>
+                <input
+                  type="email"
+                  value={Sign_up.email || ""}
+                  onChange={e => setSign_up({ ...Sign_up, email: e.target.value.trim().toLowerCase()})}
+                  style={{borderColor : wrong.input === 'email' ? wrong.color : 'black'}}
+                  required
+                />
+              </div>
+              <div className='Password'>
+                <label>Password :</label>
+                <input
+                  type="password"
+                  value={Sign_up.password || ""}
+                  onChange={e => setSign_up({ ...Sign_up, password: e.target.value })}
+                  required
+                />
+              </div>
+              <div className='Check Password'>
+                <label>Check Password :</label>
+                <input
+                  type="password"
+                  value={confirm_password || ""}
+                  onChange={e => setconfirm_password( e.target.value )}
+                  style={{borderColor : wrong.input === 'password' ? wrong.color : 'black'}}
+                  required
+                />
+              </div>
+              <div className='wilaya'>
+                <label>Wilaya :</label>
+                <select
+                  value={wilaya}
+                  onChange={(e) => {
+                    setwilaya(e.target.value)
+                    setSign_up({ ...Sign_up, address_line : {...Sign_up.address_line , wilaya : e.target.value} })
+                  }}
+                >
+                  <option value="0">-- اختر الولاية --</option>
+                  {WILAYAS_DATA.map((w) => (
+                    <option key={w.wilaya_code} value={w.wilaya_name}>
+                      {w.wilaya_code} - {w.wilaya_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='wilaya'>
+                <label>Baldya :</label>
+                <select
+                  value={Sign_up.address_line.baldya || ""}
+                  disabled={wilaya === "0"}
+                  onChange={e => setSign_up({ ...Sign_up, address_line : {...Sign_up.address_line , baldya : e.target.value} })}
+                >
+                  <option value="فارغ">-- اختر البلدية --</option>
+                  {wilaya !== "0" &&
+                    WILAYAS_DATA
+                      .find((w) => w.wilaya_name === wilaya)?.communes?.map((commune, idx) => (
+                        <option key={idx} value={commune.commune_name}>
+                          {commune.commune_name}
+                        </option>
+                      ))
+                  }
+                </select>
+              </div>
+              <div>
+                <label>Phone 1:</label>
+                <input 
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  style={{ appearance: "textfield", borderColor : wrong.input === 'Phone1' ? wrong.color : 'black' }}
+                  value={Sign_up.phone_numbers && Sign_up.phone_numbers[0] ? Sign_up.phone_numbers[0] : ""}
+                  onInput={e => {
+                    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  }}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                    setSign_up({
+                      ...Sign_up,
+                      phone_numbers: [
+                        val,
+                        ...(Sign_up.phone_numbers && Sign_up.phone_numbers[1]
+                          ? [Sign_up.phone_numbers[1]]
+                          : [])
+                      ]
+                    });
+                  }}
+                  maxLength={10}
+                  required
+                />
+              </div>
+              <div>
+                <label>Phone 2:</label>
+                <input
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  style={{ appearance: "textfield", borderColor : wrong.input === 'Phone2' ? wrong.color : 'black' }}
+                  value={Sign_up.phone_numbers && Sign_up.phone_numbers[1] ? Sign_up.phone_numbers[1] : ""}
+                  onInput={e => {
+                    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  }}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                    setSign_up({
+                      ...Sign_up,
+                      phone_numbers: [
+                        Sign_up.phone_numbers && Sign_up.phone_numbers[0]
+                          ? Sign_up.phone_numbers[0]
+                          : "",
+                        val
+                      ]
+                    });
+                  }}
+                  maxLength={10}
+                />
+              </div>
+              <button>Registration</button>
+            </form>
+            <p>________or________</p>
+            <div className="Accont">
+              <button>
+                <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_dark_1x_rtl_r5.png" />
+              </button>
+            </div>
+            <p className="method">
+              {form.Sign_in === "flex" ? "If you do not have an account" : "If you have an account" }
+              { form.Sign_in === "flex" ? 
+                <a
+                  href="#"
+                  onClick={() => {
+                    setform({Sign_in : "none" , Sign_up: "grid" });
+                    
+                  }}
+                  style={{ cursor: "pointer", marginLeft: "5px" }}
+                >
+                  Sign up
+                </a>
+                :
+                <a
+                  href="#"
+                  onClick={() => {
+                    setform({Sign_in : "flex" , Sign_up: "none"});
+                    
+                  }}
+                  style={{ cursor: "pointer", marginLeft: "5px" }}
+                >
+                  Sign in
+                </a>
+              }
+            </p>
+          </>
+        )}
+      </div>
+      <div className='warning_contener'style={{display: warning.display }}>
+        <div className='warning'>
+          {warning.status ==="401" ? (
+            <h1>wrong password</h1>
+          ):warning.status ==="500" ?(
+            <h1>wrong username</h1>
+          ):(
+            <h1>{warning.message}</h1>
+          )
           }
-        </p>
+          <div className='btn'>
+            <button onClick={() => setwarning({status:"",display :"None"})}>Try again</button>
+          </div>
         </div>
+      </div>
     </div>
   );
 };
-export const Header = () => {
+export const Header = ({token_access}) => {
   const [value, setvalue] = useState('none')
   if (typeof window !== 'undefined') {
     console.log(window.innerWidth, ".......");
   }
   const deviceDimensions = useDeviceDimensions();
   const viewportSize = useViewportSize();
-  
   // حساب المقاسات المثالية باستخدام الدوال المساعدة
   const optimalDimensions = calculateOptimalDimensions(deviceDimensions);
   const performanceSettings = getPerformanceSettings(deviceDimensions);
@@ -855,7 +1125,7 @@ export const Header = () => {
   return (
     <>
       <Header_content setvalue={setvalue} setIsMobile={() => {}} deviceDimensions={deviceDimensions} viewportSize={viewportSize}/>
-      <Login setvalue={setvalue} value={value}/>
+      <Login setvalue={setvalue} value={value} token={token_access}/>
     </>
 )};
 export const Footer = () => {
@@ -944,3 +1214,26 @@ export const Settings = () => {
     </>
   )
 } 
+
+export const Snack_bar = () => {
+  const {message, severity, snack, setsnack} = Use_them()
+  const handleClose = useCallback((event, reason) => {
+    if (reason === 'clickaway') {
+        return
+    }
+    setsnack(false)
+  }, [])
+  return (
+    <>
+      <Snackbar open={snack} autoHideDuration={5000} onClose={handleClose}>
+        <SnackbarAlert
+            onClose={handleClose}
+            severity={severity}
+            sx={{ width: '100%' }}
+        >
+            {message}
+        </SnackbarAlert>
+      </Snackbar>
+    </>
+  )
+}

@@ -381,6 +381,74 @@ main .prodect-container {
   align-items: center;
 }
 
+.login_contener .warning{
+  width: 350px;
+  height: auto;
+  color: rgb(255, 0, 0);
+  background-color: white;
+  box-shadow: 0 10px 16px rgba(20, 20, 37, 0.411);
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.loading_contener{
+  width: 247.5px;
+  height: 356px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  --_c:no-repeat radial-gradient(farthest-side,#25b09b 92%,#0000);
+  background: 
+    var(--_c) top,
+    var(--_c) left,
+    var(--_c) right,
+    var(--_c) bottom;
+  background-size: 12px 12px;
+  animation: l7 1s infinite;
+}
+@keyframes l7 {
+  to{transform: rotate(.5turn)}
+}
+
+.login_contener .warning h1 {
+  color: rgb(235, 18, 18);
+}
+
+.login_contener .warning_contener {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 2;
+  color: black;
+  background-color: rgba(0, 0, 0, 0.274);
+  box-shadow: 0 10px 16px rgba(20, 20, 37, 0.411);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_contener .warning .btn {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: end;
+}
+.login_contener .warning .btn button {
+  background-color: rgb(0, 128, 0);
+  padding: 10px;
+  border-radius: 30px;
+  border: none;
+}
+
 .login_contener .Form_contener .Sign_in {
   animation: var(--in) 2s ;
   display: var(--in_display);
@@ -389,7 +457,8 @@ main .prodect-container {
 .login_contener .Form_contener .Sign_up {
   animation: var(--up) 2s ;
   display: var(--up_display);
-  width: 100%;
+  width: 350px;
+  grid-template-columns: 1fr 1fr;
 }
 @keyframes opacity_1 {
   from {
@@ -407,8 +476,21 @@ main .prodect-container {
     opacity: 1;
   }
 }
+
+.login_contener .Form_contener .Sign_up .Email {
+  grid-column: 1/-1;
+}
+
+.login_contener .Form_contener .Sign_up .wilaya select {
+  color: #000;
+  background-color: #fff0;
+  border: 2px solid #000;
+  border-radius: 30px;
+  width: 100%;
+  padding: 5px;
+}
 .login_contener .Form_contener .Btn_close {
-  width: 250px;
+  width: 100%;
   display: flex;
   justify-content: flex-end;
 }
@@ -424,9 +506,11 @@ main .prodect-container {
   gap: 10px;
 }
 .login_contener .Form_contener form button {
+  grid-column: 1/-1;
   background-color: rgb(0, 128, 0);
   padding: 10px;
   border-radius: 30px;
+  border: none;
 }
 .login_contener .Form_contener form button:hover {
   background-color: rgba(0, 128, 0, 0.479);

@@ -9,6 +9,13 @@
     font-weight: 600;
     position: relative;
 }
+.profile_contener .loading_contener {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .profile_contener .info {
     margin-bottom: 30px;
     display: flex;
@@ -60,6 +67,10 @@
     border: none;
 }
 
+.profile_contener .info .edit button:hover {
+    background-color: rgba(35, 35, 255, 0.438);
+}
+
 .profile_contener .contener input {
     border: black solid 2px;
     width: 100%;
@@ -100,6 +111,15 @@
 .profile_contener .contener::-webkit-scrollbar {
     display: none; /* Chrome, Safari, newer Edge (Chromium) */
 }
+.profile_contener .contener .Name {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+}
+.profile_contener .contener .Name div{
+    width: 100%;
+}
 .profile_contener .add {
     border: black solid 2px;
     width: 100%;
@@ -125,11 +145,62 @@
     border: none;
     color: black;
 }
+
 .profile_contener .contener .edit_img {
+    justify-content: center;
     width: 100%;
+    height: 210px;
+    display: flex;
+    position: relative;
+}
+
+.profile_contener .contener .edit_img .img {
+    position: absolute;
+    z-index: 2;
+}
+.profile_contener .contener .edit_img .img:hover {
+    z-index: 1;
+}
+.profile_contener .contener .edit_img .input {
+    position: absolute;
+    z-index: 1;
+    height: 200px;
+    width: 200px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.356);
 }
+.profile_contener .contener .edit_img .input span {
+    font-size: 130px;
+    color: rgba(255, 255, 255, 0.582);
+}
+.profile_contener .contener .edit_img .input:hover  {
+    z-index: 2;
+}
+.profile_contener .contener .edit_img .input input {
+    display: none;
+}
+
+.profile_contener .contener .btn {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: end;
+    margin-top: 10px;
+}
+.profile_contener .contener .btn button {
+    background-color: green;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: none;
+}
+.profile_contener .contener .btn button:hover {
+    background-color: rgba(0, 128, 0, 0.479);
+  }
 @media screen and (max-width : 570px){
     .profile_contener .info .img {
         flex-direction: column;
@@ -138,4 +209,13 @@
         width: 82%;
         margin: initial;
     }   
+}
+.wilaya select {
+    color: #000;
+    background-color: #fff0;
+    border: 2px solid #000;
+    border-radius: 30px;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
 }

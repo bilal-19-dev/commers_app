@@ -10,7 +10,41 @@
 }
 .Car_contener tbody {
     background-color: white;
+    height: 100vh;
 }
+.Car_contener .loading_contener {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Car_contener .no_data {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 70px;
+    font-weight: 600;
+    background-color: rgb(75, 75, 75);
+    border-radius: 30px;
+}
+.Car_contener .btn_close {
+    width: 50px;
+}
+.Car_contener .btn_close button , .btn_close_Phone button {
+    width: 30px;
+    height: 30px;
+    border-radius:30px ;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+}
+
 .Car_contener table {
     width: 100%;
 }
@@ -22,18 +56,23 @@
     margin: 10px;
     border-radius: 30px;
 }
-.Car_contener .body :hover {
-    background-color: rgb(75, 75, 75);
-}
-.Car_contener th , td {
+.Car_contener td {
     width: 20%;
     text-align: center;
+}
+.Car_contener th {
+    width: 25%;
+    text-align: center;
+    margin-right: 60px;
 }
 .Car_contener .hader tr {
     background-color: rgb(90, 90, 255);
 }
 .Car_contener .body tr {
     background-color: rgb(173, 173, 173);
+}
+.Car_contener .body tr:hover {
+    background-color: rgb(99, 99, 99);
 }
 .Car_contener .body td  {
     height: 50px;
@@ -115,6 +154,18 @@
     gap: 5px;
     width: 100%;
 }
+.Car_contener .Phon_contener .no_data {
+    height: 50vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 600;
+    background-color: rgb(75, 75, 75);
+    border-radius: 30px;
+}
+
 .Car_contener .Phon_contener .Prodect {
     display: flex;
     background-color: rgba(126, 126, 126, 0.445);
@@ -131,11 +182,24 @@
     margin-bottom: 10px;
     border-radius: 30px;
 }
-.Car_contener .Size_quantity , .Name_color_price {
+.Car_contener .btn_close_Phone {
+    display: flex;
+    justify-content: end;
+}
+.Car_contener .Name_color_price {
     width: 35%;
     display: flex;
     flex-direction: column;
     gap: 5px;
+    padding: 10px;
+    justify-content: center;
+}
+.Car_contener .Size_quantity {
+    width: 35%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     padding: 10px;
     justify-content: center;
 }
