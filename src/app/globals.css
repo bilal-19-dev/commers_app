@@ -1,4 +1,4 @@
-html{
+html {
   width: 100%;
   overflow: hidden;
 }
@@ -9,11 +9,14 @@ html{
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: linear-gradient(120deg ,rgba(94, 92, 93, 0.829) 50%, white 90%);
+    --background: linear-gradient(
+      120deg,
+      rgba(94, 92, 93, 0.829) 50%,
+      white 90%
+    );
     --foreground: #edededfb;
   }
 }
-
 
 * {
   box-sizing: border-box;
@@ -49,7 +52,8 @@ body {
   padding: 0;
   overflow-x: hidden;
 }
-body label , h1{
+body label,
+h1 {
   color: black;
 }
 header {
@@ -78,8 +82,7 @@ header nav .nav-container {
   justify-content: space-between;
   align-items: center;
   grid-template-columns: auto auto 1fr;
-  grid-template-areas: 
-    "logo sercher links" ;
+  grid-template-areas: "logo sercher links";
 }
 header nav .nav-container .logo {
   grid-area: logo;
@@ -97,7 +100,7 @@ header nav .nav-container .content {
   margin-left: 10px;
 }
 header nav .nav-container .content .search-bar {
-  color: black; 
+  color: black;
   padding: 5px;
   border-radius: 3rem;
   border: 1px solid #ccc;
@@ -137,11 +140,10 @@ main {
 main .prodect-container {
   grid-area: main;
   display: grid;
-  grid-template-areas: 
-    "sidebar middle " ; 
-  grid-template-columns: 260px  1fr;
+  grid-template-areas: "sidebar middle ";
+  grid-template-columns: 260px 1fr;
   grid-template-rows: auto;
-  gap: 20px; 
+  gap: 20px;
   padding: 15px;
 }
 
@@ -151,9 +153,9 @@ main .prodect-container {
   color: #22223b;
   background: linear-gradient(135deg, #f8fafc63 40%, #e0e7ff 80%);
   border-radius: 18px;
-  box-shadow: 0 4px 24px 0 rgba(60,72,88,0.10);
+  box-shadow: 0 4px 24px 0 rgba(60, 72, 88, 0.1);
   width: 100%;
-  font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+  font-family: "Cairo", "Segoe UI", Arial, sans-serif;
   font-size: clamp(0.7rem, 0.6vw, 1rem);
   padding: 32px 24px;
   position: sticky;
@@ -183,7 +185,7 @@ main .prodect-container {
   padding-top: 0px;
   grid-template-columns: repeat(auto-fill, minmax(211px, 1fr));
   grid-template-rows: 1fr;
-  grid-auto-flow: dense ;
+  grid-auto-flow: dense;
   border-radius: 30px;
 }
 
@@ -257,14 +259,13 @@ main .prodect-container {
 .ProductCard_special .image {
   object-fit: cover;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.1); 
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 1rem;
 }
 
 .ProductCard_discount .description {
-  
   border-radius: 18px;
-  box-shadow: 0 4px 16px rgba(60,60,120,0.08);
+  box-shadow: 0 4px 16px rgba(60, 60, 120, 0.08);
   padding: 24px 20px;
   margin: 10px 0;
 }
@@ -300,29 +301,39 @@ main .prodect-container {
   color: #3b3b3b;
   margin-top: 6px;
 }
-.ProductCard_discount .description .description-content .size_and_price div .new_price {
+.ProductCard_discount
+  .description
+  .description-content
+  .size_and_price
+  div
+  .new_price {
   font-size: clamp(1.4rem, 1vw, 0.9rem);
   color: #2d6a4f;
   font-weight: 700;
 }
-.ProductCard_discount .description .description-content .size_and_price div .old_price {
+.ProductCard_discount
+  .description
+  .description-content
+  .size_and_price
+  div
+  .old_price {
   font-size: clamp(1.1rem, 0.7vw, 0.7rem);
   text-decoration: line-through;
   color: #b0b0b0;
   margin-right: 8px;
 }
 .ProductCard_discount .description .discount {
-  background-color: #fef9c3 ;
-  color : #b45309;
+  background-color: #fef9c3;
+  color: #b45309;
   border-radius: 6px;
   padding: 2px 10px;
   font-size: clamp(1.1rem, 0.7vw, 0.7rem);
   font-weight: 600;
-}  
+}
 .ProductCard_discount .description .discount-start {
   display: inline-block;
-  background-color:#e0e7ff;
-  color : #3b3b3b;
+  background-color: #e0e7ff;
+  color: #3b3b3b;
   border-radius: 6px;
   padding: 2px 8px;
   font-size: clamp(0.92rem, 0.6vw, 0.6rem);
@@ -330,8 +341,8 @@ main .prodect-container {
 }
 .ProductCard_discount .description .discount-end {
   display: inline-block;
-  background-color:#ffe0e0;
-  color : #b91c1c;
+  background-color: #ffe0e0;
+  color: #b91c1c;
   border-radius: 6px;
   padding: 2px 8px;
   font-size: clamp(0.92rem, 0.6vw, 0.6rem);
@@ -366,7 +377,7 @@ main .prodect-container {
   position: fixed;
   z-index: 100;
   font-weight: 800;
-  animation: var(--login) 0.5s ;
+  animation: var(--login) 0.5s;
 }
 .login_contener .Form_contener {
   width: auto;
@@ -381,7 +392,7 @@ main .prodect-container {
   align-items: center;
 }
 
-.login_contener .warning{
+.login_contener .warning {
   width: 350px;
   height: auto;
   color: rgb(255, 0, 0);
@@ -394,7 +405,7 @@ main .prodect-container {
   justify-content: center;
   align-items: center;
 }
-.loading_contener{
+.loading_contener {
   width: 247.5px;
   height: 356px;
   display: flex;
@@ -404,17 +415,15 @@ main .prodect-container {
 .loader {
   width: 50px;
   aspect-ratio: 1;
-  --_c:no-repeat radial-gradient(farthest-side,#25b09b 92%,#0000);
-  background: 
-    var(--_c) top,
-    var(--_c) left,
-    var(--_c) right,
-    var(--_c) bottom;
+  --_c: no-repeat radial-gradient(farthest-side, #25b09b 92%, #0000);
+  background: var(--_c) top, var(--_c) left, var(--_c) right, var(--_c) bottom;
   background-size: 12px 12px;
   animation: l7 1s infinite;
 }
 @keyframes l7 {
-  to{transform: rotate(.5turn)}
+  to {
+    transform: rotate(0.5turn);
+  }
 }
 
 .login_contener .warning h1 {
@@ -450,19 +459,19 @@ main .prodect-container {
 }
 
 .login_contener .Form_contener .Sign_in {
-  animation: var(--in) 2s ;
+  animation: var(--in) 2s;
   display: var(--in_display);
   width: 100%;
 }
 .login_contener .Form_contener .Sign_up {
-  animation: var(--up) 2s ;
+  animation: var(--up) 2s;
   display: var(--up_display);
   width: 350px;
   grid-template-columns: 1fr 1fr;
 }
 @keyframes opacity_1 {
   from {
-    opacity: 1 ;
+    opacity: 1;
   }
   to {
     opacity: 0;
@@ -470,7 +479,7 @@ main .prodect-container {
 }
 @keyframes opacity_2 {
   from {
-    opacity: 0 ;
+    opacity: 0;
   }
   to {
     opacity: 1;
@@ -479,6 +488,15 @@ main .prodect-container {
 
 .login_contener .Form_contener .Sign_up .Email {
   grid-column: 1/-1;
+}
+
+.login_contener .Form_contener .Sign_up .Ferst_Name,
+.Last_Name,
+.wilaya {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .login_contener .Form_contener .Sign_up .wilaya select {
@@ -533,9 +551,8 @@ main .prodect-container {
   margin-top: 20px;
   border: none;
 }
-.login_contener .Form_contener .Accont :hover{
+.login_contener .Form_contener .Accont :hover {
   background-color: #6b7280;
-  
 }
 .login_contener .method {
   all: initial;
@@ -547,7 +564,7 @@ main .prodect-container {
   cursor: pointer;
   margin-left: 3px;
 }
-.login_contener .Form_contener .Accont  {
+.login_contener .Form_contener .Accont {
   width: 100%;
 }
 @media screen and (max-width: 1023px) {
@@ -574,8 +591,8 @@ main .prodect-container {
     overflow-y: hidden;
   }
   main .prodect-container {
-    grid-template-areas: 
-      "sidebar" 
+    grid-template-areas:
+      "sidebar"
       "middle";
     grid-template-columns: auto;
   }
@@ -586,7 +603,7 @@ main .prodect-container {
     align-items: center;
   }
   .ProductCard_discount .description {
-    padding: 0px ;
+    padding: 0px;
   }
   .ProductCard_discount .description .description-content {
     display: flex;
@@ -623,7 +640,6 @@ main .prodect-container {
     flex-direction: column;
     align-items: flex-start;
   }
-
 }
 @media screen and (max-width: 560px) {
   .ProductCard .description .description_content .name_and_color h2 {
@@ -639,7 +655,7 @@ main .prodect-container {
     text-align: center;
     display: flex;
     flex-direction: column;
-    align-items: center;  
+    align-items: center;
   }
   header nav .search-input {
     width: 75%;
@@ -651,7 +667,7 @@ main .prodect-container {
 }
 @media screen and (max-width: 400px) {
   .ProductCard .description .description_content {
-    display: flex ;
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
@@ -694,18 +710,32 @@ main .prodect-container {
   .ProductCard_discount .description .description-content .name_and_color span {
     font-size: 0.3rem;
   }
-  .ProductCard_discount .description .description-content .size_and_price .Size {
+  .ProductCard_discount
+    .description
+    .description-content
+    .size_and_price
+    .Size {
     font-size: 0.5rem;
   }
-  .ProductCard_discount .description .description-content .size_and_price div .new_price {
+  .ProductCard_discount
+    .description
+    .description-content
+    .size_and_price
+    div
+    .new_price {
     font-size: 0.7rem;
   }
-  .ProductCard_discount .description .description-content .size_and_price div .old_price {
+  .ProductCard_discount
+    .description
+    .description-content
+    .size_and_price
+    div
+    .old_price {
     font-size: 0.7rem;
   }
   .ProductCard_discount .description .discount {
     font-size: 0.5rem;
-  }  
+  }
   .ProductCard_discount .description .discount-start {
     font-size: 0.4rem;
   }
@@ -758,18 +788,32 @@ main .prodect-container {
   .ProductCard_discount .description .description-content .name_and_color span {
     font-size: 0.3rem;
   }
-  .ProductCard_discount .description .description-content .size_and_price .Size {
+  .ProductCard_discount
+    .description
+    .description-content
+    .size_and_price
+    .Size {
     font-size: 0.5rem;
   }
-  .ProductCard_discount .description .description-content .size_and_price div .new_price {
+  .ProductCard_discount
+    .description
+    .description-content
+    .size_and_price
+    div
+    .new_price {
     font-size: 0.7rem;
   }
-  .ProductCard_discount .description .description-content .size_and_price div .old_price {
+  .ProductCard_discount
+    .description
+    .description-content
+    .size_and_price
+    div
+    .old_price {
     font-size: 0.7rem;
   }
   .ProductCard_discount .description .discount {
     font-size: 0.5rem;
-  }  
+  }
   .ProductCard_discount .description .discount-start {
     font-size: 0.4rem;
   }
@@ -779,7 +823,6 @@ main .prodect-container {
   .ProductCard_discount .description button {
     font-size: 0.4rem;
   }
-
 }
 
 .footer {

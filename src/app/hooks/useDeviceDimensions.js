@@ -1,12 +1,12 @@
-'use client';
-import { useState, useEffect } from 'react';
+"use client";
+import { useState, useEffect } from "react";
 
 export function useDeviceDimensions() {
   const [dimensions, setDimensions] = useState({
     width: 0,
     height: 0,
     devicePixelRatio: 1,
-    orientation: 'portrait',
+    orientation: "portrait",
     isLandscape: false,
     isPortrait: true,
     isMobile: false,
@@ -18,17 +18,17 @@ export function useDeviceDimensions() {
 
   useEffect(() => {
     // التأكد من أننا في المتصفح
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return;
+
     function updateDimensions() {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      
+
       setDimensions({
         width,
         height,
         devicePixelRatio: window.devicePixelRatio,
-        orientation: window.screen.orientation?.type || 'portrait',
+        orientation: window.screen.orientation?.type || "portrait",
         isLandscape: width > height,
         isPortrait: height > width,
         isMobile: width < 768,
@@ -39,28 +39,27 @@ export function useDeviceDimensions() {
       });
 
       // تحديث CSS Custom Properties
-
     }
 
     // تحديث المقاسات عند التحميل
     updateDimensions();
 
     // مراقبة تغيير المقاسات
-    window.addEventListener('resize', updateDimensions);
-    window.addEventListener('orientationchange', updateDimensions);
+    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("orientationchange", updateDimensions);
 
     // مراقبة تغيير DPI (مهم للأجهزة عالية الدقة)
     if (window.matchMedia) {
-      const mediaQuery = window.matchMedia('(resolution: 1dppx)');
-      mediaQuery.addEventListener('change', updateDimensions);
+      const mediaQuery = window.matchMedia("(resolution: 1dppx)");
+      mediaQuery.addEventListener("change", updateDimensions);
     }
 
     return () => {
-      window.removeEventListener('resize', updateDimensions);
-      window.removeEventListener('orientationchange', updateDimensions);
+      window.removeEventListener("resize", updateDimensions);
+      window.removeEventListener("orientationchange", updateDimensions);
       if (window.matchMedia) {
-        const mediaQuery = window.matchMedia('(resolution: 1dppx)');
-        mediaQuery.removeEventListener('change', updateDimensions);
+        const mediaQuery = window.matchMedia("(resolution: 1dppx)");
+        mediaQuery.removeEventListener("change", updateDimensions);
       }
     };
   }, []);
@@ -76,8 +75,8 @@ export function useViewportSize() {
 
   useEffect(() => {
     // التأكد من أننا في المتصفح
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return;
+
     function updateViewportSize() {
       setViewportSize({
         width: window.innerWidth,
@@ -86,12 +85,12 @@ export function useViewportSize() {
     }
 
     updateViewportSize();
-    window.addEventListener('resize', updateViewportSize);
-    window.addEventListener('orientationchange', updateViewportSize);
+    window.addEventListener("resize", updateViewportSize);
+    window.addEventListener("orientationchange", updateViewportSize);
 
     return () => {
-      window.removeEventListener('resize', updateViewportSize);
-      window.removeEventListener('orientationchange', updateViewportSize);
+      window.removeEventListener("resize", updateViewportSize);
+      window.removeEventListener("orientationchange", updateViewportSize);
     };
   }, []);
 

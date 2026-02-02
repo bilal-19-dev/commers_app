@@ -221,3 +221,80 @@
         width: 105%;
     }
 }
+.Order_detail .Product_detail .detail {
+    flex-direction: column;
+    width: 100%;
+}
+.warning {
+    width: 350px;
+    height: auto;
+    z-index: 12;
+    color: rgb(255, 0, 0);
+    background-color: white;
+    box-shadow: 0 10px 16px rgba(20, 20, 37, 0.411);
+    border-radius: 30px;
+    padding: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.warning .btn {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: end;
+}
+.warning .btn button {
+    background-color: rgb(0, 128, 0);
+    padding: 10px;
+    border-radius: 30px;
+    border: none;
+}
+.Order_detail .Product_detail .detail  {
+    margin-bottom: 10px;
+}
+.Order_detail .Product_detail .detail_delivery  {
+    width: 100%;
+}
+.Order_detail .Product_detail .detail_delivery .Ferst_Name_order ,.Last_Name_order ,.wilaya_order ,.Phone {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    margin-bottom: 5px;
+}
+.Order_detail .Product_detail .detail_delivery .wilaya select {
+    color: #000;
+    background-color: #fff0;
+    border: 2px solid #000;
+    border-radius: 30px;
+    width: 200px;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+.Order_detail .Product_detail .detail_delivery input {
+    color: #000;
+    background-color: #fff0;
+    border: 2px solid #000;
+    border-radius: 30px;
+    width: 200px;
+    padding: 5px;
+}
+.Order_detail .Product_detail .detail label {
+    font-weight: 600;
+    font-size: large;
+    display: block;
+}
+.Order_detail .Product_detail .detail_delivery label {
+    font-weight: 600;
+    font-size: large;
+    display: block;
+}
+.Order_detail .Product_detail .detail h1 {
+    font-weight: 900;
+    font-size: xx-large;
+}
+.Order_detail .Product_detail .detail p {
+    font-weight: 900;
+    font-size: large;
+}
