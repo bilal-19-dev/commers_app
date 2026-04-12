@@ -1,30 +1,74 @@
 "use client";
-import * as React from "react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Account, apiFetch } from "../data/FETCH.js";
 import { WILAYAS_DATA } from "../data/Wilaya.js";
 import { URL } from "../data/URL.js";
+import { ChevronLeftIcon, ChevronRightIcon } from "../data/Icons.jsx";
 import { Use_them } from "../hooks/ThemProvider";
+import { useRouter } from "@/app/navigation";
+import { useTranslations } from "next-intl";
+import Box from "@mui/material/Box";
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
+
+const sizes = [
+  { label: "38", available: true },
+  { label: "39", available: true },
+  { label: "40", available: true },
+  { label: "41", available: true },
+  { label: "42", available: true },
+  { label: "43", available: false },
+  { label: "44", available: true },
+  { label: "45", available: false },
+];
 
 export default function Prodect_detail_component({ data }) {
-  const [test, settest] = useState();
+  const toastT = useTranslations("toast");
+  const [value, setValue] = useState(Math.round(data.rating));
   const [open, setOpen] = useState("none");
-  const [value, setValue] = useState(1);
-  const [Primary, setPrimary] = useState(data.primary_image);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [image, setimage] = useState([]);
   const [info, setinfo] = useState({});
   const [wrong, setwrong] = useState({ color: "red", input: "" });
-  const [order, setorder] = useState({});
   const [wilaya, setwilaya] = useState("0");
   const [warning, setwarning] = useState({ messege: "", display: "none" });
   const [loding, setloding] = useState({ type: "", value: true });
+  const [loading, setLoading] = useState(false);
   const { setmessge, setSeverity, setsnack, setCart } = Use_them();
+  const router = useRouter();
+  const [selectedSize, setSelectedSize] = useState(2);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const scrollRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const touchStartY = useRef(0);
+  const isDragging = useRef(false);
+  const [dragOffset, setDragOffset] = useState(0);
   const [form, setform] = useState({
     size: "size3",
-    color: data.colors[0].color
+    color: data?.colors?.[0]?.color
       ? data.colors[0].color
-      : data.colors[0].color_name,
+      : data?.colors?.[0]?.color_name || "",
     quantity: 1,
   });
+  function handle_order_form() {
+    const order_form = [
+      {
+        order_info: form,
+        prodect: data,
+      },
+    ];
+    localStorage.removeItem("order_info");
+    localStorage.setItem("order_info", JSON.stringify(order_form));
+    router.push("/order_form");
+  }
+  const max_quantity =
+    data?.colors?.find((color) =>
+      color?.color
+        ? color.color === form.color
+        : color.color_name === form.color,
+    )?.quantity ?? 1;
   const [delivery, setdelivery] = useState({
     items: [
       {
@@ -45,11 +89,18 @@ export default function Prodect_detail_component({ data }) {
       },
     ],
   });
-  const handleClick = useCallback((msg, sev) => {
-    setmessge(msg);
-    setSeverity(sev);
-    setsnack(true);
-  }, []);
+  const handleClick = useCallback(
+    (msg, sev) => {
+      setmessge(msg);
+      setSeverity(sev);
+      setsnack(true);
+    },
+    [setmessge, setSeverity, setsnack],
+  );
+
+  const buildItemsPayload = () => [
+    { product: data.id, quantity: form.quantity, color: form.color },
+  ];
   const user_order = async () => {
     try {
       setloding({ type: "warning", value: true });
@@ -59,12 +110,26 @@ export default function Prodect_detail_component({ data }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(order),
+        body: JSON.stringify({
+          items: buildItemsPayload(),
+          deliveries: [
+            {
+              delivery_address: {
+                wilaya: info?.address_line?.wilaya || "0",
+                baldya: info?.address_line?.baldya || "0",
+              },
+              delivery_phone: Array.isArray(info?.phone_numbers)
+                ? info.phone_numbers
+                : [],
+              first_name: info?.first_name || "",
+              last_name: info?.last_name || "",
+            },
+          ],
+        }),
       });
-      console.log(res.status);
       if (!res.ok) {
         const errorData = await res.json();
-        setloding(false);
+        setloding({ type: "", value: false });
         setwarning({
           messege: errorData.error
             ? errorData.error + " pless complet your order"
@@ -75,12 +140,11 @@ export default function Prodect_detail_component({ data }) {
       } else {
         setwarning({ ...warning, display: "none" });
       }
-      handleClick("تم ارسال الطلب بنجاح شكرا", "success");
+      handleClick(toastT("order_sent_success"), "success");
     } catch (error) {
-      console.error("Error fetching profile:", error);
-      handleClick("فشل في إرسال الطلب أعد المحاولة", "error");
+      handleClick(toastT("order_send_failed"), "error");
     } finally {
-      setloding(false);
+      setloding({ type: "", value: false });
     }
   };
   const Anonimo_order = async () => {
@@ -89,31 +153,31 @@ export default function Prodect_detail_component({ data }) {
       delivery.deliveries[0].first_name.length < 3
     ) {
       setwrong({ ...wrong, input: "first_name" });
-      handleClick("أكتب الأسم كاملا من فضلك", "warning");
+      handleClick(toastT("first_name_required_full"), "warning");
     } else if (
       !delivery.deliveries[0].last_name ||
       delivery.deliveries[0].last_name.length < 3
     ) {
       setwrong({ ...wrong, input: "last_name" });
-      handleClick("أكتب اللقب كاملا من فضلك", "warning");
+      handleClick(toastT("last_name_required_full"), "warning");
     } else if (
       delivery.deliveries[0].delivery_address?.wilaya === "0" ||
       delivery.deliveries[0].delivery_address?.baldya === "0"
     ) {
       setwrong({ ...wrong, input: "wilaya" });
-      handleClick("أدخل مكان الإقامة من فضلك", "warning");
+      handleClick(toastT("address_required"), "warning");
     } else if (
       !delivery.deliveries[0].delivery_phone[0] ||
       !/^(05|06|07|02)\d{8}$/.test(delivery.deliveries[0].delivery_phone[0])
     ) {
       setwrong({ ...wrong, input: "Phone1" });
-      handleClick("أدخل هاتف الأول صالح من فضلك", "warning");
+      handleClick(toastT("primary_phone_invalid"), "warning");
     } else if (
       delivery.deliveries[0].delivery_phone[1] &&
       !/^(05|06|07|02)\d{8}$/.test(delivery.deliveries[0].delivery_phone[1])
     ) {
       setwrong({ ...wrong, input: "Phone2" });
-      handleClick("أدخل هاتف ثاني صالح من فضلك", "warning");
+      handleClick(toastT("secondary_phone_invalid"), "warning");
     } else {
       setwrong({ ...wrong, input: "" });
       let result = true;
@@ -127,10 +191,9 @@ export default function Prodect_detail_component({ data }) {
           },
           body: JSON.stringify(delivery),
         });
-        console.log(res.status);
         if (!res.ok) {
           const errorData = await res.json();
-          setloding(false);
+          setloding({ type: "", value: false });
           result = false;
           setwarning({
             messege: errorData.error
@@ -140,12 +203,11 @@ export default function Prodect_detail_component({ data }) {
           });
           throw new Error(JSON.stringify(errorData));
         }
-        handleClick("تم ارسال الطلب بنجاح شكرا", "success");
+        handleClick(toastT("order_sent_success"), "success");
       } catch (error) {
-        console.error("Error fetching profile:", error);
-        handleClick("فشل في إرسال الطلب أعد المحاولة", "error");
+        handleClick(toastT("order_send_failed"), "error");
       } finally {
-        setloding(false);
+        setloding({ type: "", value: false });
         if (result) {
           setwarning({ ...warning, display: "none" });
         }
@@ -155,23 +217,23 @@ export default function Prodect_detail_component({ data }) {
   const hendel_add_car = () => {
     const newItem = {
       id: data.id,
-      quantity: value,
+      quantity: form.quantity,
       color: form.color,
     };
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     let item = JSON.parse(localStorage.getItem("cart"));
     let check = item?.find((i) => i.id == data.id && i.color == form.color);
     if (check) {
-      handleClick("العنصر موجود في السلة فعلا", "warning");
+      handleClick(toastT("item_already_in_cart"), "warning");
     } else {
       localStorage.setItem("cart", JSON.stringify([...cart, newItem]));
       setCart((prev) => [...prev, newItem]);
       item = JSON.parse(localStorage.getItem("cart"));
       let find = item.find((i) => i.id == data.id && i.color == form.color);
       if (find) {
-        handleClick("تم إضافة العنصر الى السلة", "success");
+        handleClick(toastT("item_added_to_cart"), "success");
       } else {
-        handleClick("فشل في إرسال الطلب أعد المحاولة", "error");
+        handleClick(toastT("order_send_failed"), "error");
       }
     }
   };
@@ -182,9 +244,8 @@ export default function Prodect_detail_component({ data }) {
         const account = await Account();
         setinfo(account.user);
       } catch (error) {
-        console.error("Error fetching orders:", error);
       } finally {
-        setloding(false);
+        setloding({ type: "", value: false });
       }
     };
     fetchAccount();
@@ -193,19 +254,38 @@ export default function Prodect_detail_component({ data }) {
     document.documentElement.style.setProperty("--display_order", open);
     document.documentElement.style.setProperty(
       "--display_order_animation",
-      open === "flex" ? "opacity_2" : null
+      open === "flex" ? "opacity_2" : null,
     );
   }, [open]);
 
-  const scrollSecondary = (direction) => {
-    const secondaryContainer = document.querySelector(".Secondary-images");
-    if (secondaryContainer) {
-      const scrollAmount = 200; // مقدار السكرول بالبكسل
-      if (direction === "left") {
-        secondaryContainer.scrollLeft -= scrollAmount;
-      } else {
-        secondaryContainer.scrollLeft += scrollAmount;
-      }
+  const checkScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollLeft = Math.abs(el.scrollLeft);
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setCanScrollRight(scrollLeft > 1);
+    setCanScrollLeft(scrollLeft < maxScroll - 1);
+  }, []);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    checkScroll();
+    el.addEventListener("scroll", checkScroll);
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, [checkScroll]);
+
+  const scroll = (direction) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = 240;
+    if (direction === "left") {
+      el.scrollBy({ left: amount, behavior: "smooth" });
+    } else {
+      el.scrollBy({ left: -amount, behavior: "smooth" });
     }
   };
   const hendel_add_btn = () => {
@@ -214,11 +294,11 @@ export default function Prodect_detail_component({ data }) {
       data?.colors.find((color) =>
         color.color
           ? color.color === form.color
-          : color.color_name === form.color
+          : color.color_name === form.color,
       ).quantity
     ) {
       setform({ ...form, quantity: form.quantity });
-      handleClick("الكمية غير متوفرة حاليا", "warning");
+      handleClick(toastT("quantity_unavailable"), "warning");
     } else {
       setform({ ...form, quantity: form.quantity + 1 });
     }
@@ -226,214 +306,318 @@ export default function Prodect_detail_component({ data }) {
   const hendel_minus_btn = () => {
     if (form.quantity <= 1) {
       setform({ ...form, quantity: form.quantity });
-      handleClick("من فضلك ادخل كمية صحيحة", "warning");
+      handleClick(toastT("quantity_invalid"), "warning");
     } else {
       setform({ ...form, quantity: form.quantity - 1 });
     }
   };
-  // const [star, setStar] = useState({ star_1: "black", star_2: "black", star_3: "black", star_4: "black", star_5: "black" });
-  // const [gas_star, set_gas_star] = useState({ star_1: "black", star_2: "black", star_3: "black", star_4: "black", star_5: "black" });
-  // const [Rating , setRating] = useState (3);
-  // useEffect(() => {
-  //     console.log("rendred--------" + Rating)
-  //     const newStars = {
-  //         star_1: Rating >= 1 ? "yellow" : "black" ,
-  //         star_2: Rating >= 2 ? "yellow" : "black" ,
-  //         star_3: Rating >= 3 ? "yellow" : "black" ,
-  //         star_4: Rating >= 4 ? "yellow" : "black" ,
-  //         star_5: Rating >= 5 ? "yellow" : "black" ,
-  //     };
-  //     setStar(newStars);
-  // },[Rating])
-  // const hendel_star_btn = (ring) => {
-  //     const newStars = {
-  //         star_1: ring >= 1 && star.star_1 != "yellow" ? "yellow" : ring > 1 ? "yellow" : "black" ,
-  //         star_2: ring >= 2 && star.star_2 != "yellow" ? "yellow" : ring > 2 ? "yellow" : "black" ,
-  //         star_3: ring >= 3 && star.star_3 != "yellow" ? "yellow" : ring > 3 ? "yellow" : "black" ,
-  //         star_4: ring >= 4 && star.star_4 != "yellow" ? "yellow" : ring > 4 ? "yellow" : "black" ,
-  //         star_5: ring >= 5 && star.star_5 != "yellow" ? "yellow" : ring > 5 ? "yellow" : "black" ,
-  //     };
-  //     setStar(newStars);
-  // }
-  // const hendel_gas_star_btn = (ring) => {
-  //     const newStars = {
-  //         star_1: ring >= 1 ? "yellow" : "black" ,
-  //         star_2: ring >= 2 ? "yellow" : "black" ,
-  //         star_3: ring >= 3 ? "yellow" : "black" ,
-  //         star_4: ring >= 4 ? "yellow" : "black" ,
-  //         star_5: ring >= 5 ? "yellow" : "black" ,
-  //     };
-  //     set_gas_star(newStars);
-  // }
+  useEffect(() => {
+    let img = [data.primary_image];
+    (data.secondary_images || []).forEach((im) => img.push(im.image));
+    setimage(img);
+  }, [data.primary_image, data.secondary_images]);
+  const handlePrevImage = () => {
+    setSelectedImage((prev) => (prev === 0 ? image.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = () => {
+    setSelectedImage((prev) => (prev === image.length - 1 ? 0 : prev + 1));
+  };
+  const handleTouchStart = useCallback((e) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    touchStartX.current = e.clientX;
+    touchStartY.current = e.clientY;
+    touchEndX.current = e.clientX;
+    isDragging.current = true;
+  }, []);
+
+  const handleTouchMove = useCallback((e) => {
+    if (!isDragging.current) return;
+    touchEndX.current = e.clientX;
+    const diffX = touchEndX.current - touchStartX.current;
+    const diffY = e.clientY - touchStartY.current;
+
+    if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffX) < 10) return;
+
+    if (Math.abs(diffX) > 10) {
+      e.preventDefault();
+    }
+
+    setDragOffset(diffX);
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e) => {
+      if (!isDragging.current) return;
+      e.currentTarget.releasePointerCapture(e.pointerId);
+      isDragging.current = false;
+      const diff = touchEndX.current - touchStartX.current;
+      const threshold = 50; // minimum swipe distance
+
+      setDragOffset(0);
+
+      if (Math.abs(diff) > threshold) {
+        if (diff < 0) {
+          handleNextImage();
+        } else {
+          handlePrevImage();
+        }
+      }
+    },
+    [handleNextImage, handlePrevImage],
+  );
   return (
     <>
       <main>
-        <div className="prodect-detail-container">
-          {loding.type === "" && loding.value ? (
-            <div className="loading_contener">
-              <div className="loader"></div>
-            </div>
-          ) : (
-            <>
-              <div className="Picture">
-                <div className="Pictures_Container">
-                  <div className="Primary">
-                    <img src={Primary} alt="Product Image" />
-                  </div>
-                  <div className="Secondary">
-                    <div className="Secondary-images">
+        <div className="pro-detail">
+          <div className="product-main animate-in">
+            <div className="gallery">
+              <div
+                className="gallery-main"
+                onPointerDown={handleTouchStart}
+                onPointerMove={handleTouchMove}
+                onPointerUp={handleTouchEnd}
+              >
+                <div
+                  className="gallery-slider-track"
+                  style={{
+                    transform: `translateX(${-selectedImage * 100}%) translateX(${dragOffset}px)`,
+                  }}
+                >
+                  {image.map((img, index) => (
+                    <div className="gallery-slide" key={index}>
                       <img
-                        onClick={() => setPrimary(data.primary_image)}
-                        src={data.primary_image}
-                        alt="Product Image"
+                        src={img}
+                        alt="image"
+                        className={`gallery-slide-img ${img ? "loaded" : ""}`}
+                        loading={index <= 1 ? "eager" : "lazy"}
+                        draggable={false}
                       />
-                      {data.secondary_images.map((img) => (
-                        <img
-                          onClick={() => setPrimary(img.image)}
-                          src={img.image}
-                          alt="Product Image"
-                        />
-                      ))}
                     </div>
-                    <div className="Secondary-scroll-btn-container">
-                      <button
-                        className="Secondary-scroll-btn left"
-                        onClick={() => scrollSecondary("left")}
-                      >
-                        ‹
-                      </button>
-                      <button
-                        className="Secondary-scroll-btn right"
-                        onClick={() => scrollSecondary("right")}
-                      >
-                        ›
-                      </button>
-                    </div>
-                  </div>
+                  ))}
+                </div>
+                <div className="gallery-dots">
+                  {image.map((_, index) => (
+                    <button
+                      key={index}
+                      className={`gallery-dot ${selectedImage === index ? "active" : ""}`}
+                      onClick={() => setSelectedImage(index)}
+                      aria-label={`صورة ${index + 1}`}
+                    />
+                  ))}
+                </div>
+                <div className="gallery-badges">
+                  <span className="badge badge-sale">خصم 30%</span>
+                  <span className="badge badge-new">جديد</span>
+                </div>
+                <button
+                  className="gallery-arrow gallery-arrow-right"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => {
+                    handleNextImage();
+                  }}
+                >
+                  <ChevronRightIcon />
+                </button>
+                <button
+                  className="gallery-arrow gallery-arrow-left"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => {
+                    handlePrevImage();
+                  }}
+                >
+                  <ChevronLeftIcon />
+                </button>
+                <div className="gallery-counter">
+                  {selectedImage + 1} / {image.length}
                 </div>
               </div>
-              <div className="Detail">
-                <h1>{data.name}</h1>
-                <hr />
-                <p>{data.price} $</p>
-                {/* <div className="Rating">
-                                    <button onClick={()=>hendel_star_btn(1)} onMouseEnter={()=>hendel_gas_star_btn(1)} onMouseLeave={()=>hendel_gas_star_btn(star.star_1 === "black" ? Rating : 0)}>
-                                        <span style={{color : star.star_1 === "black" ? gas_star.star_1 : star.star_1}} className="material-symbols-outlined">
-                                            star
-                                        </span>
-                                    </button>
-                                    <button onClick={()=>hendel_star_btn(2)} onMouseEnter={()=>hendel_gas_star_btn(2)} onMouseLeave={()=>hendel_gas_star_btn(star.star_1 === "black" ? Rating : 0)}>
-                                        <span style={{color : star.star_2 === "black" ? gas_star.star_2 : star.star_2}} className="material-symbols-outlined">
-                                            star
-                                        </span>
-                                    </button>
-                                    <button onClick={()=>hendel_star_btn(3)} onMouseEnter={()=>hendel_gas_star_btn(3)} onMouseLeave={()=>hendel_gas_star_btn(star.star_1 === "black" ? Rating : 0)}>
-                                        <span style={{color : star.star_3 === "black" ? gas_star.star_3 : star.star_3}} className="material-symbols-outlined">
-                                            star
-                                        </span>
-                                    </button>
-                                    <button onClick={()=>hendel_star_btn(4)} onMouseEnter={()=>hendel_gas_star_btn(4)} onMouseLeave={()=>hendel_gas_star_btn(star.star_1 === "black" ? Rating : 0)}>
-                                        <span style={{color : star.star_4 === "black" ? gas_star.star_4 : star.star_4}} className="material-symbols-outlined">
-                                            star
-                                        </span>
-                                    </button>
-                                    <button onClick={()=>hendel_star_btn(5)} onMouseEnter={()=>hendel_gas_star_btn(5)} onMouseLeave={()=>hendel_gas_star_btn(star.star_1 === "black" ? Rating : 0)}>
-                                        <span style={{color : star.star_5 === "black" ? gas_star.star_5 : star.star_5}} className="material-symbols-outlined">
-                                            star
-                                        </span>
-                                    </button>
-                                    <p>4.5</p>
-                                </div> */}
-                <form onSubmit={(event) => event.preventDefault()}>
-                  <label>Size :</label>
-                  <select
-                    defaultValue="size3"
-                    onChange={(e) => setform({ ...form, size: e.target.value })}
-                    className="Size_Color"
-                  >
-                    <option value="size1">Size 1</option>
-                    <option value="size2">Size 2</option>
-                    <option value="size3">Size 3</option>
-                    <option value="size4">Size 4</option>
-                    <option value="size5">Size 5</option>
-                    <option value="size6">Size 6</option>
-                    <option value="size7">Size 7</option>
-                  </select>
-                  <label>Color :</label>
-                  <select
-                    onChange={(e) =>
-                      setform({ ...form, color: e.target.value, quantity: 1 })
+              <div className="gallery-thumbs-wrapper">
+                <button
+                  className={`scroll-arrow-thumbs scroll-arrow-right ${!canScrollLeft ? "hidden" : ""}`}
+                  onClick={() => scroll("left")}
+                  aria-label="تمرير للأمام"
+                >
+                  <ChevronRightIcon />
+                </button>
+                <div className="gallery-thumbs" ref={scrollRef}>
+                  {image.map((img, index) => (
+                    <button
+                      key={`${img}-${index}`}
+                      className={`gallery-thumb ${image[selectedImage] === img ? "active" : ""}`}
+                      onClick={() => setSelectedImage(index)}
+                    >
+                      <img src={img} alt="Product Image" />
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className={`scroll-arrow-thumbs scroll-arrow-left ${!canScrollRight ? "hidden" : ""}`}
+                  onClick={() => scroll("right")}
+                  aria-label="تمرير للخلف"
+                >
+                  <ChevronLeftIcon />
+                </button>
+              </div>
+            </div>
+
+            <div className="product-info">
+              <span className="product-category">أحذية رياضية / جري</span>
+              <h1 className="product-title">{data.name}</h1>
+
+              <div className="product-rating">
+                <span className="rating-text">
+                  <strong>{data.rating}</strong> من 5
+                </span>
+                <span className="divider">|</span>
+                <span className="rating-text">{data.reviews_count} تقييم</span>
+                <span className="divider">|</span>
+                <span className="rating-text" style={{ color: "#10b981" }}>
+                  1,250+ مبيعة
+                </span>
+              </div>
+              <Box sx={{ "& > legend": { mt: 0 } }}>
+                <Rating
+                  name="simple-controlled"
+                  value={value}
+                  dir="ltr"
+                  onChange={(event, newValue) => {
+                    setValue(newValue);
+                  }}
+                />
+              </Box>
+              <div className="product-price-section">
+                <span className="current-price">{data.price}$</span>
+                <span className="original-price">659 ر.س</span>
+                <span className="discount-percent">وفّر 200 ر.س</span>
+              </div>
+
+              <p className="product-description">{data.description}</p>
+
+              <div className="option-group">
+                <div className="option-label">
+                  اللون: <span>{form.color}</span>
+                </div>
+                <div className="color-options">
+                  {data.colors.map((color, index) => {
+                    if (color.color) {
+                      return (
+                        <button
+                          key={color.color}
+                          className={`color-swatch ${form.color === color.color ? "active" : ""}`}
+                          style={{ backgroundColor: color.color }}
+                          onClick={() =>
+                            setform({
+                              ...form,
+                              color: color.color,
+                              quantity: 1,
+                            })
+                          }
+                          title={color.color}
+                        />
+                      );
                     }
-                    className="Size_Color"
+                    return null;
+                  })}
+                </div>
+              </div>
+
+              <div className="option-group">
+                <div className="option-label">
+                  المقاس: <span>{sizes[selectedSize].label} EU</span>
+                </div>
+                <div className="size-options">
+                  {sizes.map((size, index) => (
+                    <button
+                      key={size.label}
+                      className={`size-btn ${selectedSize === index ? "active" : ""} ${!size.available ? "disabled" : ""}`}
+                      onClick={() => size.available && setSelectedSize(index)}
+                    >
+                      {size.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="quantity-section">
+                <div className="option-label" style={{ marginBottom: 0 }}>
+                  الكمية:
+                </div>
+                <div className="quantity-control">
+                  <button
+                    className="qty-btn"
+                    onClick={() =>
+                      setform({
+                        ...form,
+                        quantity: Math.max(1, form.quantity - 1),
+                      })
+                    }
                   >
-                    {data.colors ? (
-                      data.colors.map((color) => (
-                        <option
-                          value={color.color ? color.color : color.color_name}
-                        >
-                          {color.color ? color.color : color.color_name}
-                        </option>
-                      ))
-                    ) : (
-                      <option value="Color 1">Color 1</option>
-                    )}
-                  </select>
-                  <label>Quantity :</label>
-                  <div className="Number">
-                    <button type="button" onClick={hendel_add_btn}>
-                      <span className="material-symbols-outlined">add</span>
-                    </button>
-                    <input
-                      onChange={(e) =>
-                        setform({ ...form, quantity: e.target.value })
-                      }
-                      className="Quantity"
-                      type="number"
-                      value={form.quantity}
-                    />
-                    <button type="button" onClick={hendel_minus_btn}>
-                      <span className="material-symbols-outlined">remove</span>
-                    </button>
-                  </div>
-                  <div className="Button_Buy">
-                    <button
-                      className="Buy"
-                      onClick={() => {
-                        setOpen("flex");
-                        setorder({
-                          items: [
-                            {
-                              product: data.id,
-                              quantity: value,
-                              color: form.color,
-                            },
-                          ],
-                        });
-                      }}
-                    >
-                      Buy Now
-                    </button>
-                    <button
-                      className="Car"
-                      onClick={() => {
-                        hendel_add_car();
-                      }}
-                    >
-                      Add to car
-                      <span className="material-symbols-outlined">
-                        add_shopping_cart
-                      </span>
-                    </button>
-                  </div>
-                </form>
+                    −
+                  </button>
+                  <div className="qty-value">{form.quantity}</div>
+                  <button
+                    className="qty-btn"
+                    onClick={() =>
+                      setform({
+                        ...form,
+                        quantity: Math.min(max_quantity, form.quantity + 1),
+                      })
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+                <div className="stock-info low">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="12" r="10" />
+                  </svg>
+                  متبقي 5 قطع فقط!
+                </div>
               </div>
-              <div className="Info">
-                <hr />
-                <label>Description :</label>
-                <div style={{ whiteSpace: "pre-line" }}>{data.description}</div>
+
+              <div className="action-buttons">
+                <button
+                  className="btn btn-car"
+                  onClick={() => hendel_add_car()}
+                >
+                  <span className="material-symbols-outlined">
+                    add_shopping_cart
+                  </span>
+                  أضف إلى السلة
+                </button>
+                <button
+                  className="btn btn-buy"
+                  onClick={() => {
+                    handle_order_form();
+                    setLoading(true);
+                  }}
+                >
+                  {loading ? (
+                    <>
+                      <svg className="spin" viewBox="0 0 24 24" fill="none">
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="white"
+                          strokeWidth="4"
+                          style={{ opacity: 0.25 }}
+                        />
+                        <path
+                          fill="white"
+                          style={{ opacity: 0.75 }}
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                    </>
+                  ) : (
+                    " شراء الأن"
+                  )}
+                </button>
               </div>
-            </>
-          )}
+            </div>
+          </div>
         </div>
       </main>
       <div className="test" style={{ display: open }}>
@@ -453,7 +637,7 @@ export default function Prodect_detail_component({ data }) {
                   Size : <span>{form.size}</span>
                 </label>
                 <label>
-                  Quantity : <span>{value}</span>
+                  Quantity : <span>{form.quantity}</span>
                 </label>
                 <label>
                   Price : <span>{data.price} $</span>
@@ -600,7 +784,7 @@ export default function Prodect_detail_component({ data }) {
                         <option value="فارغ">-- اختر البلدية --</option>
                         {wilaya !== "0" &&
                           WILAYAS_DATA.find(
-                            (w) => w.wilaya_name === wilaya
+                            (w) => w.wilaya_name === wilaya,
                           )?.communes?.map((commune, idx) => (
                             <option key={idx} value={commune.commune_name}>
                               {commune.commune_name}
@@ -622,7 +806,7 @@ export default function Prodect_detail_component({ data }) {
                           delivery.deliveries &&
                           delivery.deliveries[0]?.delivery_phone &&
                           Array.isArray(
-                            delivery.deliveries[0].delivery_phone
+                            delivery.deliveries[0].delivery_phone,
                           ) &&
                           delivery.deliveries[0].delivery_phone[0]
                             ? delivery.deliveries[0].delivery_phone[0]
@@ -673,7 +857,7 @@ export default function Prodect_detail_component({ data }) {
                           delivery.deliveries &&
                           delivery.deliveries[0]?.delivery_phone &&
                           Array.isArray(
-                            delivery.deliveries[0].delivery_phone
+                            delivery.deliveries[0].delivery_phone,
                           ) &&
                           delivery.deliveries[0].delivery_phone[1]
                             ? delivery.deliveries[0].delivery_phone[1]

@@ -1,0 +1,370 @@
+{
+  "toast": {
+    "logout_success": "تم تسجيل الخروج",
+    "logout_failed": "تعذر تسجيل الخروج حاول مرة أخرى لاحقا",
+    "login_success": "تم تسجيل الدخول بنجاح",
+    "login_failed": "فشلت عملية تسجيل الدخول",
+    "order_sent_success": "تم ارسال الطلب بنجاح شكرا",
+    "order_send_failed": "فشل في إرسال الطلب أعد المحاولة",
+    "code_sent_success": "تم إرسال الكود",
+    "send_failed": "هناك مشكلة أثناء الإرسال حاول مرة أخرى لاحقا",
+    "profile_image_deleted_success": "تم حذف صورة الملف الشخصي",
+    "profile_update_success": "تم تحديث الملف الشخصي",
+    "profile_update_failed": "هناك مشكلة أثناء التعديل حاول مرة أخرى لاحقا",
+    "password_updated_success": "تم تحديث كلمة المرور",
+    "product_removed_from_order_success": "تم ازالة المنتوج من السلة",
+    "first_name_required_full": "أكتب الأسم كاملا من فضلك",
+    "last_name_required_full": "أكتب اللقب كاملا من فضلك",
+    "address_required": "أدخل مكان الإقامة من فضلك",
+    "primary_phone_invalid": "أدخل هاتف الأول صالح من فضلك",
+    "secondary_phone_invalid": "أدخل هاتف ثاني صالح من فضلك",
+    "item_already_in_cart": "العنصر موجود في السلة فعلا",
+    "item_added_to_cart": "تم إضافة العنصر الى السلة",
+    "quantity_unavailable": "الكمية غير متوفرة حاليا",
+    "quantity_invalid": "من فضلك ادخل كمية صحيحة",
+    "delete_cart_item_failed": "فشل في حذف العنصر من السلة",
+    "item_removed_from_cart_success": "تم حذف العنصر من السلة",
+    "quantity_invalid_or_remove": "من فضلك ادخل كمية صحيحة او احذف المنتج"
+  },
+  "login": {
+    "fields": {
+      "email": "البريد الإلكتروني",
+      "password": "كلمة السر",
+      "confirm_password": "تأكيد كلمة السر",
+      "first_name": "الاسم",
+      "last_name": "اللقب",
+      "wilaya": "الولاية",
+      "commune": "البلدية",
+      "phone1": "رقم الهاتف الأول",
+      "phone2": "رقم الهاتف الثاني",
+      "code": "الكود"
+    },
+    "placeholders": {
+      "email": "@gmail.com",
+      "password": "أدخل كلمة السر",
+      "confirm_password": "أعد إدخال كلمة السر",
+      "first_name": "أدخل الاسم",
+      "last_name": "أدخل اللقب",
+      "phone1": "0555 123 456",
+      "phone2": "0666 789 012",
+      "select_wilaya": "-- اختر الولاية --",
+      "select_commune": "-- اختر البلدية --",
+      "select_wilaya_first": "-- اختر الولاية أولاً --"
+    },
+    "hints": {
+      "phone2_optional": "اختياري"
+    },
+    "errors": {
+      "password_required": "كلمة السر مطلوبة",
+      "password_min_length": "كلمة السر يجب أن تكون 6 أحرف على الأقل",
+      "confirm_password_required": "يرجى تأكيد كلمة السر",
+      "confirm_password_mismatch": "كلمتا السر غير متطابقتين",
+      "first_name_required": "الاسم مطلوب",
+      "first_name_min_length": "الاسم يجب أن يكون حرفين على الأقل",
+      "last_name_required": "اللقب مطلوب",
+      "last_name_min_length": "اللقب يجب أن يكون حرفين على الأقل",
+      "email_required": "البريد الإلكتروني مطلوب",
+      "email_invalid": "صيغة البريد غير صحيحة",
+      "wilaya_required": "يرجى اختيار الولاية",
+      "commune_required": "يرجى اختيار البلدية",
+      "phone1_required": "رقم الهاتف الأول مطلوب",
+      "phone_invalid": "رقم الهاتف غير صحيح (مثال: 0555123456)",
+      "phone2_same_as_phone1": "رقم الهاتف الثاني يجب أن يختلف عن الأول",
+      "credentials_invalid": "كلمة السر أو إسم المستخدم خاطأ",
+      "register_failed": "هناك مشكلة أثناء التعديل حاول مرة أخرى لاحقا",
+      "send_failed_retry": "هناك مشكلة أثناء الإرسال حاول مرة أخرى لاحقا",
+      "request_failed": "فشل في إرسال الطلب أعد المحاولة",
+      "code_required": "أدخل الكود الذي أرسل الى الإمايل من فضلك"
+    },
+    "buttons": {
+      "submit_signin": "GO",
+      "submit_signup": "تسجيل",
+      "forget_password": "نسيت كلمة السر؟",
+      "cancel": "إلغاء",
+      "send": "إرسال"
+    },
+    "labels": {
+      "or": "___أو___",
+      "no_account": "إذا لم يكن لديك حساب",
+      "have_account": "إذا كان لديك حساب",
+      "sign_up": " إنشاء حساب ",
+      "sign_in": " تسجيل الدخول",
+      "contact_info": "معلومات التواصل"
+    },
+    "change_password": {
+      "title_send": "سنرسل لك كود التأكد الى هذا البريد الإلكتروني",
+      "title_sent": "تم ارسال الكود"
+    }
+  },
+  "features": {
+    "title": "لماذا تختار LOGO؟",
+    "subtitle": "نحن ملتزمون بتقديم منتجات عالية الجودة مع خدمة استثنائية.",
+    "cards": {
+      "fast_delivery": {
+        "title": "توصيل سريع",
+        "description": "احصل على منتجاتك في 2-3 أيام عمل مع شحن مجاني للطلبات التي تتجاوز 50$."
+      },
+      "secure_shopping": {
+        "title": "تسوق آمن",
+        "description": "معلومات الدفع والبيانات الشخصية محمية بأحدث معايير الأمان."
+      },
+      "quality_guarantee": {
+        "title": "ضمان الجودة",
+        "description": "جميع المنتجات مضمونة لمدة 30 يومًا مع دعم عملاء مدى الحياة."
+      }
+    }
+  },
+  "pro": {
+    "title": "منتجاتنا",
+    "subtitle": "نقدم لك الجودة الفائقة التي تستحقها.",
+    "view_all": "عرض الكل"
+  },
+  "footer": {
+    "title": "تواصل معنا",
+    "email_label": "البريد الإلكتروني :",
+    "mobile_label": "الهاتف :",
+    "social_label": "التواصل الاجتماعي :"
+  },
+  "navbar": {
+    "home": "الرئيسية",
+    "about": "عن الشركة",
+    "contact": "اتصل بنا",
+    "products": "المنتجات",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "ar": "العربية",
+    "en": "الإنجليزية",
+    "de": "الألمانية",
+    "es": "الإسبانية",
+    "fr": "الفرنسية"
+  },
+  "Hero": {
+    "title": {
+      "line1": "فكّر بشكل أخضر...",
+      "line2": "عِش بنقاء"
+    },
+    "subtitle": "طاقة نظيفة يمكنك الوثوق بها. وفّر المال واحمِ الأرض من أجل مستقبل أكثر صحة، معًا.",
+    "buttons": {
+      "shop": "تسوق الآن",
+      "learn": "اعرف المزيد"
+    }
+  },
+  "order_form": {
+    "page": {
+      "title": "إتمام عملية الطلب",
+      "subtitle": "أدخل معلوماتك لإتمام طلبك وسيتم التواصل معك في أقرب وقت"
+    },
+    "steps": {
+      "product": "المنتج",
+      "info": "المعلومات",
+      "confirm": "التأكيد"
+    },
+    "trust": {
+      "secure_pay": "دفع آمن",
+      "secure_pay_sub": "عند الاستلام",
+      "fast_delivery": "توصيل سريع",
+      "fast_delivery_sub": "2-5 أيام",
+      "free_return": "استرجاع مجاني",
+      "free_return_sub": "7 أيام"
+    },
+    "buyer_info": {
+      "title": "معلومات المشتري",
+      "subtitle": "يرجى ملء جميع الحقول المطلوبة لإتمام الطلب"
+    },
+    "fields": {
+      "first_name": "الاسم",
+      "last_name": "اللقب",
+      "wilaya": "الولاية",
+      "commune": "البلدية",
+      "phone1": "رقم الهاتف الأول",
+      "phone2": "رقم الهاتف الثاني"
+    },
+    "placeholders": {
+      "first_name": "أدخل الاسم",
+      "last_name": "أدخل اللقب",
+      "select_wilaya": "-- اختر الولاية --",
+      "select_commune": "-- اختر البلدية --",
+      "select_wilaya_first": "-- اختر الولاية أولاً --",
+      "phone1": "0555 123 456",
+      "phone2": "0666 789 012"
+    },
+    "hints": {
+      "phone2_optional": "اختياري"
+    },
+    "errors": {
+      "first_name_required": "الاسم مطلوب",
+      "first_name_min_length": "الاسم يجب أن يكون حرفين على الأقل",
+      "last_name_required": "اللقب مطلوب",
+      "last_name_min_length": "اللقب يجب أن يكون حرفين على الأقل",
+      "wilaya_required": "يرجى اختيار الولاية",
+      "commune_required": "يرجى اختيار البلدية",
+      "phone1_required": "رقم الهاتف الأول مطلوب",
+      "phone_invalid": "رقم الهاتف غير صحيح (مثال: 0555123456)",
+      "phone2_same_as_phone1": "رقم الهاتف الثاني يجب أن يختلف عن الأول",
+      "product_unavailable": "يبدو أن العنصر غير متوفر حاليا أعد طلب المنتج لاحقا"
+    },
+    "delivery": {
+      "section_title": "معلومات التواصل",
+      "fast_title": "التوصيل السريع",
+      "fast_desc": "عمليت اصال المنتج الى بلدك تكون خلال يوم او يومين او على الأقصى 3 أيام",
+      "fast_price": "السعر : 50$",
+      "normal_title": "التوصيل العادي",
+      "normal_desc": "عمليت اصال المنتج الى بلدك تكون خلال 4 أيام أو أكثر",
+      "normal_price": "السعر : 20$"
+    },
+    "submit": {
+      "confirm": "تأكيد الطلب",
+      "confirming": "جاري تأكيد الطلب...",
+      "security_note": "🔒 معلوماتك الشخصية محمية وآمنة تماماً"
+    },
+    "success": {
+      "title": "تم تأكيد الطلب بنجاح! 🎉",
+      "subtitle": "سيتم التواصل معك قريباً على أحد الأرقام المقدمة",
+      "full_name": "الاسم الكامل",
+      "wilaya": "الولاية",
+      "commune": "البلدية",
+      "phone1": "الهاتف الأول",
+      "phone2": "الهاتف الثاني",
+      "delivery": "التوصيل",
+      "delivery_normal": "العادي",
+      "delivery_fast": "السريع",
+      "new_order": "طلب جديد"
+    },
+    "product_card": {
+      "title": "معلومات المنتج المطلوب",
+      "category": "منتجات",
+      "color": "اللون",
+      "size": "المقاس",
+      "quantity": "الكمية",
+      "total": "مجموع السعر:",
+      "currency": "دج"
+    }
+  },
+  "cart": {
+    "empty": {
+      "title": "سلة التسوق فارغة",
+      "subtitle": "ابدأ التسوق واكتشف منتجاتنا الرائعة",
+      "back_btn": "العودة للتسوق"
+    },
+    "header": {
+      "title": "سلة التسوق",
+      "items_count": "لديك {count} منتجات في سلة التسوق"
+    },
+    "continue_shopping": "← متابعة التسوق",
+    "selected_products": "المنتجات المختارة",
+    "remove_btn": "🗑️ إزالة",
+    "currency": "دج",
+    "summary": {
+      "title": "ملخص الطلبية",
+      "subtotal": "المجموع الفرعي",
+      "shipping": "الشحن",
+      "shipping_free": "مجاني",
+      "discount": "الخصم ({discount}%)",
+      "total": "الإجمالي",
+      "checkout_btn": "إتمام الشراء ←",
+      "secure_note": "🔒 دفع آمن ومشفر 100%"
+    }
+  },
+  "orders": {
+    "filters": {
+      "all": "جميع الطلبات",
+      "delivered": "تم التسليم",
+      "shipped": "تم الشحن",
+      "pending": "قيد الانتظار",
+      "cancelled": "ملغى"
+    },
+    "order_card": {
+      "order_id": "رقم الطلب",
+      "date_placed": "تاريخ الطلب",
+      "item_count": "عدد المنتجات",
+      "hide_products": "إخفاء المنتجات",
+      "show_products": "عرض المنتجات",
+      "color": "اللون",
+      "size": "المقاس",
+      "qty": "الكمية",
+      "order_total": "إجمالي الطلب"
+    },
+    "stats": {
+      "total_orders": "إجمالي الطلبات",
+      "delivered": "تم التسليم",
+      "in_progress": "قيد المعالجة",
+      "cancelled": "ملغى"
+    },
+    "header": {
+      "title": "سجل الطلبات",
+      "subtitle": "تتبع طلباتك وإدارتها",
+      "search_placeholder": "ابحث عن طلبات أو منتجات..."
+    },
+    "empty": {
+      "title": "لا توجد طلبات",
+      "subtitle": "حاول تعديل معايير البحث أو الفلتر",
+      "clear_filters": "مسح الفلاتر"
+    },
+    "profile": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "no_phone": "لا يوجد رقم هاتف",
+      "activate_msg": "يرجى تفعيل حسابك",
+      "activate_link": "من هنا"
+    },
+    "edit_form": {
+      "title": "تعديل الملف الشخصي",
+      "first_name": "الاسم",
+      "last_name": "اللقب",
+      "wilaya": "الولاية",
+      "commune": "البلدية",
+      "email": "البريد الإلكتروني",
+      "phone1": "رقم الهاتف الأول",
+      "phone2": "رقم الهاتف الثاني",
+      "phone2_hint": "اختياري",
+      "placeholders": {
+        "first_name": "أدخل الاسم",
+        "last_name": "أدخل اللقب",
+        "select_wilaya": "-- اختر الولاية --",
+        "select_commune": "-- اختر البلدية --",
+        "select_wilaya_first": "-- اختر الولاية أولاً --",
+        "email": "@gmail.com",
+        "phone1": "0555 123 456",
+        "phone2": "0666 789 012"
+      },
+      "contact_divider": "معلومات التواصل",
+      "change_password_btn": "تغيير كلمة المرور",
+      "cancel_btn": "إلغاء",
+      "save_btn": "حفظ",
+      "security_note": "🔒 معلوماتك الشخصية محمية وآمنة تماماً",
+      "errors": {
+        "no_change": "يجب أن تغير معلومة واحدة على الأقل",
+        "first_name_min": "الاسم يجب أن يكون حرفين على الأقل",
+        "last_name_min": "اللقب يجب أن يكون حرفين على الأقل",
+        "commune_required": "يرجى اختيار البلدية",
+        "wilaya_required": "يرجى اختيار الولاية",
+        "email_invalid": "صيغة البريد غير صحيحة",
+        "phone_invalid": "رقم الهاتف غير صحيح (مثال: 0555123456)",
+        "phone2_same": "رقم الهاتف الثاني يجب أن يختلف عن الأول",
+        "update_failed": "هناك مشكلة أثناء التعديل"
+      }
+    },
+    "password_form": {
+      "title_send": "سنرسل لك كود التأكد إلى هذا البريد الإلكتروني",
+      "title_sent": "تم إرسال الكود",
+      "email_label": "البريد الإلكتروني",
+      "code_label": "الكود",
+      "password_label": "كلمة السر",
+      "confirm_password_label": "تأكيد كلمة السر",
+      "placeholders": {
+        "password": "أدخل كلمة السر",
+        "confirm_password": "أعد إدخال كلمة السر"
+      },
+      "cancel_btn": "إلغاء",
+      "send_btn": "إرسال",
+      "errors": {
+        "code_required": "أدخل الكود المرسل إلى البريد",
+        "password_required": "كلمة السر مطلوبة",
+        "password_min": "6 أحرف على الأقل",
+        "confirm_required": "يرجى تأكيد كلمة السر",
+        "confirm_mismatch": "كلمتا السر غير متطابقتين",
+        "send_failed": "هناك مشكلة أثناء الإرسال"
+      }
+    }
+  }
+}

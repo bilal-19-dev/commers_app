@@ -1,0 +1,107 @@
+.Order_detail_contener {
+  background-color: white;
+  box-shadow: 0 4px 24px 10px rgba(60, 72, 88, 0.1);
+  color: black;
+  width: 100%;
+  min-height: 100vh;
+  border-radius: 30px;
+  padding: 20px;
+  font-weight: 600;
+}
+.Order_detail_contener .loading_contener {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Order_detail_contener tbody {
+  background-color: white;
+}
+.Order_detail_contener table {
+  width: 100%;
+}
+.Order_detail_contener .body {
+  min-height: 70vh;
+}
+.Order_detail_contener tr {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 30px;
+}
+.Order_detail_contener .body tr:hover {
+  background-color: rgb(75, 75, 75);
+}
+.Order_detail_contener th,
+.Order_detail_contener td {
+  width: 20%;
+  text-align: center;
+}
+.Order_detail_contener .hader tr {
+  background-color: rgb(90, 90, 255);
+}
+.Order_detail_contener .body tr {
+  background-color: rgb(173, 173, 173);
+}
+.Order_detail_contener .body td {
+  height: 50px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Order_detail_contener .body .img img {
+  width: 65%;
+  height: 100%;
+  border-radius: 5px;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.Order_detail_contener .fotter td {
+  width: auto;
+  text-align: center;
+}
+.Order_detail_contener button {
+  border-radius: 30px;
+  border: none;
+  background-color: green;
+  padding: 10px 20px;
+}
+.Order_detail_contener .fotter .btn {
+  display: flex;
+  justify-content: flex-end;
+}
+@media screen and (max-width: 610px) {
+  .Order_detail_contener th,
+  .Order_detail_contener td {
+    font-size: medium;
+  }
+  .Order_detail_contener .body .img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .Order_detail_contener .body td .img {
+    width: auto;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .Order_detail_contener th,
+  .Order_detail_contener td {
+    font-size: small;
+  }
+}
+@media screen and (max-width: 500px) {
+  .Order_detail_contener th,
+  .Order_detail_contener td {
+    font-size: x-small;
+  }
+}

@@ -1,0 +1,366 @@
+{
+  "toast": {
+    "logout_success": "Logged out successfully",
+    "logout_failed": "Couldn't log out. Please try again later",
+    "login_success": "Logged in successfully",
+    "login_failed": "Login failed",
+    "order_sent_success": "Order sent successfully, thank you",
+    "order_send_failed": "Failed to send order, please try again",
+    "code_sent_success": "Code sent successfully",
+    "send_failed": "There was a sending problem, please try again later",
+    "profile_image_deleted_success": "Profile image deleted",
+    "profile_update_success": "Profile updated successfully",
+    "profile_update_failed": "There was a problem while updating, please try again later",
+    "password_updated_success": "Password updated successfully",
+    "product_removed_from_order_success": "Product removed from cart",
+    "first_name_required_full": "Please enter your full first name",
+    "last_name_required_full": "Please enter your full last name",
+    "address_required": "Please enter your address",
+    "primary_phone_invalid": "Please enter a valid primary phone number",
+    "secondary_phone_invalid": "Please enter a valid secondary phone number",
+    "item_already_in_cart": "Item is already in the cart",
+    "item_added_to_cart": "Item added to cart",
+    "quantity_unavailable": "Requested quantity is currently unavailable",
+    "quantity_invalid": "Please enter a valid quantity",
+    "delete_cart_item_failed": "Failed to remove item from cart",
+    "item_removed_from_cart_success": "Item removed from cart",
+    "quantity_invalid_or_remove": "Please enter a valid quantity or remove the product"
+  },
+  "login": {
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "wilaya": "Wilaya",
+      "commune": "Commune",
+      "phone1": "Primary Phone",
+      "phone2": "Secondary Phone",
+      "code": "Code"
+    },
+    "placeholders": {
+      "email": "@gmail.com",
+      "password": "Enter your password",
+      "confirm_password": "Re-enter your password",
+      "first_name": "Enter first name",
+      "last_name": "Enter last name",
+      "phone1": "0555 123 456",
+      "phone2": "0666 789 012",
+      "select_wilaya": "-- Select Wilaya --",
+      "select_commune": "-- Select Commune --",
+      "select_wilaya_first": "-- Select Wilaya First --"
+    },
+    "hints": {
+      "phone2_optional": "Optional"
+    },
+    "errors": {
+      "password_required": "Password is required",
+      "password_min_length": "Password must be at least 6 characters",
+      "confirm_password_required": "Please confirm your password",
+      "confirm_password_mismatch": "Passwords do not match",
+      "first_name_required": "First name is required",
+      "first_name_min_length": "First name must be at least 2 characters",
+      "last_name_required": "Last name is required",
+      "last_name_min_length": "Last name must be at least 2 characters",
+      "email_required": "Email is required",
+      "email_invalid": "Invalid email format",
+      "wilaya_required": "Please select a wilaya",
+      "commune_required": "Please select a commune",
+      "phone1_required": "Primary phone number is required",
+      "phone_invalid": "Invalid phone number (e.g. 0555123456)",
+      "phone2_same_as_phone1": "Secondary phone must differ from primary",
+      "credentials_invalid": "Invalid username or password",
+      "register_failed": "Something went wrong, please try again later",
+      "send_failed_retry": "Something went wrong while sending, please try again later",
+      "request_failed": "Failed to send request, please try again",
+      "code_required": "Please enter the code sent to your email"
+    },
+    "buttons": {
+      "submit_signin": "GO",
+      "submit_signup": "Register",
+      "forget_password": "Forget Password",
+      "cancel": "Cancel",
+      "send": "Send"
+    },
+    "labels": {
+      "or": "________or________",
+      "no_account": "If you do not have an account",
+      "have_account": "If you have an account",
+      "sign_up": "Sign up",
+      "sign_in": "Sign in",
+      "contact_info": "Contact Information"
+    }
+  },
+  "features": {
+    "title": "WHY CHOOSE LOGO?",
+    "subtitle": "WE'RE COMMITTED TO DELIVERING QUALITY PRODUCTS WITH EXCEPTIONAL SERVICE.",
+    "cards": {
+      "fast_delivery": {
+        "title": "FAST DELIVERY",
+        "description": "GET YOUR PRODUCTS DELIVERED TO YOUR DOORSTEP IN 2-3 BUSINESS DAYS WITH FREE SHIPPING ON ORDERS OVER $50."
+      },
+      "secure_shopping": {
+        "title": "SECURE SHOPPING",
+        "description": "YOUR PAYMENT AND PERSONAL INFORMATION IS PROTECTED WITH INDUSTRY-LEADING SECURITY MEASURES."
+      },
+      "quality_guarantee": {
+        "title": "QUALITY GUARANTEE",
+        "description": "ALL PRODUCTS COME WITH A 30-DAY MONEY-BACK GUARANTEE AND LIFETIME CUSTOMER SUPPORT."
+      }
+    }
+  },
+  "pro": {
+    "title": "Our Product",
+    "subtitle": "bringing you the superior quality you deserve.",
+    "view_all": "view all"
+  },
+  "footer": {
+    "title": "CONTACT US",
+    "email_label": "Email :",
+    "mobile_label": "Mobile :",
+    "social_label": "Social Media :"
+  },
+  "navbar": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "products": "Products",
+    "login": "Sign In",
+    "logout": "Log out",
+    "ar": "Arabic",
+    "en": "English",
+    "de": "German",
+    "es": "Spanish",
+    "fr": "French"
+  },
+  "Hero": {
+    "title": {
+      "line1": "Think Green...",
+      "line2": "Live Clean"
+    },
+    "subtitle": "Clean energy you can trust. Save money and protect the Earth for a healthier future, together.",
+    "buttons": {
+      "shop": "Shop Now",
+      "learn": "Learn More"
+    }
+  },
+  "order_form": {
+    "page": {
+      "title": "Complete Your Order",
+      "subtitle": "Enter your information to complete your order and we will contact you as soon as possible"
+    },
+    "steps": {
+      "product": "Product",
+      "info": "Information",
+      "confirm": "Confirmation"
+    },
+    "trust": {
+      "secure_pay": "Secure Payment",
+      "secure_pay_sub": "Cash on Delivery",
+      "fast_delivery": "Fast Delivery",
+      "fast_delivery_sub": "2-5 Days",
+      "free_return": "Free Return",
+      "free_return_sub": "7 Days"
+    },
+    "buyer_info": {
+      "title": "Buyer Information",
+      "subtitle": "Please fill in all required fields to complete the order"
+    },
+    "fields": {
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "wilaya": "Wilaya",
+      "commune": "Commune",
+      "phone1": "Primary Phone",
+      "phone2": "Secondary Phone"
+    },
+    "placeholders": {
+      "first_name": "Enter first name",
+      "last_name": "Enter last name",
+      "select_wilaya": "-- Select Wilaya --",
+      "select_commune": "-- Select Commune --",
+      "select_wilaya_first": "-- Select Wilaya First --",
+      "phone1": "0555 123 456",
+      "phone2": "0666 789 012"
+    },
+    "hints": {
+      "phone2_optional": "Optional"
+    },
+    "errors": {
+      "first_name_required": "First name is required",
+      "first_name_min_length": "First name must be at least 2 characters",
+      "last_name_required": "Last name is required",
+      "last_name_min_length": "Last name must be at least 2 characters",
+      "wilaya_required": "Please select a wilaya",
+      "commune_required": "Please select a commune",
+      "phone1_required": "Primary phone number is required",
+      "phone_invalid": "Invalid phone number (e.g. 0555123456)",
+      "phone2_same_as_phone1": "Secondary phone must differ from primary",
+      "product_unavailable": "This item is currently unavailable, please try again later"
+    },
+    "delivery": {
+      "section_title": "Contact Information",
+      "fast_title": "Fast Delivery",
+      "fast_desc": "Your product will be delivered within 1 to 3 days",
+      "fast_price": "Price: $50",
+      "normal_title": "Standard Delivery",
+      "normal_desc": "Your product will be delivered within 4 days or more",
+      "normal_price": "Price: $20"
+    },
+    "submit": {
+      "confirm": "Confirm Order",
+      "confirming": "Confirming order...",
+      "security_note": "🔒 Your personal information is fully protected and secure"
+    },
+    "success": {
+      "title": "Order Confirmed Successfully! 🎉",
+      "subtitle": "We will contact you soon on one of the provided numbers",
+      "full_name": "Full Name",
+      "wilaya": "Wilaya",
+      "commune": "Commune",
+      "phone1": "Primary Phone",
+      "phone2": "Secondary Phone",
+      "delivery": "Delivery",
+      "delivery_normal": "Standard",
+      "delivery_fast": "Fast",
+      "new_order": "New Order"
+    },
+    "product_card": {
+      "title": "Ordered Product Information",
+      "category": "Products",
+      "color": "Color",
+      "size": "Size",
+      "quantity": "Quantity",
+      "total": "Total Price:",
+      "currency": "DZD"
+    }
+  },
+  "cart": {
+    "empty": {
+      "title": "Your cart is empty",
+      "subtitle": "Start shopping and discover our amazing products",
+      "back_btn": "Back to Shopping"
+    },
+    "header": {
+      "title": "Shopping Cart",
+      "items_count": "You have {count} products in your cart"
+    },
+    "continue_shopping": "← Continue Shopping",
+    "selected_products": "Selected Products",
+    "remove_btn": "🗑️ Remove",
+    "currency": "DZD",
+    "summary": {
+      "title": "Order Summary",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "shipping_free": "Free",
+      "discount": "Discount ({discount}%)",
+      "total": "Total",
+      "checkout_btn": "Checkout ←",
+      "secure_note": "🔒 100% Secure & Encrypted Payment"
+    }
+  },
+  "orders": {
+    "filters": {
+      "all": "All Orders",
+      "delivered": "Delivered",
+      "shipped": "Shipped",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
+    },
+    "order_card": {
+      "order_id": "Order ID",
+      "date_placed": "Date Placed",
+      "item_count": "Item Count",
+      "hide_products": "Hide Products",
+      "show_products": "Show Products",
+      "color": "color",
+      "size": "size",
+      "qty": "Qty",
+      "order_total": "Order Total"
+    },
+    "stats": {
+      "total_orders": "Total Orders",
+      "delivered": "Delivered",
+      "in_progress": "In Progress",
+      "cancelled": "Cancelled"
+    },
+    "header": {
+      "title": "Order History",
+      "subtitle": "Track and manage your orders",
+      "search_placeholder": "Search orders or products..."
+    },
+    "empty": {
+      "title": "No orders found",
+      "subtitle": "Try adjusting your search or filter criteria",
+      "clear_filters": "Clear Filters"
+    },
+    "profile": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "no_phone": "No Phone Numbers",
+      "activate_msg": "Please Activate Your Account",
+      "activate_link": "From Here"
+    },
+    "edit_form": {
+      "title": "Edit Profile",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "wilaya": "Wilaya",
+      "commune": "Commune",
+      "email": "Email",
+      "phone1": "Primary Phone",
+      "phone2": "Secondary Phone",
+      "phone2_hint": "Optional",
+      "placeholders": {
+        "first_name": "Enter first name",
+        "last_name": "Enter last name",
+        "select_wilaya": "-- Select Wilaya --",
+        "select_commune": "-- Select Commune --",
+        "select_wilaya_first": "-- Select Wilaya First --",
+        "email": "@gmail.com",
+        "phone1": "0555 123 456",
+        "phone2": "0666 789 012"
+      },
+      "contact_divider": "Contact Information",
+      "change_password_btn": "Change Password",
+      "cancel_btn": "Cancel",
+      "save_btn": "Save",
+      "security_note": "🔒 Your personal information is fully protected and secure",
+      "errors": {
+        "no_change": "You must change at least one field",
+        "first_name_min": "First name must be at least 2 characters",
+        "last_name_min": "Last name must be at least 2 characters",
+        "commune_required": "Please select a commune",
+        "wilaya_required": "Please select a wilaya",
+        "email_invalid": "Invalid email format",
+        "phone_invalid": "Invalid phone number (e.g. 0555123456)",
+        "phone2_same": "Secondary phone must differ from primary",
+        "update_failed": "Something went wrong while updating"
+      }
+    },
+    "password_form": {
+      "title_send": "We will send a verification code to this email",
+      "title_sent": "Code has been sent",
+      "email_label": "Email",
+      "code_label": "Code",
+      "password_label": "Password",
+      "confirm_password_label": "Confirm Password",
+      "placeholders": {
+        "password": "Enter your password",
+        "confirm_password": "Re-enter your password"
+      },
+      "cancel_btn": "Cancel",
+      "send_btn": "Send",
+      "errors": {
+        "code_required": "Please enter the code sent to your email",
+        "password_required": "Password is required",
+        "password_min": "At least 6 characters",
+        "confirm_required": "Please confirm your password",
+        "confirm_mismatch": "Passwords do not match",
+        "send_failed": "Something went wrong while sending"
+      }
+    }
+  }
+}

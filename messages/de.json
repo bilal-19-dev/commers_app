@@ -1,0 +1,370 @@
+{
+  "toast": {
+    "logout_success": "Erfolgreich abgemeldet",
+    "logout_failed": "Abmeldung fehlgeschlagen. Bitte versuchen Sie es später erneut",
+    "login_success": "Erfolgreich angemeldet",
+    "login_failed": "Anmeldung fehlgeschlagen",
+    "order_sent_success": "Bestellung erfolgreich gesendet, vielen Dank",
+    "order_send_failed": "Bestellung konnte nicht gesendet werden, bitte erneut versuchen",
+    "code_sent_success": "Code erfolgreich gesendet",
+    "send_failed": "Sendeproblem, bitte versuchen Sie es später erneut",
+    "profile_image_deleted_success": "Profilbild gelöscht",
+    "profile_update_success": "Profil erfolgreich aktualisiert",
+    "profile_update_failed": "Problem beim Aktualisieren, bitte versuchen Sie es später erneut",
+    "password_updated_success": "Passwort erfolgreich aktualisiert",
+    "product_removed_from_order_success": "Produkt aus dem Warenkorb entfernt",
+    "first_name_required_full": "Bitte geben Sie Ihren vollständigen Vornamen ein",
+    "last_name_required_full": "Bitte geben Sie Ihren vollständigen Nachnamen ein",
+    "address_required": "Bitte geben Sie Ihre Adresse ein",
+    "primary_phone_invalid": "Bitte geben Sie eine gültige Haupttelefonnummer ein",
+    "secondary_phone_invalid": "Bitte geben Sie eine gültige Nebentelefonnummer ein",
+    "item_already_in_cart": "Artikel bereits im Warenkorb",
+    "item_added_to_cart": "Artikel zum Warenkorb hinzugefügt",
+    "quantity_unavailable": "Die angeforderte Menge ist derzeit nicht verfügbar",
+    "quantity_invalid": "Bitte geben Sie eine gültige Menge ein",
+    "delete_cart_item_failed": "Artikel konnte nicht aus dem Warenkorb entfernt werden",
+    "item_removed_from_cart_success": "Artikel aus dem Warenkorb entfernt",
+    "quantity_invalid_or_remove": "Bitte geben Sie eine gültige Menge ein oder entfernen Sie das Produkt"
+  },
+  "login": {
+    "fields": {
+      "email": "E-Mail",
+      "password": "Passwort",
+      "confirm_password": "Passwort bestätigen",
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "wilaya": "Wilaya",
+      "commune": "Gemeinde",
+      "phone1": "Haupttelefon",
+      "phone2": "Nebentelefon",
+      "code": "Code"
+    },
+    "placeholders": {
+      "email": "@gmail.com",
+      "password": "Passwort eingeben",
+      "confirm_password": "Passwort erneut eingeben",
+      "first_name": "Vorname eingeben",
+      "last_name": "Nachname eingeben",
+      "phone1": "0555 123 456",
+      "phone2": "0666 789 012",
+      "select_wilaya": "-- Wilaya auswählen --",
+      "select_commune": "-- Gemeinde auswählen --",
+      "select_wilaya_first": "-- Zuerst Wilaya auswählen --"
+    },
+    "hints": {
+      "phone2_optional": "Optional"
+    },
+    "errors": {
+      "password_required": "Passwort ist erforderlich",
+      "password_min_length": "Das Passwort muss mindestens 6 Zeichen lang sein",
+      "confirm_password_required": "Bitte bestätigen Sie Ihr Passwort",
+      "confirm_password_mismatch": "Passwörter stimmen nicht überein",
+      "first_name_required": "Vorname ist erforderlich",
+      "first_name_min_length": "Der Vorname muss mindestens 2 Zeichen lang sein",
+      "last_name_required": "Nachname ist erforderlich",
+      "last_name_min_length": "Der Nachname muss mindestens 2 Zeichen lang sein",
+      "email_required": "E-Mail ist erforderlich",
+      "email_invalid": "Ungültiges E-Mail-Format",
+      "wilaya_required": "Bitte wählen Sie eine Wilaya",
+      "commune_required": "Bitte wählen Sie eine Gemeinde",
+      "phone1_required": "Haupttelefonnummer ist erforderlich",
+      "phone_invalid": "Ungültige Telefonnummer (z.B. 0555123456)",
+      "phone2_same_as_phone1": "Nebentelefon muss sich vom Haupttelefon unterscheiden",
+      "credentials_invalid": "Ungültiger Benutzername oder Passwort",
+      "register_failed": "Ein Fehler ist aufgetreten, bitte versuchen Sie es später erneut",
+      "send_failed_retry": "Problem beim Senden, bitte versuchen Sie es später erneut",
+      "request_failed": "Anfrage konnte nicht gesendet werden, bitte versuchen Sie es erneut",
+      "code_required": "Bitte geben Sie den an Ihre E-Mail gesendeten Code ein"
+    },
+    "buttons": {
+      "submit_signin": "LOS",
+      "submit_signup": "Registrieren",
+      "forget_password": "Passwort vergessen",
+      "cancel": "Abbrechen",
+      "send": "Senden"
+    },
+    "labels": {
+      "or": "________oder________",
+      "no_account": "Wenn Sie kein Konto haben",
+      "have_account": "Wenn Sie ein Konto haben",
+      "sign_up": "Registrieren",
+      "sign_in": "Anmelden",
+      "contact_info": "Kontaktinformationen"
+    },
+    "change_password": {
+      "title_send": "Wir senden Ihnen einen Bestätigungscode an diese E-Mail",
+      "title_sent": "Code wurde gesendet"
+    }
+  },
+  "features": {
+    "title": "WARUM LOGO WÄHLEN?",
+    "subtitle": "WIR VERPFLICHTEN UNS, QUALITÄTSPRODUKTE MIT AUSSERGEWÖHNLICHEM SERVICE ZU LIEFERN.",
+    "cards": {
+      "fast_delivery": {
+        "title": "SCHNELLE LIEFERUNG",
+        "description": "ERHALTEN SIE IHRE PRODUKTE IN 2-3 WERKTAGEN MIT KOSTENLOSEM VERSAND BEI BESTELLUNGEN ÜBER 50$."
+      },
+      "secure_shopping": {
+        "title": "SICHERES EINKAUFEN",
+        "description": "IHRE ZAHLUNGS- UND PERSÖNLICHEN INFORMATIONEN SIND MIT BRANCHENFÜHRENDEN SICHERHEITSMASSNAHMEN GESCHÜTZT."
+      },
+      "quality_guarantee": {
+        "title": "QUALITÄTSGARANTIE",
+        "description": "ALLE PRODUKTE KOMMEN MIT EINER 30-TAGE-GELD-ZURÜCK-GARANTIE UND LEBENSLANGEM KUNDENSUPPORT."
+      }
+    }
+  },
+  "pro": {
+    "title": "Unsere Produkte",
+    "subtitle": "Wir bringen Ihnen die überlegene Qualität, die Sie verdienen.",
+    "view_all": "Alle anzeigen"
+  },
+  "footer": {
+    "title": "KONTAKT",
+    "email_label": "E-Mail :",
+    "mobile_label": "Mobil :",
+    "social_label": "Soziale Medien :"
+  },
+  "navbar": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "products": "Produkte",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "ar": "Arabisch",
+    "en": "Englisch",
+    "de": "Deutsch",
+    "es": "Spanisch",
+    "fr": "Französisch"
+  },
+  "Hero": {
+    "title": {
+      "line1": "Denk grün...",
+      "line2": "Leb sauber"
+    },
+    "subtitle": "Saubere Energie, der Sie vertrauen können. Sparen Sie Geld und schützen Sie die Erde für eine gesündere Zukunft, gemeinsam.",
+    "buttons": {
+      "shop": "Jetzt kaufen",
+      "learn": "Mehr erfahren"
+    }
+  },
+  "order_form": {
+    "page": {
+      "title": "Bestellung abschließen",
+      "subtitle": "Geben Sie Ihre Informationen ein, um Ihre Bestellung abzuschließen, und wir werden Sie so schnell wie möglich kontaktieren"
+    },
+    "steps": {
+      "product": "Produkt",
+      "info": "Informationen",
+      "confirm": "Bestätigung"
+    },
+    "trust": {
+      "secure_pay": "Sichere Zahlung",
+      "secure_pay_sub": "Nachnahme",
+      "fast_delivery": "Schnelle Lieferung",
+      "fast_delivery_sub": "2-5 Tage",
+      "free_return": "Kostenlose Rückgabe",
+      "free_return_sub": "7 Tage"
+    },
+    "buyer_info": {
+      "title": "Käuferinformationen",
+      "subtitle": "Bitte füllen Sie alle Pflichtfelder aus, um die Bestellung abzuschließen"
+    },
+    "fields": {
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "wilaya": "Wilaya",
+      "commune": "Gemeinde",
+      "phone1": "Haupttelefon",
+      "phone2": "Nebentelefon"
+    },
+    "placeholders": {
+      "first_name": "Vorname eingeben",
+      "last_name": "Nachname eingeben",
+      "select_wilaya": "-- Wilaya auswählen --",
+      "select_commune": "-- Gemeinde auswählen --",
+      "select_wilaya_first": "-- Zuerst Wilaya auswählen --",
+      "phone1": "0555 123 456",
+      "phone2": "0666 789 012"
+    },
+    "hints": {
+      "phone2_optional": "Optional"
+    },
+    "errors": {
+      "first_name_required": "Vorname ist erforderlich",
+      "first_name_min_length": "Der Vorname muss mindestens 2 Zeichen lang sein",
+      "last_name_required": "Nachname ist erforderlich",
+      "last_name_min_length": "Der Nachname muss mindestens 2 Zeichen lang sein",
+      "wilaya_required": "Bitte wählen Sie eine Wilaya",
+      "commune_required": "Bitte wählen Sie eine Gemeinde",
+      "phone1_required": "Haupttelefonnummer ist erforderlich",
+      "phone_invalid": "Ungültige Telefonnummer (z.B. 0555123456)",
+      "phone2_same_as_phone1": "Nebentelefon muss sich vom Haupttelefon unterscheiden",
+      "product_unavailable": "Dieser Artikel ist derzeit nicht verfügbar, bitte versuchen Sie es später erneut"
+    },
+    "delivery": {
+      "section_title": "Kontaktinformationen",
+      "fast_title": "Schnelle Lieferung",
+      "fast_desc": "Ihr Produkt wird innerhalb von 1 bis 3 Tagen geliefert",
+      "fast_price": "Preis: 50$",
+      "normal_title": "Standardlieferung",
+      "normal_desc": "Ihr Produkt wird in 4 Tagen oder mehr geliefert",
+      "normal_price": "Preis: 20$"
+    },
+    "submit": {
+      "confirm": "Bestellung bestätigen",
+      "confirming": "Bestellung wird bestätigt...",
+      "security_note": "🔒 Ihre persönlichen Informationen sind vollständig geschützt und sicher"
+    },
+    "success": {
+      "title": "Bestellung erfolgreich bestätigt! 🎉",
+      "subtitle": "Wir werden Sie bald unter einer der angegebenen Nummern kontaktieren",
+      "full_name": "Vollständiger Name",
+      "wilaya": "Wilaya",
+      "commune": "Gemeinde",
+      "phone1": "Haupttelefon",
+      "phone2": "Nebentelefon",
+      "delivery": "Lieferung",
+      "delivery_normal": "Standard",
+      "delivery_fast": "Schnell",
+      "new_order": "Neue Bestellung"
+    },
+    "product_card": {
+      "title": "Informationen zum bestellten Produkt",
+      "category": "Produkte",
+      "color": "Farbe",
+      "size": "Größe",
+      "quantity": "Menge",
+      "total": "Gesamtpreis:",
+      "currency": "DZD"
+    }
+  },
+  "cart": {
+    "empty": {
+      "title": "Ihr Warenkorb ist leer",
+      "subtitle": "Beginnen Sie mit dem Einkaufen und entdecken Sie unsere tollen Produkte",
+      "back_btn": "Zurück zum Einkaufen"
+    },
+    "header": {
+      "title": "Warenkorb",
+      "items_count": "Sie haben {count} Produkte in Ihrem Warenkorb"
+    },
+    "continue_shopping": "← Weiter einkaufen",
+    "selected_products": "Ausgewählte Produkte",
+    "remove_btn": "🗑️ Entfernen",
+    "currency": "DZD",
+    "summary": {
+      "title": "Bestellübersicht",
+      "subtotal": "Zwischensumme",
+      "shipping": "Versand",
+      "shipping_free": "Kostenlos",
+      "discount": "Rabatt ({discount}%)",
+      "total": "Gesamt",
+      "checkout_btn": "Zur Kasse ←",
+      "secure_note": "🔒 100% sichere und verschlüsselte Zahlung"
+    }
+  },
+  "orders": {
+    "filters": {
+      "all": "Alle Bestellungen",
+      "delivered": "Geliefert",
+      "shipped": "Versandt",
+      "pending": "Ausstehend",
+      "cancelled": "Storniert"
+    },
+    "order_card": {
+      "order_id": "Bestellnummer",
+      "date_placed": "Bestelldatum",
+      "item_count": "Artikelanzahl",
+      "hide_products": "Produkte ausblenden",
+      "show_products": "Produkte anzeigen",
+      "color": "Farbe",
+      "size": "Größe",
+      "qty": "Menge",
+      "order_total": "Bestellsumme"
+    },
+    "stats": {
+      "total_orders": "Gesamtbestellungen",
+      "delivered": "Geliefert",
+      "in_progress": "In Bearbeitung",
+      "cancelled": "Storniert"
+    },
+    "header": {
+      "title": "Bestellverlauf",
+      "subtitle": "Verfolgen und verwalten Sie Ihre Bestellungen",
+      "search_placeholder": "Bestellungen oder Produkte suchen..."
+    },
+    "empty": {
+      "title": "Keine Bestellungen gefunden",
+      "subtitle": "Versuchen Sie, Ihre Such- oder Filterkriterien anzupassen",
+      "clear_filters": "Filter löschen"
+    },
+    "profile": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "no_phone": "Keine Telefonnummern",
+      "activate_msg": "Bitte aktivieren Sie Ihr Konto",
+      "activate_link": "Von hier"
+    },
+    "edit_form": {
+      "title": "Profil bearbeiten",
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "wilaya": "Wilaya",
+      "commune": "Gemeinde",
+      "email": "E-Mail",
+      "phone1": "Haupttelefon",
+      "phone2": "Nebentelefon",
+      "phone2_hint": "Optional",
+      "placeholders": {
+        "first_name": "Vorname eingeben",
+        "last_name": "Nachname eingeben",
+        "select_wilaya": "-- Wilaya auswählen --",
+        "select_commune": "-- Gemeinde auswählen --",
+        "select_wilaya_first": "-- Zuerst Wilaya auswählen --",
+        "email": "@gmail.com",
+        "phone1": "0555 123 456",
+        "phone2": "0666 789 012"
+      },
+      "contact_divider": "Kontaktinformationen",
+      "change_password_btn": "Passwort ändern",
+      "cancel_btn": "Abbrechen",
+      "save_btn": "Speichern",
+      "security_note": "🔒 Ihre persönlichen Informationen sind vollständig geschützt und sicher",
+      "errors": {
+        "no_change": "Sie müssen mindestens ein Feld ändern",
+        "first_name_min": "Der Vorname muss mindestens 2 Zeichen lang sein",
+        "last_name_min": "Der Nachname muss mindestens 2 Zeichen lang sein",
+        "commune_required": "Bitte wählen Sie eine Gemeinde",
+        "wilaya_required": "Bitte wählen Sie eine Wilaya",
+        "email_invalid": "Ungültiges E-Mail-Format",
+        "phone_invalid": "Ungültige Telefonnummer (z.B. 0555123456)",
+        "phone2_same": "Nebentelefon muss sich vom Haupttelefon unterscheiden",
+        "update_failed": "Beim Aktualisieren ist ein Fehler aufgetreten"
+      }
+    },
+    "password_form": {
+      "title_send": "Wir senden Ihnen einen Bestätigungscode an diese E-Mail",
+      "title_sent": "Code wurde gesendet",
+      "email_label": "E-Mail",
+      "code_label": "Code",
+      "password_label": "Passwort",
+      "confirm_password_label": "Passwort bestätigen",
+      "placeholders": {
+        "password": "Passwort eingeben",
+        "confirm_password": "Passwort erneut eingeben"
+      },
+      "cancel_btn": "Abbrechen",
+      "send_btn": "Senden",
+      "errors": {
+        "code_required": "Bitte geben Sie den an Ihre E-Mail gesendeten Code ein",
+        "password_required": "Passwort ist erforderlich",
+        "password_min": "Mindestens 6 Zeichen",
+        "confirm_required": "Bitte bestätigen Sie Ihr Passwort",
+        "confirm_mismatch": "Passwörter stimmen nicht überein",
+        "send_failed": "Beim Senden ist ein Fehler aufgetreten"
+      }
+    }
+  }
+}

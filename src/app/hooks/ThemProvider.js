@@ -9,35 +9,31 @@ export function ThemProvider({ children }) {
   const [snack, setsnack] = useState(false);
   const [cart, setCart] = useState([]);
   const [loged, setloged] = useState();
-  // تحميل cart من localStorage عند أول تحميل
   useEffect(() => {
     const stored = localStorage.getItem("cart");
     if (stored) setCart(JSON.parse(stored));
   }, []);
 
-  // حفظ cart كلما تغير
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
   return (
-    <>
-      <them.Provider
-        value={{
-          message,
-          setmessge,
-          severity,
-          setSeverity,
-          snack,
-          setsnack,
-          cart,
-          setCart,
-          loged,
-          setloged,
-        }}
-      >
-        {children}
-      </them.Provider>
-    </>
+    <them.Provider
+      value={{
+        message,
+        setmessge,
+        severity,
+        setSeverity,
+        snack,
+        setsnack,
+        cart,
+        setCart,
+        loged,
+        setloged,
+      }}
+    >
+      {children}
+    </them.Provider>
   );
 }
 

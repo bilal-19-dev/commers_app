@@ -17,7 +17,6 @@ export function useDeviceDimensions() {
   });
 
   useEffect(() => {
-    // التأكد من أننا في المتصفح
     if (typeof window === "undefined") return;
 
     function updateDimensions() {
@@ -38,17 +37,13 @@ export function useDeviceDimensions() {
         isExtraLargeScreen: width >= 1920,
       });
 
-      // تحديث CSS Custom Properties
     }
 
-    // تحديث المقاسات عند التحميل
     updateDimensions();
 
-    // مراقبة تغيير المقاسات
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange", updateDimensions);
 
-    // مراقبة تغيير DPI (مهم للأجهزة عالية الدقة)
     if (window.matchMedia) {
       const mediaQuery = window.matchMedia("(resolution: 1dppx)");
       mediaQuery.addEventListener("change", updateDimensions);
@@ -74,7 +69,6 @@ export function useViewportSize() {
   });
 
   useEffect(() => {
-    // التأكد من أننا في المتصفح
     if (typeof window === "undefined") return;
 
     function updateViewportSize() {

@@ -9,12 +9,11 @@ export async function apiFetch(url, options = {}) {
   });
 
   if (res.status === 401) {
-    const refreshRes = await fetch(`http://${URL}:8000/api/token/refresh`, {
+    const refreshRes = await fetch(`http://${URL}:8000/api/token/refresh/`, {
       method: "POST",
       credentials: "include",
     });
     if (!refreshRes.ok) {
-      router.push("/");
       throw new Error("Session expired");
     }
 
@@ -30,9 +29,8 @@ export async function apiFetch(url, options = {}) {
 export async function Account() {
   try {
     const res = await apiFetch(`http://${URL}:8000/api/account/me/`);
-    console.log(res.status);
     if (!res.ok) {
-      const errorData = await log.json();
+      const errorData = await res.json().catch(() => ({}));
       throw new Error(JSON.stringify(errorData));
     }
     const response = await res.json();
@@ -43,6 +41,6 @@ export async function Account() {
     }
     return response;
   } catch (error) {
-    console.error("Error fetching profile:", error);
+    return null;
   }
 }

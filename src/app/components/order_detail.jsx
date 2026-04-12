@@ -1,7 +1,7 @@
 "use client";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Account } from "../data/FETCH.js";
+
 export default function Order_detail_component({ id }) {
   const [info, setinfo] = useState({});
   const [loding, setloding] = useState(true);
@@ -11,13 +11,14 @@ export default function Order_detail_component({ id }) {
         const orders = await Account();
         setinfo(orders.orders.find((order) => order.id == id));
       } catch (error) {
-        console.error("Error fetching orders:", error);
       } finally {
         setloding(false);
       }
     };
     fetchOrders();
-  }, []);
+  }, [id]);
+
+  const items = Array.isArray(info?.items) ? info.items : [];
   return (
     <main>
       <div className="Order_detail_contener">
@@ -41,7 +42,7 @@ export default function Order_detail_component({ id }) {
           <>
             <table className="body">
               <tbody style={{ backgroundColor: "white" }}>
-                {info.items.map((item, i) => (
+                {items.map((item, i) => (
                   <tr key={i}>
                     <td className="img">
                       <img

@@ -1,10 +1,8 @@
 'use client';
 
-// دالة لحساب المقاسات المثالية بناءً على نوع الجهاز
 export function calculateOptimalDimensions(deviceInfo) {
   const { width, height, devicePixelRatio, isMobile, isTablet, isDesktop } = deviceInfo;
   
-  // المقاسات الأساسية
   const baseDimensions = {
     mobile: {
       sidebarWidth: Math.min(width * 0.9, 300),
@@ -32,14 +30,12 @@ export function calculateOptimalDimensions(deviceInfo) {
     }
   };
 
-  // تحديد نوع الجهاز
   let deviceType = 'desktop';
   if (isMobile) deviceType = 'mobile';
   else if (isTablet) deviceType = 'tablet';
 
-  // تطبيق المقاسات مع مراعاة DPI
   const dimensions = baseDimensions[deviceType];
-  const dpiMultiplier = Math.min(devicePixelRatio, 2); // حد أقصى 2x
+  const dpiMultiplier = Math.min(devicePixelRatio, 2);
 
   return {
     ...dimensions,
@@ -52,13 +48,11 @@ export function calculateOptimalDimensions(deviceInfo) {
   };
 }
 
-// دالة لحساب عدد الأعمدة المثالي للشبكة
 export function calculateOptimalGridColumns(containerWidth, cardMinWidth, cardMaxWidth) {
   const optimalColumns = Math.floor(containerWidth / ((cardMinWidth + cardMaxWidth) / 2));
-  return Math.max(1, Math.min(optimalColumns, 6)); // حد أدنى 1، حد أقصى 6
+  return Math.max(1, Math.min(optimalColumns, 6));
 }
 
-// دالة لحساب المسافات المثالية
 export function calculateOptimalSpacing(containerWidth, containerHeight) {
   const baseSpacing = Math.min(containerWidth, containerHeight) * 0.02;
   return {
@@ -70,7 +64,6 @@ export function calculateOptimalSpacing(containerWidth, containerHeight) {
   };
 }
 
-// دالة لحساب أحجام الخطوط المثالية
 export function calculateOptimalFontSizes(containerWidth, containerHeight) {
   const baseSize = Math.min(containerWidth, containerHeight) * 0.02;
   return {
@@ -83,15 +76,10 @@ export function calculateOptimalFontSizes(containerWidth, containerHeight) {
   };
 }
 
-
-
-// دالة لتحسين الأداء بناءً على قدرات الجهاز
 export function getPerformanceSettings(deviceInfo) {
   const { devicePixelRatio, width, height } = deviceInfo;
   
-  // تحديد إعدادات الأداء بناءً على قدرات الجهاز
   if (devicePixelRatio >= 2 && width >= 1920) {
-    // أجهزة عالية الدقة والشاشات الكبيرة
     return {
       enableAnimations: true,
       enableShadows: true,
@@ -101,7 +89,6 @@ export function getPerformanceSettings(deviceInfo) {
       shadowIntensity: 'high'
     };
   } else if (devicePixelRatio >= 1.5 || width >= 1024) {
-    // أجهزة متوسطة الدقة
     return {
       enableAnimations: true,
       enableShadows: true,
@@ -111,7 +98,6 @@ export function getPerformanceSettings(deviceInfo) {
       shadowIntensity: 'medium'
     };
   } else {
-    // أجهزة منخفضة الدقة
     return {
       enableAnimations: false,
       enableShadows: false,

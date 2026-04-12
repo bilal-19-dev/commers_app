@@ -1,9 +1,13 @@
 "use client";
-import React, { useEffect, useState, useContext, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import Collapse from "@mui/material/Collapse";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  startTransition,
+} from "react";
+import { useRouter, Link, usePathname } from "@/app/navigation";
+import { useParams } from "next/navigation";
 import {
   useDeviceDimensions,
   useViewportSize,
@@ -11,2093 +15,1258 @@ import {
 import {
   calculateOptimalDimensions,
   calculateOptimalGridColumns,
-  calculateOptimalSpacing,
-  calculateOptimalFontSizes,
   getPerformanceSettings,
 } from "../utils/deviceUtils";
-import Link from "next/link";
-import { WILAYAS_DATA } from "../data/Wilaya.js";
 import { URL } from "../data/URL.js";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useTheme } from "@emotion/react";
-import { Account } from "../data/FETCH.js";
+import { Account, apiFetch } from "../data/FETCH.js";
 import { Use_them } from "../hooks/ThemProvider";
+import { Field } from "./order_form.jsx";
+import { wilayas } from "../data/Wilaya.js";
+import {
+  TranslateIcon,
+  LocationIcon,
+  PhoneIcon,
+  PersonIcon,
+  HomeIcon,
+  ShoppingCartIcon,
+  MenuIcon,
+  PasswordIcon,
+  PasswordCheckIcon,
+  EmailIcon,
+  PasswordStarsIcon,
+  ArrowRightIcon,
+  ZapIcon,
+  ShieldIcon,
+  TruckIcon,
+} from "../data/Icons.jsx";
+import { useTranslations } from "next-intl";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { locales } from "../config";
 
+// ─── ثوابت خارج المكوّنات ────────────────────────────────────────
+const ANON_CREDENTIALS = { username: "@Anonimo", password: "@A.123456" };
+
+// ─── Spinner مشترك ───────────────────────────────────────────────
+function Spinner({ color = "white" }) {
+  return (
+    <svg className="spin" viewBox="0 0 24 24" fill="none">
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke={color}
+        strokeWidth="4"
+        style={{ opacity: 0.25 }}
+      />
+      <path
+        fill={color}
+        style={{ opacity: 0.75 }}
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
+    </svg>
+  );
+}
+
+// ─── SnackbarAlert ───────────────────────────────────────────────
 const SnackbarAlert = React.forwardRef(function SnackbarAlert(props, ref) {
   return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+// ─── حساب عدد عناصر السلة ────────────────────────────────────────
+function getCartCount(cart) {
+  if (!Array.isArray(cart)) return 0;
+  return cart.reduce((sum, item) => sum + (Number(item?.quantity) || 1), 0);
+}
+
+// ─── الصفحة الرئيسية ─────────────────────────────────────────────
 export default function Home_component({ data }) {
-  const prodect = data;
-  if (typeof window !== "undefined") {
-    console.log(window.innerWidth, ".......");
-  }
-  const deviceDimensions = useDeviceDimensions();
-  const viewportSize = useViewportSize();
-
-  // استخدام المقاسات الحقيقية للجهاز
-  const isMobile = deviceDimensions.isMobile;
-  const isTablet = deviceDimensions.isTablet;
-  const isDesktop = deviceDimensions.isDesktop;
-  const isLandscape = deviceDimensions.isLandscape;
-  const isPortrait = deviceDimensions.isPortrait;
-
-  // حساب المقاسات المثالية باستخدام الدوال المساعدة
-  const optimalDimensions = calculateOptimalDimensions(deviceDimensions);
-  const optimalSpacing = calculateOptimalSpacing(
-    viewportSize.width,
-    viewportSize.height
-  );
-  const optimalFontSizes = calculateOptimalFontSizes(
-    viewportSize.width,
-    viewportSize.height
-  );
-  const performanceSettings = getPerformanceSettings(deviceDimensions);
-
-  // حساب عدد الأعمدة المثالي للشبكة
-  const gridColumns = calculateOptimalGridColumns(
-    viewportSize.width - optimalDimensions.sidebarWidth,
-    optimalDimensions.cardMinWidth,
-    optimalDimensions.cardMaxWidth
-  );
   return (
-    <>
-      <main>
-        <div className="prodect-container">
-          <section className="sidebar">
-            <Sidebar
-              isMobile={isMobile}
-              setIsMobile={() => {}}
-              deviceDimensions={deviceDimensions}
-            />
-          </section>
-          <section className="middle">
-            <div className="container">
-              {prodect.map((item) => {
-                console.log(item, "-*-****");
-                return (
-                  <ProductCard
-                    key={item.id}
-                    deviceDimensions={deviceDimensions}
-                    value={item}
-                  />
-                );
-              })}
-              {/* <ProductCard deviceDimensions={deviceDimensions} />
-                <ProductCard deviceDimensions={deviceDimensions} />
-                <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCardSpecial deviceDimensions={deviceDimensions} />
-              <ProductCardDiscount deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} />
-              <ProductCard deviceDimensions={deviceDimensions} /> */}
-            </div>
-          </section>
-        </div>
-      </main>
-    </>
+    <main>
+      <div className="prodect-container">
+        <Hero />
+        <Features />
+        <Pro prodect={data} />
+      </div>
+    </main>
   );
 }
 
-function Header_content({ setvalue, deviceDimensions, viewportSize }) {
-  const [open, setOpen] = useState(null);
-  const [car, setcar] = useState(0);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const { cart, loged } = Use_them();
-  useEffect(() => {
-    Account();
-  }, []);
-  useEffect(() => {
-    setcar(cart.reduce((sum, item) => sum + item.quantity * 0 + 1, 0));
-  });
-  const handleClicklang = (event) => {
-    setOpen(event.currentTarget);
-  };
-  const handleClickMenu = (event) => {
+// ─── Navbar ──────────────────────────────────────────────────────
+function Navbar({ setvalue }) {
+  const t = useTranslations("navbar");
+  const toastT = useTranslations("toast");
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams();
+  const { setmessge, setSeverity, setsnack, cart } = Use_them();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(true);
+  const [cartCount, setCartCount] = useState(0);
+  const [loged, setLoged] = useState({ isLoggedIn: false, isUser: false });
+  const [account, setAccount] = useState(null);
+  const navRef = useRef(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick_tra = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
-    setOpen(null);
   };
-  const handle_Logout = async () => {
-    const data = { username: "@Anonimo", password: "@A.123456" };
-    localStorage.setItem("logeed", "false");
-    await fetch(`http://${URL}:8000/api/token/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      credentials: "include",
+
+  const handleClick = useCallback(
+    (msg, sev) => {
+      setmessge(msg);
+      setSeverity(sev);
+      setsnack(true);
+    },
+    [setmessge, setSeverity, setsnack],
+  );
+  const handleChangeLocale = (locale) => {
+    startTransition(() => {
+      router.replace({ pathname, params }, { locale });
     });
-    window.location.reload();
+
+    handleClose();
   };
-  // استخدام المقاسات الديناميكية
-  const searchWidth = deviceDimensions.isMobile
-    ? Math.min(275, (viewportSize.width || 1200) * 0.7)
-    : Math.min(550, (viewportSize.width || 1200) * 0.4);
+  // ─── تسجيل الخروج ─────────────────────────────────────────────
+  const logout = async () => {
+    try {
+      const res = await apiFetch(`http://${URL}:8000/api/logout/`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error();
+
+      // إعادة تعيين الحساب الافتراضي
+      await fetch(`http://${URL}:8000/api/token/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ANON_CREDENTIALS),
+        credentials: "include",
+      });
+
+      handleClick(toastT("logout_success"), "success");
+      setTimeout(() => location.reload(), 500);
+    } catch {
+      handleClick(toastT("logout_failed"), "error");
+    }
+  };
+
+  // ─── تحريك القائمة المحمول ────────────────────────────────────
+  useEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    if (!mobileMenuOpen) {
+      el.style.display = "flex";
+      el.style.height = el.scrollHeight + 65 + "px";
+      el.style.padding = "20px";
+      el.style.marginTop = "20px";
+      el.style.gap = "15px";
+    } else {
+      el.style.height = "0px";
+      el.style.padding = "0px";
+      el.style.marginTop = "0px";
+      el.style.gap = "0px";
+      setTimeout(() => {
+        el.style.display = "none";
+      }, 300);
+    }
+  }, [mobileMenuOpen]);
+
+  // ─── تحديث عداد السلة ─────────────────────────────────────────
+  useEffect(() => {
+    setCartCount(getCartCount(cart));
+  }, [cart]);
+
+  // ─── جلب بيانات الحساب ────────────────────────────────────────
+  useEffect(() => {
+    const fetchAccount = async () => {
+      try {
+        const res = await Account();
+        setLoged({
+          isLoggedIn: res.user.username !== "@Anonimo",
+          isUser: res.user.isuser,
+        });
+        setAccount(res);
+      } catch (_) {}
+    };
+    fetchAccount();
+  }, []);
+
   return (
-    <header>
-      <nav>
-        <div className="nav-container">
-          <div className="logo">
-            <h1 style={{ fontSize: "1.2rem" }}>Logo</h1>
+    <div className="head">
+      <div className="header-content">
+        {/* الشعار */}
+        <div className="logo-section">
+          <div className="logo-box" />
+          <span className="logo-text">LOGO</span>
+        </div>
+
+        {/* روابط التنقل */}
+        <nav className="nav">
+          <Link href="/">
+            <span className="nav-link">{t("home")}</span>
+          </Link>
+          <Link href="/shop">
+            <span className="nav-link">{t("products")}</span>
+          </Link>
+          <a href="#" className="nav-link">
+            {t("about")}
+          </a>
+          <a href="#" className="nav-link">
+            {t("contact")}
+          </a>
+        </nav>
+
+        {/* الإجراءات */}
+        <div className="header-actions">
+          <Link href="/car">
+            <div className="cart-icon">
+              <ShoppingCartIcon />
+              <span className={`cart-badge ${cartCount > 0 ? "active" : ""}`}>
+                {cartCount}
+              </span>
+            </div>
+          </Link>
+          <div>
+            <IconButton
+              aria-label="more"
+              onClick={handleClick_tra}
+              style={{ padding: "0px" }}
+            >
+              <TranslateIcon />
+            </IconButton>
+            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+              {locales.map((loc) => (
+                <MenuItem key={loc} onClick={() => handleChangeLocale(loc)}>
+                  {t(`${loc}`)}
+                </MenuItem>
+              ))}
+            </Menu>
           </div>
-          <div className="content">
-            <div className="search-bar">
-              <input
-                className="search-input"
-                type="search"
-                placeholder="Search..."
+
+          {loged.isUser && loged.isLoggedIn ? (
+            <>
+              <img
+                onClick={() => router.push("/orders")}
+                src={account?.user?.image || "/default.jpg"}
+                alt="profile"
+                style={{ cursor: "pointer" }}
               />
-              <button
-                style={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                }}
+              <a
+                onClick={logout}
+                className="log-out-btn"
+                style={{ cursor: "pointer" }}
               >
-                <span
-                  className="material-symbols-outlined"
-                  style={{ color: "#3b82f6", fontSize: "1.2rem" }}
+                <svg
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
                 >
-                  search
-                </span>
-              </button>
-            </div>
-          </div>
-          {viewportSize.width <= 760 ? (
-            <div className="nav-links">
-              <>
-                <Link href="/car">
-                  <button
-                    style={{
-                      backgroundColor: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      marginLeft: "10px",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      className="material-symbols-outlined"
-                      style={{ color: "#3b82f6", fontSize: "2rem" }}
-                    >
-                      shopping_cart_checkout
-                    </span>
-                    <span style={{ marginLeft: "5px" }}>{car}</span>
-                  </button>
-                </Link>
-                <button
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                    marginLeft: "10px",
-                  }}
-                >
-                  <span
-                    className="material-symbols-outlined"
-                    onClick={handleClicklang}
-                    style={{ color: "#3b82f6", fontSize: "2rem" }}
-                  >
-                    translate
-                  </span>
-                </button>
-                <button
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                    marginLeft: "10px",
-                  }}
-                  onClick={handleClickMenu}
-                >
-                  <span
-                    className="material-symbols-outlined"
-                    style={{
-                      color: "#3b82f6",
-                      fontSize: viewportSize.width <= 320 ? "1.2rem" : "1.5rem",
-                    }}
-                  >
-                    menu
-                  </span>
-                </button>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <Link href="/" passHref legacyBehavior>
-                    <MenuItem onClick={handleClose} component="a">
-                      Home
-                    </MenuItem>
-                  </Link>
-                  <Link href="/orders" passHref legacyBehavior>
-                    <MenuItem onClick={handleClose} component="a">
-                      Orders
-                    </MenuItem>
-                  </Link>
-                  <Link href="/profile">
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  </Link>
-                  {loged ? (
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        setvalue("flex");
-                      }}
-                    >
-                      Logout
-                      <span className="material-symbols-outlined">logout</span>
-                    </MenuItem>
-                  ) : (
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        handle_Logout();
-                      }}
-                    >
-                      Login
-                      <span className="material-symbols-outlined">logout</span>
-                    </MenuItem>
-                  )}
-                  {/* <MenuItem onClick={() => { handleClose(); setvalue('flex'); }}>Login</MenuItem>
-                  <MenuItem onClick={() => { handleClose(); setvalue('flex'); }}>Log out</MenuItem> */}
-                </Menu>
-                <Menu
-                  anchorEl={open}
-                  open={Boolean(open)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose}>ar</MenuItem>
-                  <MenuItem onClick={handleClose}>en</MenuItem>
-                  <MenuItem onClick={handleClose}>fr</MenuItem>
-                </Menu>
-              </>
-            </div>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <path d="M16 17l5-5-5-5" />
+                  <path d="M21 12H9" />
+                </svg>
+                {t("logout")}
+              </a>
+            </>
           ) : (
-            <div className="nav-links">
-              <ul>
-                <Link href="/">
-                  <li>Home</li>
-                </Link>
-                <Link href="/orders">
-                  <li>Orders</li>
-                </Link>
-              </ul>
-              <Link href="/car">
-                <button
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                    marginLeft: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ color: "#3b82f6", fontSize: "2rem" }}
-                  >
-                    shopping_cart_checkout
-                  </span>
-                  <span style={{ marginLeft: "5px" }}>{car}</span>
-                </button>
-              </Link>
-              <button
-                style={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                }}
+            <a
+              onClick={() => setvalue("flex")}
+              className="sign-in-btn"
+              style={{ cursor: "pointer" }}
+            >
+              {t("login")}
+            </a>
+          )}
+
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setMobileMenuOpen((p) => !p)}
+          >
+            <MenuIcon />
+          </button>
+        </div>
+      </div>
+
+      {/* القائمة المحمول */}
+      <nav className="mobile-nave" ref={navRef} style={{ display: "none" }}>
+        <Link href="/">
+          <span className="nav-link">{t("home")}</span>
+        </Link>
+        <Link href="/shop">
+          <span className="nav-link">{t("products")}</span>
+        </Link>
+        <a href="#" className="nav-link">
+          {t("about")}
+        </a>
+        {loged.isUser && loged.isLoggedIn && (
+          <>
+            <a
+              onClick={logout}
+              className="log-out-btn-mobile"
+              style={{ cursor: "pointer" }}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
               >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="M16 17l5-5-5-5" />
+                <path d="M21 12H9" />
+              </svg>
+              {t("logout")}
+            </a>
+          </>
+        )}
+      </nav>
+    </div>
+  );
+}
+
+// ─── بطاقة المنتج ────────────────────────────────────────────────
+const Product_Card = ({
+  id,
+  title,
+  subtitle,
+  price,
+  image,
+  colors,
+  sizes,
+  inStock = true,
+}) => (
+  <Link href={`/prodect_detail/${id}`}>
+    <div className="product-card">
+      <div className="card-image-wrapper">
+        <img src={image} alt={title} className="card-image" />
+        {inStock && <span className="badge">in stock</span>}
+      </div>
+      <div className="card-content">
+        <h3 className="product-title">{title}</h3>
+        {subtitle && <p className="product-subtitle">{subtitle}</p>}
+        <p className="product-price">{price} DZ</p>
+
+        <div className="options-container">
+          <div className="color-options">
+            {colors.map((color, i) =>
+              color.color ? (
                 <span
-                  className="material-symbols-outlined"
-                  onClick={handleClicklang}
-                  style={{ color: "#3b82f6", fontSize: "2rem" }}
-                >
-                  translate
+                  key={i}
+                  className="color-dot"
+                  style={{ backgroundColor: color.color }}
+                  title={color.color}
+                />
+              ) : null,
+            )}
+          </div>
+          {Array.isArray(sizes) && (
+            <div className="size-options">
+              {sizes.map((size, i) => (
+                <span key={i} className="size-option">
+                  {size}
                 </span>
-              </button>
-              <button
-                style={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                }}
-                onClick={handleClickMenu}
-              >
-                <span
-                  className="material-symbols-outlined"
-                  style={{
-                    color: "#3b82f6",
-                    fontSize: viewportSize.width <= 320 ? "1.2rem" : "1.5rem",
-                  }}
-                >
-                  menu
-                </span>
-              </button>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <Link href="/profile">
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                </Link>
-                {JSON.parse(localStorage.getItem("logeed")) ? (
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      handle_Logout();
-                    }}
-                  >
-                    Logout
-                    <span className="material-symbols-outlined">logout</span>
-                  </MenuItem>
-                ) : (
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      setvalue("flex");
-                    }}
-                  >
-                    Login
-                    <span className="material-symbols-outlined">login</span>
-                  </MenuItem>
-                )}{" "}
-              </Menu>
-              <Menu anchorEl={open} open={open} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>ar</MenuItem>
-                <MenuItem onClick={handleClose}>en</MenuItem>
-                <MenuItem onClick={handleClose}>fr</MenuItem>
-              </Menu>
+              ))}
             </div>
           )}
         </div>
-      </nav>
-    </header>
-  );
-}
 
-function Sidebar({ isMobile, setIsMobile, deviceDimensions }) {
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1070);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [setIsMobile]);
-
-  const [Collapsed, setCollapsed] = useState(true);
-  const handleToggle = () => {
-    setCollapsed(!Collapsed);
-  };
-
-  // استخدام المقاسات الديناميكية للخطوط
-  const titleFontSize =
-    deviceDimensions.isLargeScreen && deviceDimensions.width > 0
-      ? "1.7rem"
-      : "1.5rem";
-  const filterFontSize =
-    deviceDimensions.isLargeScreen && deviceDimensions.width > 0
-      ? "1.1rem"
-      : "1rem";
-  const buttonFontSize =
-    deviceDimensions.isLargeScreen && deviceDimensions.width > 0
-      ? "1.2rem"
-      : "1.1rem";
-
-  if (!isMobile && !deviceDimensions.isTablet) {
-    return (
-      <div className="sidebar-content">
-        <h2
-          style={{
-            fontSize: titleFontSize,
-            fontWeight: 800,
-            marginBottom: "24px",
-            letterSpacing: "0.5px",
-            color: "#3b3b3b",
-            textAlign: "center",
-          }}
-        >
-          <span role="img" aria-label="filter" style={{ marginRight: 8 }}>
-            🧲
-          </span>
-          الفلاتر
-        </h2>
-        {/* Price Range */}
-        <div className="filter" style={{ marginBottom: "22px" }}>
-          <div
-            style={{
-              fontWeight: 700,
-              marginBottom: "10px",
-              color: "#2d6a4f",
-              fontSize: filterFontSize,
-            }}
-          >
-            نطاق السعر
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="radio"
-                name="priceRange"
-                value="10-100"
-                style={{ accentColor: "#2d6a4f" }}
-              />
-              10 - 100 ريال
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="radio"
-                name="priceRange"
-                value="100-500"
-                style={{ accentColor: "#2d6a4f" }}
-              />
-              100 - 500 ريال
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="radio"
-                name="priceRange"
-                value="500-1000"
-                style={{ accentColor: "#2d6a4f" }}
-              />
-              500 - 1000 ريال
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="radio"
-                name="priceRange"
-                value="1000+"
-                style={{ accentColor: "#2d6a4f" }}
-              />
-              أكثر من 1000 ريال
-            </label>
-          </div>
-        </div>
-        {/* Category */}
-        <div className="filter" style={{ marginBottom: "22px" }}>
-          <div
-            style={{
-              fontWeight: 700,
-              marginBottom: "10px",
-              color: "#2d6a4f",
-              fontSize: filterFontSize,
-            }}
-          >
-            الفئة
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="category"
-                value="category1"
-                style={{ accentColor: "#3b82f6" }}
-              />
-              إلكترونيات
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="category"
-                value="category2"
-                style={{ accentColor: "#3b82f6" }}
-              />
-              ملابس
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="category"
-                value="category3"
-                style={{ accentColor: "#3b82f6" }}
-              />
-              أجهزة منزلية
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="category"
-                value="category4"
-                style={{ accentColor: "#3b82f6" }}
-              />
-              أخرى
-            </label>
-          </div>
-        </div>
-        {/* Brand */}
-        <div className="filter" style={{ marginBottom: "22px" }}>
-          <div
-            style={{
-              fontWeight: 700,
-              marginBottom: "10px",
-              color: "#2d6a4f",
-              fontSize: filterFontSize,
-            }}
-          >
-            الماركة
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="brand"
-                value="brand1"
-                style={{ accentColor: "#f59e42" }}
-              />
-              سامسونج
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="brand"
-                value="brand2"
-                style={{ accentColor: "#f59e42" }}
-              />
-              أبل
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="brand"
-                value="brand3"
-                style={{ accentColor: "#f59e42" }}
-              />
-              هواوي
-            </label>
-          </div>
-        </div>
-        {/* Availability */}
-        <div className="filter" style={{ marginBottom: "22px" }}>
-          <div
-            style={{
-              fontWeight: 700,
-              marginBottom: "10px",
-              color: "#2d6a4f",
-              fontSize: filterFontSize,
-            }}
-          >
-            التوفر
-          </div>
-          <select
-            style={{
-              width: "100%",
-              padding: "8px 12px",
-              borderRadius: "8px",
-              border: "1px solid #d1d5db",
-              fontSize: filterFontSize,
-              background: "#fff",
-              color: "#22223b",
-            }}
-          >
-            <option value="all">الكل</option>
-            <option value="in-stock">متوفر</option>
-            <option value="out-of-stock">غير متوفر</option>
-          </select>
-        </div>
-        {/* Rating */}
-        <div className="filter" style={{ marginBottom: "22px" }}>
-          <div
-            style={{
-              fontWeight: 700,
-              marginBottom: "10px",
-              color: "#2d6a4f",
-              fontSize: filterFontSize,
-            }}
-          >
-            التقييم
-          </div>
-          <select
-            style={{
-              width: "100%",
-              padding: "8px 12px",
-              borderRadius: "8px",
-              border: "1px solid #d1d5db",
-              fontSize: filterFontSize,
-              background: "#fff",
-              color: "#22223b",
-            }}
-          >
-            <option value="1">⭐ فأعلى</option>
-            <option value="2">⭐⭐ فأعلى</option>
-            <option value="3">⭐⭐⭐ فأعلى</option>
-            <option value="4">⭐⭐⭐⭐ فأعلى</option>
-            <option value="5">⭐⭐⭐⭐⭐</option>
-          </select>
-        </div>
-        {/* Attributes */}
-        <div className="filter" style={{ marginBottom: "10px" }}>
-          <div
-            style={{
-              fontWeight: 700,
-              marginBottom: "10px",
-              color: "#2d6a4f",
-              fontSize: filterFontSize,
-            }}
-          >
-            الخصائص
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="attribute"
-                value="attribute1"
-                style={{ accentColor: "#a21caf" }}
-              />
-              جديد
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="attribute"
-                value="attribute2"
-                style={{ accentColor: "#a21caf" }}
-              />
-              الأكثر مبيعاً
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="attribute"
-                value="attribute3"
-                style={{ accentColor: "#a21caf" }}
-              />
-              شحن مجاني
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: filterFontSize,
-              }}
-            >
-              <input
-                type="checkbox"
-                name="attribute"
-                value="attribute4"
-                style={{ accentColor: "#a21caf" }}
-              />
-              عروض خاصة
-            </label>
-          </div>
-        </div>
-        <button
-          style={{
-            marginTop: "24px",
-            width: "100%",
-            background: "linear-gradient(90deg, #2d6a4f 0%, #3b82f6 100%)",
-            color: "#fff",
-            fontWeight: 800,
-            fontSize: buttonFontSize,
-            border: "none",
-            borderRadius: "10px",
-            padding: "12px 0",
-            cursor: "pointer",
-            boxShadow: "0 2px 8px 0 rgba(60,72,88,0.10)",
-            letterSpacing: "1px",
-            transition: "background 0.2s",
-          }}
-        >
-          <span role="img" aria-label="search" style={{ marginLeft: 8 }}>
-            🔎
-          </span>
-          تطبيق الفلاتر
+        <button className="add-to-cart-btn" aria-label="Add to cart">
+          <span className="material-symbols-outlined">add_shopping_cart</span>
         </button>
       </div>
-    );
-  } else {
-    return (
-      <Collapse in={Collapsed} collapsedSize={50} className="sidebar-content">
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            marginBottom: "24px",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: titleFontSize,
-              fontWeight: 800,
-              marginBottom: "24px",
-              letterSpacing: "0.5px",
-              color: "#3b3b3b",
-              textAlign: "center",
-            }}
-          >
-            <span role="img" aria-label="filter" style={{ marginRight: 8 }}>
-              🧲
-            </span>
-            الفلاتر
-          </h2>
-          <button
-            className="filter-button"
-            onClick={handleToggle}
-            style={{
-              rotate: open ? "180deg" : "0deg",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            <span className="material-symbols-outlined">arrow_drop_down</span>
-          </button>
-        </div>
-        <div
-          style={{
-            width: "100%",
-            height: "calc(100vh - 150px)",
-            overflowY: "auto",
-            padding: "0 10px",
-          }}
-        >
-          {/* Price Range */}
-          <div className="filter" style={{ marginBottom: "22px" }}>
-            <div
-              style={{
-                fontWeight: 700,
-                marginBottom: "10px",
-                color: "#2d6a4f",
-                fontSize: filterFontSize,
-              }}
-            >
-              نطاق السعر
-            </div>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="radio"
-                  name="priceRange"
-                  value="10-100"
-                  style={{ accentColor: "#2d6a4f" }}
-                />
-                10 - 100 ريال
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="radio"
-                  name="priceRange"
-                  value="100-500"
-                  style={{ accentColor: "#2d6a4f" }}
-                />
-                100 - 500 ريال
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="radio"
-                  name="priceRange"
-                  value="500-1000"
-                  style={{ accentColor: "#2d6a4f" }}
-                />
-                500 - 1000 ريال
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="radio"
-                  name="priceRange"
-                  value="1000+"
-                  style={{ accentColor: "#2d6a4f" }}
-                />
-                أكثر من 1000 ريال
-              </label>
-            </div>
-          </div>
-          {/* Category */}
-          <div className="filter" style={{ marginBottom: "22px" }}>
-            <div
-              style={{
-                fontWeight: 700,
-                marginBottom: "10px",
-                color: "#2d6a4f",
-                fontSize: filterFontSize,
-              }}
-            >
-              الفئة
-            </div>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="category"
-                  value="category1"
-                  style={{ accentColor: "#3b82f6" }}
-                />
-                إلكترونيات
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="category"
-                  value="category2"
-                  style={{ accentColor: "#3b82f6" }}
-                />
-                ملابس
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="category"
-                  value="category3"
-                  style={{ accentColor: "#3b82f6" }}
-                />
-                أجهزة منزلية
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="category"
-                  value="category4"
-                  style={{ accentColor: "#3b82f6" }}
-                />
-                أخرى
-              </label>
-            </div>
-          </div>
-          {/* Brand */}
-          <div className="filter" style={{ marginBottom: "22px" }}>
-            <div
-              style={{
-                fontWeight: 700,
-                marginBottom: "10px",
-                color: "#2d6a4f",
-                fontSize: filterFontSize,
-              }}
-            >
-              الماركة
-            </div>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="brand"
-                  value="brand1"
-                  style={{ accentColor: "#f59e42" }}
-                />
-                سامسونج
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="brand"
-                  value="brand2"
-                  style={{ accentColor: "#f59e42" }}
-                />
-                أبل
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="brand"
-                  value="brand3"
-                  style={{ accentColor: "#f59e42" }}
-                />
-                هواوي
-              </label>
-            </div>
-          </div>
-          {/* Availability */}
-          <div className="filter" style={{ marginBottom: "22px" }}>
-            <div
-              style={{
-                fontWeight: 700,
-                marginBottom: "10px",
-                color: "#2d6a4f",
-                fontSize: filterFontSize,
-              }}
-            >
-              التوفر
-            </div>
-            <select
-              style={{
-                width: "100%",
-                padding: "8px 12px",
-                borderRadius: "8px",
-                border: "1px solid #d1d5db",
-                fontSize: filterFontSize,
-                background: "#fff",
-                color: "#22223b",
-              }}
-            >
-              <option value="all">الكل</option>
-              <option value="in-stock">متوفر</option>
-              <option value="out-of-stock">غير متوفر</option>
-            </select>
-          </div>
-          {/* Rating */}
-          <div className="filter" style={{ marginBottom: "22px" }}>
-            <div
-              style={{
-                fontWeight: 700,
-                marginBottom: "10px",
-                color: "#2d6a4f",
-                fontSize: filterFontSize,
-              }}
-            >
-              التقييم
-            </div>
-            <select
-              style={{
-                width: "100%",
-                padding: "8px 12px",
-                borderRadius: "8px",
-                border: "1px solid #d1d5db",
-                fontSize: filterFontSize,
-                background: "#fff",
-                color: "#22223b",
-              }}
-            >
-              <option value="1">⭐ فأعلى</option>
-              <option value="2">⭐⭐ فأعلى</option>
-              <option value="3">⭐⭐⭐ فأعلى</option>
-              <option value="4">⭐⭐⭐⭐ فأعلى</option>
-              <option value="5">⭐⭐⭐⭐⭐</option>
-            </select>
-          </div>
-          {/* Attributes */}
-          <div className="filter" style={{ marginBottom: "10px" }}>
-            <div
-              style={{
-                fontWeight: 700,
-                marginBottom: "10px",
-                color: "#2d6a4f",
-                fontSize: filterFontSize,
-              }}
-            >
-              الخصائص
-            </div>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="attribute"
-                  value="attribute1"
-                  style={{ accentColor: "#a21caf" }}
-                />
-                جديد
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="attribute"
-                  value="attribute2"
-                  style={{ accentColor: "#a21caf" }}
-                />
-                الأكثر مبيعاً
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="attribute"
-                  value="attribute3"
-                  style={{ accentColor: "#a21caf" }}
-                />
-                شحن مجاني
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: filterFontSize,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="attribute"
-                  value="attribute4"
-                  style={{ accentColor: "#a21caf" }}
-                />
-                عروض خاصة
-              </label>
-            </div>
-          </div>
-          <button
-            style={{
-              marginTop: "24px",
-              width: "100%",
-              background: "linear-gradient(90deg, #2d6a4f 0%, #3b82f6 100%)",
-              color: "#fff",
-              fontWeight: 800,
-              fontSize: buttonFontSize,
-              border: "none",
-              borderRadius: "10px",
-              padding: "12px 0",
-              cursor: "pointer",
-              boxShadow: "0 2px 8px 0 rgba(60,72,88,0.10)",
-              letterSpacing: "1px",
-              transition: "background 0.2s",
-            }}
-          >
-            <span role="img" aria-label="search" style={{ marginLeft: 8 }}>
-              🔎
-            </span>
-            تطبيق الفلاتر
-          </button>
-        </div>
-      </Collapse>
-    );
-  }
-}
+    </div>
+  </Link>
+);
 
-function ProductCard({ value }) {
+// ─── قسم المنتجات ────────────────────────────────────────────────
+const Pro = ({ prodect }) => {
+  const t = useTranslations("pro");
   return (
-    <Link href={`/prodect_detail/${value.id}`}>
-      <div className="ProductCard">
-        <div className="image">
-          <img src={value.primary_image} alt="Placeholder" />
+    <section className="pro">
+      <div className="products-header">
+        <div className="products-title-section">
+          <h2>{t("title")}</h2>
+          <p>{t("subtitle")}</p>
         </div>
-        <hr
-          style={{ border: "1px solid rgba(0, 0, 0, 0.1)", margin: "10px 0" }}
-        />
-        <div className="description">
-          <div className="description_content">
-            <div className="name">
-              <h4>{value.name}</h4>
-            </div>
-            <div className="price" style={{ textAlign: "center" }}>
-              <span>{value.price}</span>
-            </div>
-          </div>
-        </div>
+        <Link href="/shop">
+          <span className="view-all-btn">
+            {t("view_all")} <ArrowRightIcon />
+          </span>
+        </Link>
       </div>
-    </Link>
+      <div className="products-grid">
+        {prodect.slice(0, 4).map((item) => (
+          <Product_Card
+            key={item.id}
+            id={item.id}
+            title={item.name}
+            subtitle={item.subtitle}
+            price={item.price}
+            image={item.primary_image}
+            colors={item.colors}
+            sizes={item.sizes}
+          />
+        ))}
+      </div>
+    </section>
   );
-}
+};
 
-function ProductCardSpecial({ deviceDimensions }) {
-  // استخدام المقاسات الديناميكية للخطوط
-  const titleFontSize = deviceDimensions.isLargeScreen ? "1.3rem" : "1.2rem";
-  const priceFontSize = deviceDimensions.isLargeScreen ? "1.4rem" : "1.3rem";
-  const tagFontSize = deviceDimensions.isLargeScreen ? "1rem" : "0.95rem";
-
+// ─── محتوى الفوتر ────────────────────────────────────────────────
+function Footer_content() {
+  const t = useTranslations("footer");
   return (
-    <Link href="/prodect_detail" className="ProductCard_special">
-      <div
-        className="image"
-        style={{
-          border: "1px solid rgba(0, 0, 0, 0.1)",
-          borderRadius: "15px",
-          overflow: "hidden",
-        }}
-      >
-        <img style={{ height: "100%" }} src="/ph.jpg" alt="Placeholder" />
-      </div>
-      <hr
-        style={{
-          border: "1px solid rgba(0, 0, 0, 0.1)",
-          margin: "0px 10px",
-          width: "1px",
-          height: "100%",
-        }}
-      />
-      <div className="description">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            padding: "0px 5px",
-          }}
-        >
-          <div>
-            <h2
-              style={{
-                margin: 0,
-                fontWeight: 700,
-                fontSize: titleFontSize,
-                color: "#22223b",
-              }}
-            >
-              Product Name
-            </h2>
-            <span
-              style={{
-                display: "inline-block",
-                background: "#f1f5f9",
-                color: "#3b3b3b",
-                borderRadius: "8px",
-                padding: "2px 10px",
-                fontSize: tagFontSize,
-              }}
-            >
-              Color: Blue
-            </span>
-          </div>
-          <div style={{ textAlign: "center" }}>
-            <span
-              style={{
-                display: "inline-block",
-                background: "#f1f5f9",
-                color: "#3b3b3b",
-                borderRadius: "8px",
-                padding: "0px 10px",
-                fontSize: tagFontSize,
-              }}
-            >
-              Size: M
-            </span>
-            <div
-              style={{ fontWeight: 600, fontSize: "1.1rem", color: "#22223b" }}
-            >
-              <span style={{ color: "#2d6a4f", fontSize: priceFontSize }}>
-                $80
-              </span>
-            </div>
+    <div className="footer">
+      <h3 className="footer-title">{t("title")}</h3>
+      <div className="footer-content">
+        <div className="footer-item">
+          <span className="footer-label">{t("email_label")}</span>
+          <span>Gmail_Gmail@support.com</span>
+        </div>
+        <div className="footer-item">
+          <span className="footer-label">{t("mobile_label")}</span>
+          <span>0666666666 / 07777777777 / 0555555555 / 02222222222</span>
+        </div>
+        <div className="footer-item">
+          <span className="footer-label">{t("social_label")}</span>
+          <div className="footer-social">
+            <a href="#">Facebook.com</a>
+            <a href="#">Instagram.com</a>
+            <a href="#">Telegram.com</a>
           </div>
         </div>
-      </div>
-    </Link>
-  );
-}
-
-function ProductCardDiscount() {
-  // استخدام المقاسات الديناميكية للخطوط
-  return (
-    <Link href="/prodect_detail" className="ProductCard_discount">
-      <div
-        style={{
-          border: "1px solid rgba(0, 0, 0, 0.1)",
-          borderRadius: "15px",
-          overflow: "hidden",
-        }}
-      >
-        <img src="/ph.jpg" alt="Placeholder" />
-      </div>
-      <hr
-        style={{ border: "1px solid rgba(0, 0, 0, 0.1)", margin: "10px 0" }}
-      />
-      <div className="description">
-        <div
-          className="description-content"
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: "18px",
-          }}
-        >
-          <div className="name_and_color">
-            <h2>Product Name</h2>
-            <span>Color: Blue</span>
-          </div>
-          <div className="size_and_price" style={{ textAlign: "right" }}>
-            <span className="Size">Size: M</span>
-            <div
-              style={{ marginTop: "8px", fontWeight: 600, color: "#22223b" }}
-            >
-              <span className="old_price">$100</span>
-              <span className="new_price">$80</span>
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "12px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <span className="discount">20% OFF</span>
-            </div>
-            <span className="discount-start">Start: 2023-01-01</span>
-            <span className="discount-end">End: 2023-12-31</span>
-          </div>
-        </div>
-        <div
-          style={{
-            marginTop: "10px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "end",
-            height: "60px",
-          }}
-        >
-          <button>
-            Buy Now{" "}
-            <span className="material-symbols-outlined">
-              keyboard_double_arrow_right
-            </span>
-          </button>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-function Footer_content({ deviceDimensions, value }) {
-  const footerFontSize = deviceDimensions.isLargeScreen ? "1.1rem" : "1rem";
-
-  return (
-    <div className="footer-content">
-      <p style={{ fontSize: footerFontSize }}>Footer Content</p>
-      <div className="footer-links">
-        <ul style={{ fontSize: footerFontSize }}>
-          <li>Privacy Policy</li>
-          <li>Terms of Service</li>
-          <li>Contact Us</li>
-        </ul>
       </div>
     </div>
   );
 }
+
+// ─── مكوّن تسجيل الدخول / التسجيل ───────────────────────────────
 const Login = ({ setvalue, value, token }) => {
-  const [data, setdata] = useState({
-    username: "@Anonimo",
-    password: "@A.123456",
-  });
-  const [form, setform] = useState({ Sign_up: "none", Sign_in: "flex" });
-  const [wrong, setwrong] = useState({ color: "red", input: "" });
-  const [confirm_password, setconfirm_password] = useState("");
-  const { setmessge, setSeverity, setsnack, setloged } = Use_them();
-  const handleClick = useCallback((msg, sev) => {
-    setmessge(msg);
-    setSeverity(sev);
-    setsnack(true);
-  }, []);
-  const [Sign_up, setSign_up] = useState({
-    first_name: "",
-    last_name: "",
-    phone_numbers: [],
-    password: "",
+  const t = useTranslations("login");
+  const toastT = useTranslations("toast");
+  const { setmessge, setSeverity, setsnack } = Use_them();
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    wilaya: "",
+    commune: "",
     email: "",
-    address_line: { wilaya: "0" },
+    phone1: "",
+    phone2: "",
+    password: "",
+    confirmPassword: "",
+    code: "",
   });
-  const [warning, setwarning] = useState({ status: "", display: "none" });
-  const [loding, setloding] = useState({
-    value: false,
-    hight: "356px",
-    width: "247.5px",
-  });
-  const [wilaya, setwilaya] = useState("0");
-  const router = useRouter();
-  console.log(form, "*****");
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [activeForm, setActiveForm] = useState("signin"); // "signin" | "signup"
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordStep, setPasswordStep] = useState("send"); // "send" | "verify"
+
+  const selectedWilaya = wilayas.find(
+    (w) => w.name.toString() === formData.wilaya,
+  );
+  const communes = selectedWilaya?.communes ?? [];
+
+  const handleClick = useCallback(
+    (msg, sev) => {
+      setmessge(msg);
+      setSeverity(sev);
+      setsnack(true);
+    },
+    [setmessge, setSeverity, setsnack],
+  );
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) =>
+      name === "wilaya"
+        ? { ...prev, wilaya: value, commune: "" }
+        : { ...prev, [name]: value },
+    );
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
+
+  // ─── CSS Variables للتبديل بين الفورمين ──────────────────────
   useEffect(() => {
+    const isSignIn = activeForm === "signin";
     document.documentElement.style.setProperty(
       "--in",
-      form.Sign_in === "flex" ? "opacity_2" : "opacity_1"
-    );
-    document.documentElement.style.setProperty(
-      "--login",
-      form.Sign_in === "flex" || form.Sign_up === "grid" ? "opacity_2" : null
+      isSignIn ? "opacity_2" : "opacity_1",
     );
     document.documentElement.style.setProperty(
       "--up",
-      form.Sign_up === "grid" ? "opacity_2" : "opacity_1"
+      !isSignIn ? "opacity_2" : "opacity_1",
     );
-    document.documentElement.style.setProperty("--in_display", form.Sign_in);
-    document.documentElement.style.setProperty("--up_display", form.Sign_up);
-  }, [form]);
+    document.documentElement.style.setProperty("--login", "opacity_2");
+    document.documentElement.style.setProperty(
+      "--in_display",
+      isSignIn ? "flex" : "none",
+    );
+    document.documentElement.style.setProperty(
+      "--up_display",
+      !isSignIn ? "grid" : "none",
+    );
+  }, [activeForm]);
+
+  // ─── تعيين الحساب الافتراضي إن لم يكن هناك token ────────────
   useEffect(() => {
-    const default_account = async () => {
-      await fetch(`http://${URL}:8000/api/token/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        credentials: "include",
-      });
-    };
     if (!token) {
       localStorage.setItem("logeed", "false");
-      default_account();
-    }
-  }, []);
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      setloding({ value: true, hight: "356px", width: "247.5px" });
-      const res = await fetch(`http://${URL}:8000/api/token/`, {
+      fetch(`http://${URL}:8000/api/token/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ANON_CREDENTIALS),
         credentials: "include",
       });
-      if (res.status === 401) {
-        setwarning({ status: "401", display: "flex" });
-        handleClick("كلمة السر غير صحيحة اعد المحاولة ", "error");
-      } else if (res.status === 500) {
-        setwarning({ status: "500", display: "flex" });
-        handleClick("إسم المستخدم خاطأ اعد المحاولة ", "error");
-      } else {
-        setvalue("none");
-      }
+    }
+  }, []);
+
+  // ─── تسجيل الدخول ─────────────────────────────────────────────
+  const validateSignIn = async () => {
+    const newErrors = {};
+    const { password, email } = formData;
+
+    if (!email) newErrors.email = t("errors.email_required");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase()))
+      newErrors.email = t("errors.email_invalid");
+    if (!password) newErrors.password = t("errors.password_required");
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return false;
+    }
+
+    try {
+      const res = await fetch(`http://${URL}:8000/api/token/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: email, password }),
+        credentials: "include",
+      });
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(JSON.stringify(errorData));
-      }
-      handleClick("تم تسجيل الدخول", "success");
-    } catch (error) {
-      console.log("خطأفي أحد المعطيات", error);
-      return;
-    } finally {
-      setloding({ value: false, hight: "356px", width: "247.5px" });
-      window.location.reload();
-      router.push("/profile");
-    }
-  };
-  const handleregister = async (e) => {
-    e.preventDefault();
-    if (Sign_up.first_name.length < 3) {
-      setwrong({ ...wrong, input: "first_name" });
-    } else if (Sign_up.last_name.length < 3) {
-      setwrong({ ...wrong, input: "last_name" });
-    } else if (!Sign_up.email.endsWith("@gmail.com")) {
-      setwrong({ ...wrong, input: "email" });
-    } else if (!Sign_up.email.includes(".")) {
-      setwrong({ ...wrong, input: "email" });
-    } else if (Sign_up.password != confirm_password) {
-      setwrong({ ...wrong, input: "password" });
-    } else if (
-      Sign_up.phone_numbers[0] &&
-      !/^(05|06|07|02)\d{8}$/.test(Sign_up.phone_numbers[0])
-    ) {
-      setwrong({ ...wrong, input: "Phone1" });
-    } else if (
-      Sign_up.phone_numbers[1] &&
-      !/^(05|06|07|02)\d{8}$/.test(Sign_up.phone_numbers[1])
-    ) {
-      setwrong({ ...wrong, input: "Phone2" });
-    } else {
-      setwrong({ ...wrong, input: "" });
-      console.log(Sign_up, "55555555555");
-      try {
-        setloding({ value: true, hight: "524px", width: "350px" });
-        const res = await fetch(`http://${URL}:8000/api/register/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(Sign_up),
-          credentials: "include",
+        setErrors({
+          validate: t("errors.credentials_invalid"),
+          email: errorData.email,
+          password: errorData.password,
         });
-        if (!res.ok) {
-          const errorData = await res.json();
-          console.log("Response from /api/auth:", errorData.error);
-          setwarning({
-            status: "400",
-            display: "flex",
-            message: errorData.error,
-          });
-          throw new Error(JSON.stringify(errorData));
-        } else {
-          try {
-            const response = await res.json();
-            const login = {
-              username: response.username,
-              password: Sign_up.password,
-            };
-            const log = await fetch(`http://${URL}:8000/api/token/`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(login),
-              credentials: "include",
-            });
-            if (!log.ok) {
-              const errorData = await log.json();
-              console.log("Response from /api/auth:", errorData.error, login);
-              throw new Error(JSON.stringify(errorData));
-            }
-            setloged(true);
-          } catch (error) {
-            console.log("خطأفي أحد المعطيات", error);
-          }
-          setvalue("none");
-        }
-      } catch (error) {
-        console.log("خطأفي أحد المعطيات", error);
-      } finally {
-        setloding({ value: false, hight: "356px", width: "247.5px" });
-        setform({ Sign_in: "flex", Sign_up: "none" });
-        router.push("/profile");
-        window.location.reload();
+        handleClick(toastT("login_failed"), "error");
+        return false;
       }
+      handleClick(toastT("login_success"), "success");
+      setTimeout(() => location.reload(), 1000);
+      return true;
+    } catch {
+      handleClick(toastT("login_failed"), "error");
+      return false;
     }
   };
+
+  // ─── إنشاء حساب ───────────────────────────────────────────────
+  const validateSignUp = async () => {
+    const newErrors = {};
+    const phoneRegex = /^0[5-7][0-9]{8}$/;
+    const {
+      password,
+      confirmPassword,
+      firstName,
+      lastName,
+      wilaya,
+      commune,
+      email,
+      phone1,
+      phone2,
+    } = formData;
+
+    if (!firstName.trim())
+      newErrors.firstName = t("errors.first_name_required");
+    else if (firstName.trim().length < 2)
+      newErrors.firstName = t("errors.first_name_min_length");
+
+    if (!lastName.trim()) newErrors.lastName = t("errors.last_name_required");
+    else if (lastName.trim().length < 2)
+      newErrors.lastName = t("errors.last_name_min_length");
+
+    if (!email) newErrors.email = t("errors.email_required");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase()))
+      newErrors.email = t("errors.email_invalid");
+
+    if (!wilaya) newErrors.wilaya = t("errors.wilaya_required");
+    if (!commune) newErrors.commune = t("errors.commune_required");
+
+    if (!phone1.trim()) newErrors.phone1 = t("errors.phone1_required");
+    else if (!phoneRegex.test(phone1))
+      newErrors.phone1 = t("errors.phone_invalid");
+
+    if (phone2.trim() && !phoneRegex.test(phone2))
+      newErrors.phone2 = t("errors.phone_invalid");
+    if (phone1 && phone2 && phone1 === phone2)
+      newErrors.phone2 = t("errors.phone2_same_as_phone1");
+
+    if (!password) newErrors.password = t("errors.password_required");
+    else if (password.length < 6)
+      newErrors.password = t("errors.password_min_length");
+
+    if (!confirmPassword)
+      newErrors.confirmPassword = t("errors.confirm_password_required");
+    else if (password !== confirmPassword)
+      newErrors.confirmPassword = t("errors.confirm_password_mismatch");
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return false;
+    }
+
+    try {
+      const res = await fetch(`http://${URL}:8000/api/register/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          phone_numbers: phone2 ? [phone1, phone2] : [phone1],
+          password: confirmPassword,
+          username: email,
+          address_line: { wilaya, baldya: commune },
+        }),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        setErrors({
+          validate: errorData.error || t("errors.register_failed"),
+          firstName: errorData.firstName || "",
+          lastName: errorData.lastName || "",
+          phone1: errorData.phone1 || "",
+          phone2: errorData.phone2 || "",
+          email: errorData.username || "",
+          wilaya: errorData.wilaya || "",
+          commune: errorData.commune || "",
+        });
+        handleClick(toastT("order_send_failed"), "error");
+        return false;
+      }
+      handleClick(toastT("order_sent_success"), "success");
+      // تسجيل الدخول تلقائياً بعد التسجيل
+      await validateSignIn();
+      return true;
+    } catch {
+      handleClick(toastT("order_send_failed"), "error");
+      return false;
+    }
+  };
+
+  const handleSubmitSignIn = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await validateSignIn();
+    setLoading(false);
+  };
+
+  const handleSubmitSignUp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await validateSignUp();
+    setLoading(false);
+  };
+
+  // ─── إرسال كود إعادة تعيين كلمة المرور ──────────────────────
+  const handleSendCode = async (e) => {
+    e.preventDefault();
+    const newErrors = {};
+    if (!formData.email) newErrors.email = t("errors.email_required");
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.toLowerCase()))
+      newErrors.email = t("errors.email_invalid");
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await apiFetch(`http://${URL}:8000/api/Send_otp_Code/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: formData.email }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        setErrors({
+          validate: errorData.error || t("errors.send_failed_retry"),
+          email: errorData.email || "",
+        });
+        throw new Error();
+      }
+      handleClick(toastT("code_sent_success"), "success");
+      setPasswordStep("verify");
+    } catch {
+      handleClick(toastT("send_failed"), "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ─── التحقق من الكود ──────────────────────────────────────────
+  const handleVerifyCode = async (e) => {
+    e.preventDefault();
+    const { code, email } = formData;
+    if (!code) {
+      setErrors({ code: t("errors.code_required") });
+      return;
+    }
+
+    setLoading(true);
+    const body = new FormData();
+    body.append("username", email);
+    body.append("code", code);
+
+    try {
+      const res = await apiFetch(`http://${URL}:8000/api/VerifyOTPView/`, {
+        method: "POST",
+        body,
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        setErrors({
+          validate: errorData.error || t("errors.send_failed_retry"),
+          code: errorData.code || "",
+        });
+        throw new Error();
+      }
+      handleClick(toastT("password_updated_success"), "success");
+      setShowPasswordModal(false);
+      setPasswordStep("send");
+      setErrors({});
+      setvalue("none");
+      location.reload();
+    } catch {
+      handleClick(toastT("send_failed"), "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const closeModal = () => {
+    setvalue("none");
+    setActiveForm("signin");
+    setErrors({});
+  };
+
   return (
-    <div className="login_contener" style={{ display: value }}>
-      <div className="Form_contener">
-        <div className="Btn_close">
-          <button
-            onClick={() => {
-              setvalue("none");
-              setform({ Sign_in: "flex", Sign_up: "none" });
-            }}
-          >
-            <span className="material-symbols-outlined">close</span>
-          </button>
-        </div>
-        {loding.value === true ? (
-          <div
-            className="loading_contener"
-            style={{ height: loding.hight, width: loding.width }}
-          >
-            <div className="loader"></div>
+    <>
+      {/* ─── نافذة الدخول/التسجيل ─── */}
+      <div className="login_contener" style={{ display: value }}>
+        <div className="Form_contener">
+          <div className="Btn_close">
+            <button onClick={closeModal}>
+              <span className="material-symbols-outlined">close</span>
+            </button>
           </div>
-        ) : (
-          <>
-            <form className="Sign_in" onSubmit={handleSubmit}>
-              <label>Name :</label>
+
+          {/* فورم تسجيل الدخول */}
+          <form className="Sign_in" onSubmit={handleSubmitSignIn}>
+            <Field
+              label={t("fields.email")}
+              required
+              error={errors.email}
+              icon={<EmailIcon />}
+            >
               <input
-                onChange={(e) => setdata({ ...data, username: e.target.value })}
                 type="text"
-                required
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder={t("placeholders.email")}
+                className={`form-input${errors.email ? " error" : ""}`}
               />
-              <label>Password :</label>
+            </Field>
+
+            <Field
+              label={t("fields.password")}
+              required
+              error={errors.password}
+              icon={<PasswordIcon />}
+            >
               <input
-                onChange={(e) => setdata({ ...data, password: e.target.value })}
                 type="password"
-                required
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder={t("placeholders.password")}
+                className={`form-input${errors.password ? " error" : ""}`}
               />
-              <button>Go</button>
-            </form>
-            <form className="Sign_up" onSubmit={handleregister}>
-              <div className="Ferst_Name">
-                <label>Ferst Name :</label>
+              <p
+                className="field-info"
+                style={{ cursor: "pointer" }}
+                onClick={() => setShowPasswordModal(true)}
+              >
+                {t("buttons.forget_password")}
+              </p>
+            </Field>
+
+            <Field error={errors.validate}>
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? <Spinner /> : t("buttons.submit_signin")}
+              </button>
+            </Field>
+          </form>
+
+          {/* فورم إنشاء الحساب */}
+          <form className="Sign_up" onSubmit={handleSubmitSignUp}>
+            <div className="form-grid-2">
+              <Field
+                label={t("fields.first_name")}
+                required
+                error={errors.firstName}
+                icon={<PersonIcon />}
+              >
                 <input
                   type="text"
-                  value={Sign_up.first_name || ""}
-                  onChange={(e) =>
-                    setSign_up({ ...Sign_up, first_name: e.target.value })
-                  }
-                  style={{
-                    borderColor:
-                      wrong.input === "first_name" ? wrong.color : "black",
-                  }}
-                  required
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder={t("placeholders.first_name")}
+                  className={`form-input${errors.firstName ? " error" : ""}`}
                 />
-              </div>
-              <div className="Last_Name">
-                <label>Last Name :</label>
+              </Field>
+              <Field
+                label={t("fields.last_name")}
+                required
+                error={errors.lastName}
+                icon={<PersonIcon />}
+              >
                 <input
                   type="text"
-                  value={Sign_up.last_name || ""}
-                  onChange={(e) =>
-                    setSign_up({ ...Sign_up, last_name: e.target.value })
-                  }
-                  style={{
-                    borderColor:
-                      wrong.input === "last_name" ? wrong.color : "black",
-                  }}
-                  required
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder={t("placeholders.last_name")}
+                  className={`form-input${errors.lastName ? " error" : ""}`}
                 />
-              </div>
-              <div className="Email">
-                <label>Email :</label>
-                <input
-                  type="email"
-                  value={Sign_up.email || ""}
-                  onChange={(e) =>
-                    setSign_up({
-                      ...Sign_up,
-                      email: e.target.value.trim().toLowerCase(),
-                    })
-                  }
-                  style={{
-                    borderColor:
-                      wrong.input === "email" ? wrong.color : "black",
-                  }}
-                  required
-                />
-              </div>
-              <div className="Password">
-                <label>Password :</label>
+              </Field>
+            </div>
+
+            <div className="password">
+              <Field
+                label={t("fields.password")}
+                required
+                error={errors.password}
+                icon={<PasswordIcon />}
+              >
                 <input
                   type="password"
-                  value={Sign_up.password || ""}
-                  onChange={(e) =>
-                    setSign_up({ ...Sign_up, password: e.target.value })
-                  }
-                  required
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder={t("placeholders.password")}
+                  className={`form-input${errors.password ? " error" : ""}`}
                 />
-              </div>
-              <div className="Check Password">
-                <label>Check Password :</label>
+              </Field>
+              <Field
+                label={t("fields.confirm_password")}
+                required
+                error={errors.confirmPassword}
+                icon={<PasswordCheckIcon />}
+              >
                 <input
                   type="password"
-                  value={confirm_password || ""}
-                  onChange={(e) => setconfirm_password(e.target.value)}
-                  style={{
-                    borderColor:
-                      wrong.input === "password" ? wrong.color : "black",
-                  }}
-                  required
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder={t("placeholders.confirm_password")}
+                  className={`form-input${errors.confirmPassword ? " error" : ""}`}
                 />
-              </div>
-              <div className="wilaya">
-                <label>Wilaya :</label>
+              </Field>
+            </div>
+
+            <div className="Wilaya">
+              <Field
+                label={t("fields.wilaya")}
+                required
+                error={errors.wilaya}
+                icon={<LocationIcon />}
+              >
                 <select
-                  value={wilaya}
-                  onChange={(e) => {
-                    setwilaya(e.target.value);
-                    setSign_up({
-                      ...Sign_up,
-                      address_line: {
-                        ...Sign_up.address_line,
-                        wilaya: e.target.value,
-                      },
-                    });
-                  }}
+                  name="wilaya"
+                  value={formData.wilaya}
+                  onChange={handleChange}
+                  className={`form-select${errors.wilaya ? " error" : ""}`}
                 >
-                  <option value="0">-- اختر الولاية --</option>
-                  {WILAYAS_DATA.map((w) => (
-                    <option key={w.wilaya_code} value={w.wilaya_name}>
-                      {w.wilaya_code} - {w.wilaya_name}
+                  <option value="">{t("placeholders.select_wilaya")}</option>
+                  {wilayas.map((w) => (
+                    <option key={w.code} value={w.name.toString()}>
+                      {w.code.toString().padStart(2, "0")} - {w.name}
                     </option>
                   ))}
                 </select>
-              </div>
-              <div className="wilaya">
-                <label>Baldya :</label>
+              </Field>
+              <Field
+                label={t("fields.commune")}
+                required
+                error={errors.commune}
+                icon={<HomeIcon />}
+              >
                 <select
-                  value={Sign_up.address_line.baldya || ""}
-                  disabled={wilaya === "0"}
-                  onChange={(e) =>
-                    setSign_up({
-                      ...Sign_up,
-                      address_line: {
-                        ...Sign_up.address_line,
-                        baldya: e.target.value,
-                      },
-                    })
-                  }
+                  name="commune"
+                  value={formData.commune}
+                  onChange={handleChange}
+                  disabled={!formData.wilaya}
+                  className={`form-select${errors.commune ? " error" : ""}`}
                 >
-                  <option value="فارغ">-- اختر البلدية --</option>
-                  {wilaya !== "0" &&
-                    WILAYAS_DATA.find(
-                      (w) => w.wilaya_name === wilaya
-                    )?.communes?.map((commune, idx) => (
-                      <option key={idx} value={commune.commune_name}>
-                        {commune.commune_name}
-                      </option>
-                    ))}
+                  <option value="">
+                    {formData.wilaya
+                      ? t("placeholders.select_commune")
+                      : t("placeholders.select_wilaya_first")}
+                  </option>
+                  {communes.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
                 </select>
-              </div>
-              <div>
-                <label>Phone 1:</label>
+              </Field>
+            </div>
+
+            <div className="section-divider">
+              <div className="section-divider-line" />
+              <span className="section-divider-text">
+                {t("labels.contact_info")}
+              </span>
+              <div className="section-divider-line" />
+            </div>
+
+            <Field
+              label={t("fields.email")}
+              required
+              error={errors.email}
+              icon={<EmailIcon />}
+            >
+              <input
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder={t("placeholders.email")}
+                className={`form-input${errors.email ? " error" : ""}`}
+              />
+            </Field>
+
+            <div className="phone">
+              <Field
+                label={t("fields.phone1")}
+                required
+                error={errors.phone1}
+                icon={<PhoneIcon />}
+              >
                 <input
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  style={{
-                    appearance: "textfield",
-                    borderColor:
-                      wrong.input === "Phone1" ? wrong.color : "black",
-                  }}
-                  value={
-                    Sign_up.phone_numbers && Sign_up.phone_numbers[0]
-                      ? Sign_up.phone_numbers[0]
-                      : ""
-                  }
-                  onInput={(e) => {
-                    e.target.value = e.target.value
-                      .replace(/\D/g, "")
-                      .slice(0, 10);
-                  }}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/\D/g, "").slice(0, 10);
-                    setSign_up({
-                      ...Sign_up,
-                      phone_numbers: [
-                        val,
-                        ...(Sign_up.phone_numbers && Sign_up.phone_numbers[1]
-                          ? [Sign_up.phone_numbers[1]]
-                          : []),
-                      ],
-                    });
-                  }}
+                  type="tel"
+                  name="phone1"
+                  value={formData.phone1}
+                  onChange={handleChange}
+                  placeholder={t("placeholders.phone1")}
                   maxLength={10}
-                  required
+                  className={`form-input phone-input${errors.phone1 ? " error" : ""}`}
                 />
-              </div>
-              <div>
-                <label>Phone 2:</label>
+              </Field>
+              <Field
+                label={t("fields.phone2")}
+                error={errors.phone2}
+                hint={t("hints.phone2_optional")}
+                icon={<PhoneIcon />}
+              >
                 <input
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  style={{
-                    appearance: "textfield",
-                    borderColor:
-                      wrong.input === "Phone2" ? wrong.color : "black",
-                  }}
-                  value={
-                    Sign_up.phone_numbers && Sign_up.phone_numbers[1]
-                      ? Sign_up.phone_numbers[1]
-                      : ""
-                  }
-                  onInput={(e) => {
-                    e.target.value = e.target.value
-                      .replace(/\D/g, "")
-                      .slice(0, 10);
-                  }}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/\D/g, "").slice(0, 10);
-                    setSign_up({
-                      ...Sign_up,
-                      phone_numbers: [
-                        Sign_up.phone_numbers && Sign_up.phone_numbers[0]
-                          ? Sign_up.phone_numbers[0]
-                          : "",
-                        val,
-                      ],
-                    });
-                  }}
+                  type="tel"
+                  name="phone2"
+                  value={formData.phone2}
+                  onChange={handleChange}
+                  placeholder={t("placeholders.phone2")}
                   maxLength={10}
+                  className={`form-input phone-input${errors.phone2 ? " error" : ""}`}
                 />
-              </div>
-              <button>Registration</button>
-            </form>
-            <p>________or________</p>
+              </Field>
+            </div>
+
+            <Field error={errors.validate}>
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? <Spinner /> : t("buttons.submit_signup")}
+              </button>
+            </Field>
+          </form>
+
+          {/* الجزء السفلي */}
+          <div className="bottom">
+            <p className="or">{t("labels.or")}</p>
             <div className="Accont">
-              <button>
-                <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_dark_1x_rtl_r5.png" />
+              <button type="button">
+                <img
+                  src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_dark_1x_rtl_r5.png"
+                  alt="Gmail"
+                />
               </button>
             </div>
             <p className="method">
-              {form.Sign_in === "flex"
-                ? "If you do not have an account"
-                : "If you have an account"}
-              {form.Sign_in === "flex" ? (
-                <a
-                  href="#"
-                  onClick={() => {
-                    setform({ Sign_in: "none", Sign_up: "grid" });
-                  }}
-                  style={{ cursor: "pointer", marginLeft: "5px" }}
-                >
-                  Sign up
-                </a>
+              {activeForm === "signin" ? (
+                <>
+                  {t("labels.no_account")}
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveForm("signup");
+                    }}
+                    style={{ cursor: "pointer", marginLeft: "5px" }}
+                  >
+                    {t("labels.sign_up")}
+                  </a>
+                </>
               ) : (
-                <a
-                  href="#"
-                  onClick={() => {
-                    setform({ Sign_in: "flex", Sign_up: "none" });
-                  }}
-                  style={{ cursor: "pointer", marginLeft: "5px" }}
-                >
-                  Sign in
-                </a>
+                <>
+                  {t("labels.have_account")}
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveForm("signin");
+                    }}
+                    style={{ cursor: "pointer", marginLeft: "5px" }}
+                  >
+                    {t("labels.sign_in")}
+                  </a>
+                </>
               )}
             </p>
-          </>
-        )}
-      </div>
-      <div className="warning_contener" style={{ display: warning.display }}>
-        <div className="warning">
-          {warning.status === "401" ? (
-            <h1>wrong password</h1>
-          ) : warning.status === "500" ? (
-            <h1>wrong username</h1>
-          ) : (
-            <h1>{warning.message}</h1>
-          )}
-          <div className="btn">
-            <button onClick={() => setwarning({ status: "", display: "None" })}>
-              Try again
-            </button>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-export const Header = ({ token_access }) => {
-  const [value, setvalue] = useState("none");
-  if (typeof window !== "undefined") {
-    console.log(window.innerWidth, ".......");
-  }
-  const deviceDimensions = useDeviceDimensions();
-  const viewportSize = useViewportSize();
-  // حساب المقاسات المثالية باستخدام الدوال المساعدة
-  const optimalDimensions = calculateOptimalDimensions(deviceDimensions);
-  const performanceSettings = getPerformanceSettings(deviceDimensions);
-  // عرض معلومات الجهاز للتطوير (يمكن إزالته لاحقاً)
-  useEffect(() => {
-    console.log("Device Dimensions:", deviceDimensions);
-    console.log("Viewport Size:", viewportSize);
-    console.log("Optimal Dimensions:", optimalDimensions);
-    console.log("Performance Settings:", performanceSettings);
-  }, [deviceDimensions, viewportSize, optimalDimensions, performanceSettings]);
-  return (
-    <>
-      <Header_content
-        setvalue={setvalue}
-        setIsMobile={() => {}}
-        deviceDimensions={deviceDimensions}
-        viewportSize={viewportSize}
-      />
-      <Login setvalue={setvalue} value={value} token={token_access} />
-    </>
-  );
-};
-export const Footer = () => {
-  if (typeof window !== "undefined") {
-    console.log(window.innerWidth, ".......");
-  }
-  const deviceDimensions = useDeviceDimensions();
-  const viewportSize = useViewportSize();
 
-  // حساب المقاسات المثالية باستخدام الدوال المساعدة
-  const optimalDimensions = calculateOptimalDimensions(deviceDimensions);
-  const performanceSettings = getPerformanceSettings(deviceDimensions);
+      {/* ─── نافذة إعادة تعيين كلمة المرور ─── */}
+      {showPasswordModal && (
+        <div className="fixed-body" style={{ display: "flex" }}>
+          <form
+            className="code-body"
+            onSubmit={
+              passwordStep === "send" ? handleSendCode : handleVerifyCode
+            }
+            noValidate
+          >
+            <h3>
+              {passwordStep === "verify"
+                ? t("change_password.title_sent")
+                : t("change_password.title_send")}
+            </h3>
 
-  // عرض معلومات الجهاز للتطوير (يمكن إزالته لاحقاً)
-  useEffect(() => {
-    console.log("Device Dimensions:", deviceDimensions);
-    console.log("Viewport Size:", viewportSize);
-    console.log("Optimal Dimensions:", optimalDimensions);
-    console.log("Performance Settings:", performanceSettings);
-  }, [deviceDimensions, viewportSize, optimalDimensions, performanceSettings]);
-  return <Footer_content deviceDimensions={deviceDimensions} />;
-};
-export const Settings = () => {
-  if (typeof window !== "undefined") {
-    console.log(window.innerWidth, ".......");
-  }
-  const deviceDimensions = useDeviceDimensions();
-  const viewportSize = useViewportSize();
+            <div className="inputs">
+              <Field
+                label={t("fields.email")}
+                error={errors.email}
+                icon={<EmailIcon />}
+              >
+                <input
+                  type="text"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t("placeholders.email")}
+                  className={`form-input${errors.email ? " error" : ""}`}
+                  disabled={passwordStep === "verify"}
+                />
+              </Field>
 
-  // استخدام المقاسات الحقيقية للجهاز
-  const isMobile = deviceDimensions.isMobile;
-  const isTablet = deviceDimensions.isTablet;
-  const isDesktop = deviceDimensions.isDesktop;
-  const isLandscape = deviceDimensions.isLandscape;
-  const isPortrait = deviceDimensions.isPortrait;
+              {passwordStep === "verify" && (
+                <Field
+                  label={t("fields.code")}
+                  error={errors.code}
+                  icon={<PasswordStarsIcon />}
+                  required
+                >
+                  <input
+                    type="tel"
+                    name="code"
+                    onChange={handleChange}
+                    maxLength={6}
+                    className={`form-input phone-input${errors.code ? " error" : ""}`}
+                  />
+                </Field>
+              )}
+            </div>
 
-  // حساب المقاسات المثالية باستخدام الدوال المساعدة
-  const optimalDimensions = calculateOptimalDimensions(deviceDimensions);
-  const optimalSpacing = calculateOptimalSpacing(
-    viewportSize.width,
-    viewportSize.height
-  );
-  const optimalFontSizes = calculateOptimalFontSizes(
-    viewportSize.width,
-    viewportSize.height
-  );
-  const performanceSettings = getPerformanceSettings(deviceDimensions);
-
-  // حساب عدد الأعمدة المثالي للشبكة
-  const gridColumns = calculateOptimalGridColumns(
-    viewportSize.width - optimalDimensions.sidebarWidth,
-    optimalDimensions.cardMinWidth,
-    optimalDimensions.cardMaxWidth
-  );
-
-  // عرض معلومات الجهاز للتطوير (يمكن إزالته لاحقاً)
-  useEffect(() => {
-    console.log("Device Dimensions:", deviceDimensions);
-    console.log("Viewport Size:", viewportSize);
-    console.log("Optimal Dimensions:", optimalDimensions);
-    console.log("Performance Settings:", performanceSettings);
-  }, [deviceDimensions, viewportSize, optimalDimensions, performanceSettings]);
-
-  return (
-    <>
-      {/* عرض معلومات الجهاز للتطوير */}
-      {process.env.NODE_ENV === "development" && viewportSize.width > 0 && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "10px",
-            right: "10px",
-            background: "rgba(0,0,0,0.8)",
-            color: "white",
-            padding: "10px",
-            borderRadius: "5px",
-            fontSize: "12px",
-            zIndex: 1000,
-            maxWidth: "300px",
-          }}
-        >
-          <div>Width: {viewportSize.width}px</div>
-          <div>Height: {viewportSize.height}px</div>
-          <div>
-            Device:{" "}
-            {deviceDimensions.isMobile
-              ? "Mobile"
-              : deviceDimensions.isTablet
-              ? "Tablet"
-              : "Desktop"}
-          </div>
-          <div>Orientation: {deviceDimensions.orientation}</div>
-          <div>Pixel Ratio: {deviceDimensions.devicePixelRatio}</div>
-          <div>Grid Columns: {gridColumns}</div>
-          <div>
-            Sidebar Width: {Math.round(optimalDimensions.sidebarWidth)}px
-          </div>
-          <div>Card Min: {Math.round(optimalDimensions.cardMinWidth)}px</div>
-          <div>Performance: {performanceSettings.imageQuality}</div>
+            <Field error={errors.validate}>
+              <div className="btn">
+                <button
+                  type="button"
+                  className="btn-submit cancel"
+                  disabled={loading}
+                  onClick={() => {
+                    setShowPasswordModal(false);
+                    setPasswordStep("send");
+                    setErrors({});
+                  }}
+                >
+                  {t("buttons.cancel")}
+                </button>
+                <button
+                  type="submit"
+                  className="btn-submit save"
+                  disabled={loading}
+                >
+                  {loading ? <Spinner /> : t("buttons.send")}
+                </button>
+              </div>
+            </Field>
+          </form>
         </div>
       )}
     </>
   );
 };
 
-export const Snack_bar = () => {
-  const { message, severity, snack, setsnack } = Use_them();
-  const handleClose = useCallback((event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setsnack(false);
-  }, []);
+// ─── Header ──────────────────────────────────────────────────────
+export const Header = ({ token_access }) => {
+  const [value, setValue] = useState("none");
   return (
     <>
-      <Snackbar open={snack} autoHideDuration={5000} onClose={handleClose}>
-        <SnackbarAlert
-          onClose={handleClose}
-          severity={severity}
-          sx={{ width: "100%" }}
-        >
-          {message}
-        </SnackbarAlert>
-      </Snackbar>
+      <Navbar setvalue={setValue} />
+      <Login setvalue={setValue} value={value} token={token_access} />
     </>
+  );
+};
+
+// ─── Hero ─────────────────────────────────────────────────────────
+export const Hero = () => {
+  const t = useTranslations("Hero");
+  return (
+    <section className="hero">
+      <div className="hero-content">
+        <h1 className="hero-title">
+          {t("title.line1")}
+          <br />
+          {t("title.line2")}
+        </h1>
+        <p className="hero-subtitle">{t("subtitle")}</p>
+        <div className="hero-buttons">
+          <Link href="/shop">
+            <button className="btn-primary">{t("buttons.shop")}</button>
+          </Link>
+          <button className="btn-secondary">{t("buttons.learn")}</button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Features ────────────────────────────────────────────────────
+export const Features = () => {
+  const t = useTranslations("features");
+  const cards = [
+    { icon: <ZapIcon />, key: "fast_delivery" },
+    { icon: <ShieldIcon />, key: "secure_shopping" },
+    { icon: <TruckIcon />, key: "quality_guarantee" },
+  ];
+  return (
+    <section className="why-choose">
+      <h2 className="section-title">{t("title")}</h2>
+      <p className="section-subtitle">{t("subtitle")}</p>
+      <div className="features-grid">
+        {cards.map(({ icon, key }) => (
+          <div key={key} className="feature-card">
+            <div className="feature-icon">{icon}</div>
+            <h3 className="feature-title">{t(`cards.${key}.title`)}</h3>
+            <p className="feature-description">
+              {t(`cards.${key}.description`)}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+// ─── Footer ──────────────────────────────────────────────────────
+export const Footer = () => <Footer_content />;
+
+// ─── Settings (dev only) ─────────────────────────────────────────
+export const Settings = () => {
+  const deviceDimensions = useDeviceDimensions();
+  const viewportSize = useViewportSize();
+
+  if (process.env.NODE_ENV !== "development" || viewportSize.width === 0)
+    return null;
+
+  const optimalDimensions = calculateOptimalDimensions(deviceDimensions);
+  const gridColumns = calculateOptimalGridColumns(
+    viewportSize.width - optimalDimensions.sidebarWidth,
+    optimalDimensions.cardMinWidth,
+    optimalDimensions.cardMaxWidth,
+  );
+  const performanceSettings = getPerformanceSettings(deviceDimensions);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        bottom: 10,
+        right: 10,
+        background: "rgba(0,0,0,0.8)",
+        color: "white",
+        padding: 10,
+        borderRadius: 5,
+        fontSize: 12,
+        zIndex: 1000,
+      }}
+    >
+      <div>Width: {viewportSize.width}px</div>
+      <div>Height: {viewportSize.height}px</div>
+      <div>
+        Device:{" "}
+        {deviceDimensions.isMobile
+          ? "Mobile"
+          : deviceDimensions.isTablet
+            ? "Tablet"
+            : "Desktop"}
+      </div>
+      <div>Orientation: {deviceDimensions.orientation}</div>
+      <div>Pixel Ratio: {deviceDimensions.devicePixelRatio}</div>
+      <div>Grid Columns: {gridColumns}</div>
+      <div>Sidebar: {Math.round(optimalDimensions.sidebarWidth)}px</div>
+      <div>Card Min: {Math.round(optimalDimensions.cardMinWidth)}px</div>
+      <div>Performance: {performanceSettings.imageQuality}</div>
+    </div>
+  );
+};
+
+// ─── Snackbar ────────────────────────────────────────────────────
+export const Snack_bar = () => {
+  const { message, severity, snack, setsnack } = Use_them();
+  const handleClose = useCallback(
+    (_, reason) => {
+      if (reason === "clickaway") return;
+      setsnack(false);
+    },
+    [setsnack],
+  );
+
+  return (
+    <Snackbar open={snack} autoHideDuration={5000} onClose={handleClose}>
+      <SnackbarAlert
+        onClose={handleClose}
+        severity={severity}
+        sx={{ width: "100%" }}
+      >
+        {message}
+      </SnackbarAlert>
+    </Snackbar>
   );
 };

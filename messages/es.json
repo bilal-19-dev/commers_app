@@ -1,0 +1,370 @@
+{
+  "toast": {
+    "logout_success": "Sesión cerrada correctamente",
+    "logout_failed": "No se pudo cerrar sesión. Por favor, inténtelo más tarde",
+    "login_success": "Sesión iniciada correctamente",
+    "login_failed": "Error al iniciar sesión",
+    "order_sent_success": "Pedido enviado correctamente, gracias",
+    "order_send_failed": "Error al enviar el pedido, por favor inténtelo de nuevo",
+    "code_sent_success": "Código enviado correctamente",
+    "send_failed": "Problema de envío, por favor inténtelo más tarde",
+    "profile_image_deleted_success": "Foto de perfil eliminada",
+    "profile_update_success": "Perfil actualizado correctamente",
+    "profile_update_failed": "Problema al actualizar, por favor inténtelo más tarde",
+    "password_updated_success": "Contraseña actualizada correctamente",
+    "product_removed_from_order_success": "Producto eliminado del carrito",
+    "first_name_required_full": "Por favor, introduzca su nombre completo",
+    "last_name_required_full": "Por favor, introduzca su apellido completo",
+    "address_required": "Por favor, introduzca su dirección",
+    "primary_phone_invalid": "Por favor, introduzca un número de teléfono principal válido",
+    "secondary_phone_invalid": "Por favor, introduzca un número de teléfono secundario válido",
+    "item_already_in_cart": "El artículo ya está en el carrito",
+    "item_added_to_cart": "Artículo añadido al carrito",
+    "quantity_unavailable": "La cantidad solicitada no está disponible actualmente",
+    "quantity_invalid": "Por favor, introduzca una cantidad válida",
+    "delete_cart_item_failed": "Error al eliminar el artículo del carrito",
+    "item_removed_from_cart_success": "Artículo eliminado del carrito",
+    "quantity_invalid_or_remove": "Por favor, introduzca una cantidad válida o elimine el producto"
+  },
+  "login": {
+    "fields": {
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirm_password": "Confirmar contraseña",
+      "first_name": "Nombre",
+      "last_name": "Apellido",
+      "wilaya": "Wilaya",
+      "commune": "Comuna",
+      "phone1": "Teléfono principal",
+      "phone2": "Teléfono secundario",
+      "code": "Código"
+    },
+    "placeholders": {
+      "email": "@gmail.com",
+      "password": "Introduzca su contraseña",
+      "confirm_password": "Confirme su contraseña",
+      "first_name": "Introduzca el nombre",
+      "last_name": "Introduzca el apellido",
+      "phone1": "0555 123 456",
+      "phone2": "0666 789 012",
+      "select_wilaya": "-- Seleccionar wilaya --",
+      "select_commune": "-- Seleccionar comuna --",
+      "select_wilaya_first": "-- Seleccionar wilaya primero --"
+    },
+    "hints": {
+      "phone2_optional": "Opcional"
+    },
+    "errors": {
+      "password_required": "La contraseña es obligatoria",
+      "password_min_length": "La contraseña debe tener al menos 6 caracteres",
+      "confirm_password_required": "Por favor, confirme su contraseña",
+      "confirm_password_mismatch": "Las contraseñas no coinciden",
+      "first_name_required": "El nombre es obligatorio",
+      "first_name_min_length": "El nombre debe tener al menos 2 caracteres",
+      "last_name_required": "El apellido es obligatorio",
+      "last_name_min_length": "El apellido debe tener al menos 2 caracteres",
+      "email_required": "El correo electrónico es obligatorio",
+      "email_invalid": "Formato de correo electrónico inválido",
+      "wilaya_required": "Por favor, seleccione una wilaya",
+      "commune_required": "Por favor, seleccione una comuna",
+      "phone1_required": "El número de teléfono principal es obligatorio",
+      "phone_invalid": "Número de teléfono inválido (ej: 0555123456)",
+      "phone2_same_as_phone1": "El teléfono secundario debe ser diferente al principal",
+      "credentials_invalid": "Nombre de usuario o contraseña inválidos",
+      "register_failed": "Algo salió mal, por favor inténtelo más tarde",
+      "send_failed_retry": "Problema al enviar, por favor inténtelo más tarde",
+      "request_failed": "Error al enviar la solicitud, por favor inténtelo de nuevo",
+      "code_required": "Por favor, introduzca el código enviado a su correo"
+    },
+    "buttons": {
+      "submit_signin": "IR",
+      "submit_signup": "Registrarse",
+      "forget_password": "Olvidé mi contraseña",
+      "cancel": "Cancelar",
+      "send": "Enviar"
+    },
+    "labels": {
+      "or": "________o________",
+      "no_account": "Si no tiene una cuenta",
+      "have_account": "Si tiene una cuenta",
+      "sign_up": "Registrarse",
+      "sign_in": "Iniciar sesión",
+      "contact_info": "Información de contacto"
+    },
+    "change_password": {
+      "title_send": "Le enviaremos un código de verificación a este correo",
+      "title_sent": "El código ha sido enviado"
+    }
+  },
+  "features": {
+    "title": "¿POR QUÉ ELEGIR LOGO?",
+    "subtitle": "NOS COMPROMETEMOS A ENTREGAR PRODUCTOS DE CALIDAD CON UN SERVICIO EXCEPCIONAL.",
+    "cards": {
+      "fast_delivery": {
+        "title": "ENTREGA RÁPIDA",
+        "description": "RECIBA SUS PRODUCTOS EN 2-3 DÍAS HÁBILES CON ENVÍO GRATUITO EN PEDIDOS SUPERIORES A 50$."
+      },
+      "secure_shopping": {
+        "title": "COMPRAS SEGURAS",
+        "description": "SU INFORMACIÓN DE PAGO Y PERSONAL ESTÁ PROTEGIDA CON MEDIDAS DE SEGURIDAD LÍDERES EN LA INDUSTRIA."
+      },
+      "quality_guarantee": {
+        "title": "GARANTÍA DE CALIDAD",
+        "description": "TODOS LOS PRODUCTOS VIENEN CON UNA GARANTÍA DE DEVOLUCIÓN DE DINERO DE 30 DÍAS Y SOPORTE AL CLIENTE DE POR VIDA."
+      }
+    }
+  },
+  "pro": {
+    "title": "Nuestros Productos",
+    "subtitle": "Llevándole la calidad superior que merece.",
+    "view_all": "Ver todo"
+  },
+  "footer": {
+    "title": "CONTÁCTENOS",
+    "email_label": "Correo :",
+    "mobile_label": "Móvil :",
+    "social_label": "Redes sociales :"
+  },
+  "navbar": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "products": "Productos",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "ar": "Árabe",
+    "en": "Inglés",
+    "de": "Alemán",
+    "es": "Español",
+    "fr": "Francés"
+  },
+  "Hero": {
+    "title": {
+      "line1": "Piensa en verde...",
+      "line2": "Vive limpio"
+    },
+    "subtitle": "Energía limpia en la que puede confiar. Ahorre dinero y proteja la Tierra para un futuro más saludable, juntos.",
+    "buttons": {
+      "shop": "Comprar ahora",
+      "learn": "Saber más"
+    }
+  },
+  "order_form": {
+    "page": {
+      "title": "Completar su pedido",
+      "subtitle": "Introduzca su información para completar su pedido y nos pondremos en contacto con usted lo antes posible"
+    },
+    "steps": {
+      "product": "Producto",
+      "info": "Información",
+      "confirm": "Confirmación"
+    },
+    "trust": {
+      "secure_pay": "Pago seguro",
+      "secure_pay_sub": "Pago contra entrega",
+      "fast_delivery": "Entrega rápida",
+      "fast_delivery_sub": "2-5 días",
+      "free_return": "Devolución gratuita",
+      "free_return_sub": "7 días"
+    },
+    "buyer_info": {
+      "title": "Información del comprador",
+      "subtitle": "Por favor, complete todos los campos obligatorios para finalizar el pedido"
+    },
+    "fields": {
+      "first_name": "Nombre",
+      "last_name": "Apellido",
+      "wilaya": "Wilaya",
+      "commune": "Comuna",
+      "phone1": "Teléfono principal",
+      "phone2": "Teléfono secundario"
+    },
+    "placeholders": {
+      "first_name": "Introduzca el nombre",
+      "last_name": "Introduzca el apellido",
+      "select_wilaya": "-- Seleccionar wilaya --",
+      "select_commune": "-- Seleccionar comuna --",
+      "select_wilaya_first": "-- Seleccionar wilaya primero --",
+      "phone1": "0555 123 456",
+      "phone2": "0666 789 012"
+    },
+    "hints": {
+      "phone2_optional": "Opcional"
+    },
+    "errors": {
+      "first_name_required": "El nombre es obligatorio",
+      "first_name_min_length": "El nombre debe tener al menos 2 caracteres",
+      "last_name_required": "El apellido es obligatorio",
+      "last_name_min_length": "El apellido debe tener al menos 2 caracteres",
+      "wilaya_required": "Por favor, seleccione una wilaya",
+      "commune_required": "Por favor, seleccione una comuna",
+      "phone1_required": "El número de teléfono principal es obligatorio",
+      "phone_invalid": "Número de teléfono inválido (ej: 0555123456)",
+      "phone2_same_as_phone1": "El teléfono secundario debe ser diferente al principal",
+      "product_unavailable": "Este artículo no está disponible actualmente, por favor inténtelo más tarde"
+    },
+    "delivery": {
+      "section_title": "Información de contacto",
+      "fast_title": "Entrega rápida",
+      "fast_desc": "Su producto será entregado en 1 a 3 días",
+      "fast_price": "Precio: 50$",
+      "normal_title": "Entrega estándar",
+      "normal_desc": "Su producto será entregado en 4 días o más",
+      "normal_price": "Precio: 20$"
+    },
+    "submit": {
+      "confirm": "Confirmar pedido",
+      "confirming": "Confirmando pedido...",
+      "security_note": "🔒 Su información personal está completamente protegida y segura"
+    },
+    "success": {
+      "title": "¡Pedido confirmado con éxito! 🎉",
+      "subtitle": "Nos pondremos en contacto con usted pronto en uno de los números proporcionados",
+      "full_name": "Nombre completo",
+      "wilaya": "Wilaya",
+      "commune": "Comuna",
+      "phone1": "Teléfono principal",
+      "phone2": "Teléfono secundario",
+      "delivery": "Entrega",
+      "delivery_normal": "Estándar",
+      "delivery_fast": "Rápida",
+      "new_order": "Nuevo pedido"
+    },
+    "product_card": {
+      "title": "Información del producto pedido",
+      "category": "Productos",
+      "color": "Color",
+      "size": "Talla",
+      "quantity": "Cantidad",
+      "total": "Precio total:",
+      "currency": "DZD"
+    }
+  },
+  "cart": {
+    "empty": {
+      "title": "Su carrito está vacío",
+      "subtitle": "Comience a comprar y descubra nuestros increíbles productos",
+      "back_btn": "Volver a comprar"
+    },
+    "header": {
+      "title": "Carrito de compras",
+      "items_count": "Tiene {count} productos en su carrito"
+    },
+    "continue_shopping": "← Continuar comprando",
+    "selected_products": "Productos seleccionados",
+    "remove_btn": "🗑️ Eliminar",
+    "currency": "DZD",
+    "summary": {
+      "title": "Resumen del pedido",
+      "subtotal": "Subtotal",
+      "shipping": "Envío",
+      "shipping_free": "Gratis",
+      "discount": "Descuento ({discount}%)",
+      "total": "Total",
+      "checkout_btn": "Finalizar compra ←",
+      "secure_note": "🔒 Pago 100% seguro y encriptado"
+    }
+  },
+  "orders": {
+    "filters": {
+      "all": "Todos los pedidos",
+      "delivered": "Entregado",
+      "shipped": "Enviado",
+      "pending": "Pendiente",
+      "cancelled": "Cancelado"
+    },
+    "order_card": {
+      "order_id": "N.º de pedido",
+      "date_placed": "Fecha del pedido",
+      "item_count": "Número de artículos",
+      "hide_products": "Ocultar productos",
+      "show_products": "Mostrar productos",
+      "color": "color",
+      "size": "talla",
+      "qty": "Cant.",
+      "order_total": "Total del pedido"
+    },
+    "stats": {
+      "total_orders": "Total de pedidos",
+      "delivered": "Entregados",
+      "in_progress": "En curso",
+      "cancelled": "Cancelados"
+    },
+    "header": {
+      "title": "Historial de pedidos",
+      "subtitle": "Rastree y gestione sus pedidos",
+      "search_placeholder": "Buscar pedidos o productos..."
+    },
+    "empty": {
+      "title": "No se encontraron pedidos",
+      "subtitle": "Intente ajustar sus criterios de búsqueda o filtro",
+      "clear_filters": "Borrar filtros"
+    },
+    "profile": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "no_phone": "Sin números de teléfono",
+      "activate_msg": "Por favor, active su cuenta",
+      "activate_link": "Desde aquí"
+    },
+    "edit_form": {
+      "title": "Editar perfil",
+      "first_name": "Nombre",
+      "last_name": "Apellido",
+      "wilaya": "Wilaya",
+      "commune": "Comuna",
+      "email": "Correo electrónico",
+      "phone1": "Teléfono principal",
+      "phone2": "Teléfono secundario",
+      "phone2_hint": "Opcional",
+      "placeholders": {
+        "first_name": "Introduzca el nombre",
+        "last_name": "Introduzca el apellido",
+        "select_wilaya": "-- Seleccionar wilaya --",
+        "select_commune": "-- Seleccionar comuna --",
+        "select_wilaya_first": "-- Seleccionar wilaya primero --",
+        "email": "@gmail.com",
+        "phone1": "0555 123 456",
+        "phone2": "0666 789 012"
+      },
+      "contact_divider": "Información de contacto",
+      "change_password_btn": "Cambiar contraseña",
+      "cancel_btn": "Cancelar",
+      "save_btn": "Guardar",
+      "security_note": "🔒 Su información personal está completamente protegida y segura",
+      "errors": {
+        "no_change": "Debe cambiar al menos un campo",
+        "first_name_min": "El nombre debe tener al menos 2 caracteres",
+        "last_name_min": "El apellido debe tener al menos 2 caracteres",
+        "commune_required": "Por favor, seleccione una comuna",
+        "wilaya_required": "Por favor, seleccione una wilaya",
+        "email_invalid": "Formato de correo electrónico inválido",
+        "phone_invalid": "Número de teléfono inválido (ej: 0555123456)",
+        "phone2_same": "El teléfono secundario debe ser diferente al principal",
+        "update_failed": "Algo salió mal durante la actualización"
+      }
+    },
+    "password_form": {
+      "title_send": "Le enviaremos un código de verificación a este correo",
+      "title_sent": "El código ha sido enviado",
+      "email_label": "Correo electrónico",
+      "code_label": "Código",
+      "password_label": "Contraseña",
+      "confirm_password_label": "Confirmar contraseña",
+      "placeholders": {
+        "password": "Introduzca su contraseña",
+        "confirm_password": "Confirme su contraseña"
+      },
+      "cancel_btn": "Cancelar",
+      "send_btn": "Enviar",
+      "errors": {
+        "code_required": "Por favor, introduzca el código enviado a su correo",
+        "password_required": "La contraseña es obligatoria",
+        "password_min": "Al menos 6 caracteres",
+        "confirm_required": "Por favor, confirme su contraseña",
+        "confirm_mismatch": "Las contraseñas no coinciden",
+        "send_failed": "Algo salió mal durante el envío"
+      }
+    }
+  }
+}
