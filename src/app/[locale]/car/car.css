@@ -1,85 +1,10 @@
-.warning {
-  width: 350px;
-  height: auto;
-  z-index: 12;
-  color: rgb(255, 0, 0);
-  background-color: white;
-  box-shadow: 0 10px 16px rgba(20, 20, 37, 0.411);
-  border-radius: 30px;
-  padding: 20px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.warning .btn {
-  width: 100%;
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end;
-}
-.warning .btn button {
-  background-color: rgb(0, 128, 0);
-  padding: 10px;
-  border-radius: 30px;
-  border: none;
-}
-.Order_detail .Product_detail .detail {
-  flex-direction: column;
-  width: 100%;
-  margin-bottom: 10px;
-}
-.Order_detail .Product_detail .detail_delivery {
-  width: 100%;
-}
-.Order_detail .Product_detail .detail_delivery .Ferst_Name_order,
-.Last_Name_order,
-.wilaya_order,
-.Phone {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 70%;
-  margin-bottom: 5px;
-}
-.Order_detail .Product_detail .detail_delivery .wilaya select {
-  color: #000;
-  background-color: #fff0;
-  border: 2px solid #000;
-  border-radius: 30px;
-  width: 200px;
-  margin-bottom: 5px;
-  padding: 5px;
-}
-.Order_detail .Product_detail .detail_delivery input {
-  color: #000;
-  background-color: #fff0;
-  border: 2px solid #000;
-  border-radius: 30px;
-  width: 200px;
-  padding: 5px;
-}
-.Order_detail .Product_detail .detail label {
-  font-weight: 600;
-  font-size: large;
-  display: block;
-}
-.Order_detail .Product_detail .detail_delivery label {
-  font-weight: 600;
-  font-size: large;
-  display: block;
-}
-.Order_detail .Product_detail .detail h1 {
-  font-weight: 900;
-  font-size: xx-large;
-}
-.Order_detail .Product_detail .detail p {
-  font-weight: 900;
-  font-size: large;
-}
+/* ============================================================
+   CART PAGE
+   ============================================================ */
 .cart-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
   border-radius: var(--radius);
 }
@@ -89,7 +14,7 @@
   margin: 0 auto;
 }
 
-/* Header */
+/* ── Header ── */
 .cart-page .cart-header {
   text-align: center;
   margin-bottom: 40px;
@@ -113,7 +38,24 @@
   margin-bottom: 15px;
 }
 
-/* Cart Content */
+/* ── Continue Shopping Link ── */
+.cart-page .continue-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #4299e1;
+  text-decoration: none;
+  margin-bottom: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.cart-page .continue-link:hover {
+  color: #3182ce;
+}
+
+/* ── Layout ── */
 .cart-page .cart-content {
   display: grid;
   grid-template-columns: 1fr 350px;
@@ -121,7 +63,9 @@
   align-items: start;
 }
 
-/* Cart Items Section */
+/* ============================================================
+       CART ITEMS SECTION
+       ============================================================ */
 .cart-page .cart-items-section {
   background: white;
   border-radius: 16px;
@@ -139,22 +83,22 @@
   border-bottom: 2px solid #e2e8f0;
 }
 
-/* Cart Item */
 .cart-page .cart-items-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+/* ── Cart Item ── */
 .cart-page .cart-item {
   display: flex;
   gap: 20px;
   padding: 20px;
   background: #f8fafc;
   border-radius: 12px;
-  transition: all 0.3s ease;
   border: 1px solid transparent;
   animation: fadeIn 0.3s ease-out;
+  transition: all 0.3s ease;
 }
 
 .cart-page .cart-item:hover {
@@ -191,11 +135,6 @@
   font-weight: 600;
 }
 
-.cart-page .item-info .item-variant {
-  color: #718096;
-  font-size: 0.9rem;
-}
-
 .cart-page .item-info .item-price {
   color: #4299e1;
   font-size: 1.3rem;
@@ -210,11 +149,10 @@
   margin-top: 10px;
 }
 
-/* Quantity Control */
+/* ── Quantity Control ── */
 .cart-page .quantity-control {
   display: flex;
   align-items: center;
-  gap: 0;
   background: white;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
@@ -229,16 +167,15 @@
   color: #4a5568;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
 }
 
 .cart-page .quantity-btn:hover {
   background: #e2e8f0;
 }
-
 .cart-page .quantity-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -249,28 +186,27 @@
   text-align: center;
   font-weight: 600;
   color: #2d3748;
-  border: none;
   background: white;
   font-size: 1rem;
 }
 
+/* ── Color Select ── */
 .cart-page .Size_Color {
   color: black;
-  cursor: pointer;
   background: white;
-  border: none;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  align-items: center;
   padding: 8px 16px;
   font-size: 0.9rem;
-  border: 1px solid #e2e8f0;
+  cursor: pointer;
   transition: all 0.2s;
 }
 
 .cart-page .Size_Color:hover {
-  border: 1px solid black;
+  border-color: black;
 }
 
+/* ── Remove Button ── */
 .cart-page .remove-btn {
   background: #fed7d7;
   color: #c53030;
@@ -279,10 +215,10 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: all 0.2s;
   display: flex;
   align-items: center;
   gap: 5px;
+  transition: all 0.2s;
 }
 
 .cart-page .remove-btn:hover {
@@ -290,7 +226,9 @@
   color: white;
 }
 
-/* Order Summary */
+/* ============================================================
+       ORDER SUMMARY
+       ============================================================ */
 .cart-page .order-summary {
   background: white;
   border-radius: 16px;
@@ -331,56 +269,7 @@
   color: #2d3748;
 }
 
-/* Promo Code */
-.cart-page .promo-section {
-  margin: 20px 0;
-  padding: 20px 0;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.cart-page .promo-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #4a5568;
-  font-size: 0.95rem;
-}
-
-.cart-page .promo-input-wrapper {
-  display: flex;
-  gap: 10px;
-}
-
-.cart-page .promo-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  transition: border-color 0.2s;
-}
-
-.cart-page .promo-input:focus {
-  outline: none;
-  border-color: #4299e1;
-}
-
-.cart-page .promo-btn {
-  padding: 12px 20px;
-  background: #4299e1;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.cart-page .promo-btn:hover {
-  background: #3182ce;
-}
-
-/* Checkout Button */
+/* ── Checkout Button ── */
 .cart-page .checkout-btn {
   width: 100%;
   padding: 16px;
@@ -391,13 +280,8 @@
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s;
   margin-top: 10px;
-}
-
-.cart-page .spin {
-  width: 20px;
-  height: 20px;
+  transition: all 0.3s;
 }
 
 .cart-page .checkout-btn:hover {
@@ -407,6 +291,11 @@
 
 .cart-page .checkout-btn:active {
   transform: translateY(0);
+}
+
+.cart-page .spin {
+  width: 20px;
+  height: 20px;
 }
 
 .cart-page .secure-note {
@@ -419,7 +308,9 @@
   font-size: 0.85rem;
 }
 
-/* Empty Cart */
+/* ============================================================
+       EMPTY CART
+       ============================================================ */
 .cart-page .empty-cart {
   text-align: center;
   padding: 60px 20px;
@@ -459,23 +350,23 @@
   transform: translateY(-2px);
 }
 
-/* Continue Shopping Link */
-.cart-page .continue-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #4299e1;
-  text-decoration: none;
-  margin-bottom: 20px;
-  font-weight: 500;
-  transition: color 0.2s;
+/* ============================================================
+       ANIMATIONS
+       ============================================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.cart-page .continue-link:hover {
-  color: #3182ce;
-}
-
-/* Responsive Design */
+/* ============================================================
+       RESPONSIVE
+       ============================================================ */
 @media (max-width: 968px) {
   .cart-page .cart-content {
     grid-template-columns: 1fr;
@@ -515,61 +406,19 @@
   .cart-page .order-summary {
     padding: 15px;
   }
-
-  .cart-page .promo-input-wrapper {
-    flex-direction: column;
-  }
-
-  .cart-page .promo-btn {
-    width: 100%;
-  }
 }
 
 @media (max-width: 380px) {
   .cart-page .cart-header h1 {
     font-size: 1.5rem;
   }
-
   .cart-page .section-title {
     font-size: 1.2rem;
   }
-
   .cart-page .item-info h3 {
     font-size: 1rem;
   }
-
   .cart-page .item-info .item-price {
     font-size: 1.1rem;
   }
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Custom Scrollbar */
-.cart-page .cart-items-section::-webkit-scrollbar {
-  width: 8px;
-}
-
-.cart-page .cart-items-section::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.cart-page .cart-items-section::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 4px;
-}
-
-.cart-page .cart-items-section::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
 }

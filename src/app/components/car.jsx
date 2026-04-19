@@ -24,68 +24,56 @@ export default function Car_component() {
   );
 
   async function fetchProducts(silent = false) {
-    if (!silent) setLoading(false);
+    if (!silent) setLoading(true); // ابدأ التحميل
 
     const productsInCart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-    if (!productsInCart || productsInCart.length === 0) {
+    if (productsInCart.length === 0) {
       setItems(undefined);
+      setLoading(false);
       return;
     }
 
-    const ids = productsInCart.map((item) => item.id);
+    const ids = [...new Set(productsInCart.map((item) => item.id))];
 
     try {
       const res = await fetch(`http://${URL}:8000/api/products/by-ids/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids }),
-        cache: "no-store",
       });
 
-      if (!res.ok) {
-        handleClick(toastT("order_send_failed"), "error");
-        throw new Error("Failed to fetch products");
-      }
+      if (!res.ok) throw new Error("Fetch failed");
 
       const fetchedProducts = await res.json();
       setproducts(fetchedProducts);
 
-      const itemsList = [];
-
-      for (const product of fetchedProducts) {
-        for (const color of product.colors) {
-          const colorValue = color.color || color.color_name;
-          const inCart = productsInCart.some(
-            (item) => item.id === product.id && item.color === colorValue,
-          );
-
-          if (inCart) {
-            const cartItem = productsInCart.find(
-              (item) => item.id === product.id && item.color === colorValue,
-            );
-            itemsList.push({
+      // بناء قائمة العناصر بناءً على ما في السلة حالياً
+      const itemsList = productsInCart.map(cartItem => {
+        const product = fetchedProducts.find(p => p.id === cartItem.id);
+        if (!product) return null;
+  
+        const colorInfo = product.colors.find(c => (c.color || c.color_name) === cartItem.color);
+        
+        return {
               id: product.id,
               product: product.primary_image,
               name: product.name,
-              color: colorValue,
+          color: cartItem.color,
               price: product.price,
-              size: "/",
-              stock: color.quantity,
-              quantity: cartItem?.quantity,
-            });
-          }
-        }
-      }
-
-      const cleanItems = itemsList.filter((item) =>
-        productsInCart.some(
-          (pro) => pro.id === item.id && pro.color === item.color,
-        ),
-      );
-
-      setItems(cleanItems);
-    } catch (error) {}
+          size: cartItem.size || "/",
+          stock: colorInfo ? colorInfo.quantity : 0,
+          quantity: cartItem.quantity,
+        };
+      }).filter(Boolean); // إزالة العناصر الفارغة
+  
+      setItems(itemsList);
+    } catch (error) {
+      console.error(error);
+      handleClick(toastT("order_send_failed"), "error");
+    } finally {
+      setLoading(false); // إنهاء التحميل في كل الحالات
+    }
   }
 
   useEffect(() => {
@@ -115,7 +103,7 @@ export default function Car_component() {
         (product, x) =>
           x !== i &&
           product.id === productsInCart[i].id &&
-          product.color === input,
+          product.color === input
       );
       if (isDuplicate) {
         handleClick(toastT("item_already_in_cart"), "warning");
@@ -125,14 +113,28 @@ export default function Car_component() {
 
     const updatedCart = productsInCart.map((item, x) => {
       if (x !== i) return item;
-      if (operation === "color") return { ...item, color: input };
-      if (operation === "size") return { ...item, size: input };
-      if (operation === "quantity") return { ...item, quantity: input };
-      return item;
+      return { ...item, [operation]: input };
     });
 
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-    fetchProducts(true);
+  
+    // تحديث حالة items فوراً لضمان عدم اختفاء العنصر
+    const updatedItems = items.map((item, x) => {
+      if (x !== i) return item;
+      
+      // إذا تغير اللون، نحتاج لتحديث الـ stock من بيانات الـ products الأصلية
+      let newStock = item.stock;
+      if (operation === "color") {
+        const product = products.find(p => p.id === item.id);
+        const colorInfo = product?.colors.find(c => (c.color || c.color_name) === input);
+        newStock = colorInfo ? colorInfo.quantity : 0;
+      }
+  
+      return { ...item, [operation]: input, stock: newStock };
+    });
+  
+    setItems(updatedItems);
+    // اختياري: يمكنك استدعاء fetchProducts(true) للتأكد من المزامنة مع السيرفر
   }
 
   function hendel_delet_car(i) {
@@ -214,6 +216,10 @@ export default function Car_component() {
       />
     </svg>
   );
+
+  if (loading && (!items || items.length === 0)) {
+    return <div className="loading-screen"><Spinner /></div>;
+  }
 
   if (!items) {
     return (

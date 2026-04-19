@@ -1,3 +1,6 @@
+/* ============================================
+   SHOP CONTAINER
+   ============================================ */
 .shop-container {
   display: flex;
   flex-direction: column;
@@ -7,6 +10,9 @@
   padding: 0 20px;
 }
 
+/* ============================================
+       HERO
+       ============================================ */
 .shop-hero {
   background: rgba(255, 255, 255, 0.2);
   padding: 60px 24px;
@@ -14,15 +20,6 @@
   position: relative;
   overflow: hidden;
   border-radius: 12px;
-}
-
-.shop-hero::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
 }
 
 .shop-hero .hero-content {
@@ -69,12 +66,17 @@
   color: rgba(255, 255, 255, 0.75);
   font-weight: 500;
 }
+
+/* ============================================
+       MAIN CONTAINER
+       ============================================ */
 .main-container {
   padding: 40px 24px;
   background-color: white;
   border-radius: 12px;
   text-align: end;
 }
+
 .section-header {
   display: flex;
   flex-direction: row-reverse;
@@ -90,12 +92,15 @@
   font-weight: 800;
   color: black;
 }
+
+/* ============================================
+       CATEGORIES SCROLL
+       ============================================ */
 .categories-scroll-wrapper {
   position: relative;
   margin-bottom: 28px;
 }
 
-/* Scroll container */
 .categories-scroll {
   display: flex;
   gap: 14px;
@@ -105,13 +110,37 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  direction: ltr;
 }
 
 .categories-scroll::-webkit-scrollbar {
   display: none;
 }
 
-/* Scroll Arrow Buttons */
+/* Gradient fade edges */
+.categories-scroll-wrapper::before,
+.categories-scroll-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 5;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.categories-scroll-wrapper::before {
+  left: 0;
+}
+
+.categories-scroll-wrapper::after {
+  right: 0;
+}
+
+/* ============================================
+       SCROLL ARROWS
+       ============================================ */
 .scroll-arrow {
   position: absolute;
   top: 50%;
@@ -153,28 +182,9 @@
   transform: translateY(-50%) scale(0.8);
 }
 
-/* Gradient fade edges */
-.categories-scroll-wrapper::before,
-.categories-scroll-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 60px;
-  z-index: 5;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.categories-scroll-wrapper::before {
-  left: 0;
-}
-
-.categories-scroll-wrapper::after {
-  right: 0;
-}
-
-/* Category Scroll Button */
+/* ============================================
+       CATEGORY BUTTON
+       ============================================ */
 .category-scroll-btn {
   display: flex;
   flex-direction: column;
@@ -195,7 +205,7 @@
 }
 
 .category-scroll-btn::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 16px;
@@ -225,33 +235,6 @@
   opacity: 0.1;
 }
 
-/* Category Icon */
-.category-scroll-icon {
-  font-size: 1.8rem;
-  line-height: 1;
-  position: relative;
-  z-index: 1;
-  transition: transform 0.35s ease;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  background: var(--bg-main);
-}
-
-.category-scroll-btn:hover .category-scroll-icon,
-.category-scroll-btn.active .category-scroll-icon {
-  transform: scale(1.12);
-  background: rgba(108, 92, 231, 0.05);
-}
-
-.category-scroll-btn.active .category-scroll-icon {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-/* Category Name */
 .category-scroll-name {
   font-size: 0.8rem;
   font-weight: 700;
@@ -268,23 +251,15 @@
 .category-scroll-btn:hover .category-scroll-name {
   color: var(--text-dark);
 }
+
 .category-scroll-btn.active .category-scroll-name {
   color: var(--cat-color);
   font-weight: 800;
 }
 
-@keyframes dotPulse {
-  0%,
-  100% {
-    transform: translateX(-50%) scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: translateX(-50%) scale(1.6);
-    opacity: 0.6;
-  }
-}
-
+/* ============================================
+       TOOLBAR
+       ============================================ */
 .toolbar {
   display: flex;
   align-items: center;
@@ -358,6 +333,7 @@
   background: var(--accent);
   color: white;
 }
+
 .toolbar-actions {
   display: flex;
   align-items: center;
@@ -410,6 +386,10 @@
   font-weight: 700;
   margin-right: -4px;
 }
+
+/* ============================================
+       FILTER PANEL
+       ============================================ */
 .filter-panel {
   background: var(--bg-card);
   border: 2px solid var(--border);
@@ -418,6 +398,7 @@
   overflow: hidden;
   animation: panelSlideIn 0.3s ease;
   box-shadow: var(--shadow-md);
+  width: 100%;
 }
 
 @keyframes panelSlideIn {
@@ -499,7 +480,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
-  padding: 0;
 }
 
 .filter-group {
@@ -563,7 +543,7 @@
   color: var(--text-medium);
 }
 
-.price-input-group input[type="number"] {
+.price-input-group input[type='number'] {
   width: 100%;
   padding: 10px 12px;
   border: 2px solid var(--border);
@@ -577,7 +557,7 @@
   transition: var(--transition);
 }
 
-.price-input-group input[type="number"]:focus {
+.price-input-group input[type='number']:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
 }
@@ -697,24 +677,16 @@
   color: var(--primary);
 }
 
+/* ============================================
+       RESULTS BAR & ACTIVE FILTERS
+       ============================================ */
 .results-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 12px;
-}
-
-.results-count {
-  font-size: 0.9rem;
-  color: var(--text-medium);
-  font-weight: 500;
-}
-
-.results-count strong {
-  color: var(--primary);
-  font-weight: 800;
 }
 
 .active-filters-tags {
@@ -759,13 +731,16 @@
   width: 14px;
   height: 14px;
 }
+
+/* ============================================
+       SORT DROPDOWN
+       ============================================ */
 .sort-arrow {
   font-size: 0.65rem;
   margin-right: -4px;
   opacity: 0.6;
 }
 
-/* Sort Dropdown */
 .sort-dropdown-wrapper {
   position: relative;
 }
@@ -831,64 +806,60 @@
   font-size: 1rem;
 }
 
-/* View Toggle */
-.view-toggle {
-  display: flex;
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.view-toggle-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: var(--bg-card);
-  border: none;
-  color: var(--text-light);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.view-toggle-btn:first-child {
-  border-left: 1px solid var(--border);
-}
-
-.view-toggle-btn:hover {
-  color: var(--primary);
-  background: rgba(108, 92, 231, 0.04);
-}
-
-.view-toggle-btn.active {
-  background: var(--primary);
-  color: white;
-}
-
+/* ============================================
+       PRODUCTS GRID
+       ============================================ */
 .shop-container .products-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 24px;
 }
 
+/* ============================================
+       ANIMATIONS
+       ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+       SCROLLBAR
+       ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-light);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-medium);
+}
+
+/* ============================================
+       RESPONSIVE
+       ============================================ */
 @media (max-width: 1200px) {
   .shop-container .products-grid {
     grid-template-columns: repeat(5, 1fr);
   }
-
-  .features-section {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .filter-panel-body {
     grid-template-columns: repeat(3, 1fr);
   }
-
   .toolbar-btn-text {
     display: inline;
   }
-
   .category-scroll-btn {
     min-width: 90px;
     max-width: 100px;
@@ -896,7 +867,6 @@
   }
 }
 
-/* Tablet Portrait */
 @media (max-width: 992px) {
   .shop-container .products-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -905,67 +875,39 @@
   .shop-hero h1 {
     font-size: 2.2rem;
   }
-
   .shop-hero p {
     font-size: 1rem;
   }
-
-  .nav-links {
-    display: none;
-  }
-
-  .mobile-menu-btn {
-    display: flex;
-  }
-
   .shop-hero .hero-stats {
     gap: 24px;
   }
-
   .shop-hero .hero-stat-number {
     font-size: 1.6rem;
   }
-
   .filter-panel-body {
     grid-template-columns: repeat(2, 1fr);
   }
-
   .filter-group {
     border-left: none;
     border-bottom: 1px solid var(--border);
   }
-
   .filter-group:last-child {
     border-bottom: none;
   }
-
   .toolbar-btn-text {
     display: none;
   }
-
   .sort-dropdown {
     left: auto;
     right: 0;
   }
-
   .category-scroll-btn {
     min-width: 85px;
     max-width: 95px;
     padding: 12px 8px;
   }
-
-  .category-scroll-icon {
-    font-size: 1.6rem;
-    width: 42px;
-    height: 42px;
-  }
-
-  .category-scroll-name {
-    font-size: 0.75rem;
-  }
 }
 
-/* Mobile Landscape */
 @media (max-width: 768px) {
   .shop-container .products-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -974,66 +916,45 @@
   .shop-hero {
     padding: 40px 20px;
   }
-
   .shop-hero h1 {
     font-size: 1.8rem;
   }
-
-  .features-section {
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+  .main-container {
+    padding: 24px 16px;
   }
-
   .section-header {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .main-container {
-    padding: 24px 16px;
-  }
-
-  .current-price {
-    font-size: 1.1rem;
-  }
-
   .toolbar {
     flex-direction: column;
     align-items: stretch;
   }
-
   .toolbar-search {
     min-width: 100%;
   }
-
   .toolbar-actions {
     justify-content: space-between;
   }
-
   .filter-panel-body {
     grid-template-columns: 1fr;
   }
-
   .filter-group {
     border-left: none;
     border-bottom: 1px solid var(--border);
   }
-
   .results-bar {
     flex-direction: column;
     align-items: flex-start;
   }
-
   .scroll-arrow {
     width: 38px;
     height: 38px;
   }
-
   .categories-scroll-wrapper::before,
   .categories-scroll-wrapper::after {
     width: 40px;
   }
-
   .category-scroll-btn {
     min-width: 80px;
     max-width: 90px;
@@ -1041,84 +962,41 @@
     border-radius: 14px;
     gap: 6px;
   }
-
-  .category-scroll-icon {
-    font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-  }
-
   .category-scroll-name {
     font-size: 0.72rem;
   }
 }
 
-/* Mobile Portrait */
 @media (max-width: 480px) {
   .shop-container .products-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
-
   .shop-hero h1 {
     font-size: 1.5rem;
   }
-
   .shop-hero p {
     font-size: 0.9rem;
   }
-
   .shop-hero .hero-stats {
     gap: 16px;
   }
-
   .shop-hero .hero-stat-number {
     font-size: 1.3rem;
   }
-
   .shop-hero .hero-stat-label {
     font-size: 0.75rem;
   }
-
-  .features-section {
-    grid-template-columns: 1fr;
-  }
-
   .section-title {
     font-size: 1.3rem;
   }
-  .current-price {
-    font-size: 1rem;
-  }
-
-  .original-price {
-    font-size: 0.75rem;
-  }
-
-  .add-to-cart-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    font-size: 0.95rem;
-  }
-  .stars {
-    font-size: 0.7rem;
-  }
-
-  .rating-count {
-    font-size: 0.7rem;
-  }
-
   .toolbar-btn {
     padding: 10px 14px;
     font-size: 0.85rem;
   }
-
   .toolbar-actions {
     flex-wrap: wrap;
   }
-
   .sort-dropdown {
     position: fixed;
     left: 16px;
@@ -1128,41 +1006,29 @@
     min-width: auto;
     border-radius: 18px;
   }
-
   .filter-panel {
     border-radius: 14px;
   }
-
   .filter-panel-header {
     padding: 16px;
   }
-
   .filter-group {
     padding: 16px;
   }
-
-  .view-toggle {
-    display: none;
-  }
-
   .scroll-arrow {
     width: 34px;
     height: 34px;
   }
-
   .scroll-arrow-left {
     left: -4px;
   }
-
   .scroll-arrow-right {
     right: -4px;
   }
-
   .categories-scroll {
     gap: 10px;
     padding: 8px 2px 12px 2px;
   }
-
   .category-scroll-btn {
     min-width: 72px;
     max-width: 82px;
@@ -1170,194 +1036,29 @@
     border-radius: 12px;
     gap: 5px;
   }
-
-  .category-scroll-icon {
-    font-size: 1.3rem;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-  }
-
   .category-scroll-name {
     font-size: 0.68rem;
     max-width: 70px;
   }
-
   .categories-scroll-wrapper::before,
   .categories-scroll-wrapper::after {
     width: 28px;
   }
 }
 
-/* Small Mobile */
 @media (max-width: 360px) {
   .shop-container .products-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-
   .category-scroll-btn {
     min-width: 66px;
     max-width: 76px;
     padding: 8px 4px;
     gap: 4px;
   }
-
-  .category-scroll-icon {
-    font-size: 1.2rem;
-    width: 32px;
-    height: 32px;
-  }
-
   .category-scroll-name {
     font-size: 0.63rem;
     max-width: 64px;
-  }
-}
-
-/* ============================================
-   SCROLLBAR STYLES
-   ============================================ */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--text-light);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-medium);
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--text-light);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-medium);
-}
-::-webkit-scrollbar {
-  width: 8px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--text-light);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-medium);
-}
-
-
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--text-light);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-medium);
-}
-
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--text-light);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-medium);
-}
-
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--text-light);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-medium);
-}
-
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--text-light);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-medium);
-}
-
-/* ============================================
-   ANIMATIONS
-   ============================================ */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }

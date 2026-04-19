@@ -24,7 +24,8 @@
     "quantity_invalid": "من فضلك ادخل كمية صحيحة",
     "delete_cart_item_failed": "فشل في حذف العنصر من السلة",
     "item_removed_from_cart_success": "تم حذف العنصر من السلة",
-    "quantity_invalid_or_remove": "من فضلك ادخل كمية صحيحة او احذف المنتج"
+    "quantity_invalid_or_remove": "من فضلك ادخل كمية صحيحة او احذف المنتج",
+    "review_sent_success":"تقيمك معتبر شكرا"
   },
   "login": {
     "fields": {
@@ -237,7 +238,8 @@
       "size": "المقاس",
       "quantity": "الكمية",
       "total": "مجموع السعر:",
-      "currency": "دج"
+      "currency": "دج",
+      "price": "السعر"
     }
   },
   "cart": {
@@ -365,6 +367,103 @@
         "confirm_mismatch": "كلمتا السر غير متطابقتين",
         "send_failed": "هناك مشكلة أثناء الإرسال"
       }
+    }
+  },
+  "product_detail": {
+    "gallery": {
+      "image_alt": "صورة {index}",
+      "thumbnail_alt": "صورة مصغرة {index}",
+      "scroll_forward": "تمرير للأمام",
+      "scroll_back": "تمرير للخلف",
+      "badge_sale": "خصم {discount}%",
+      "badge_new": "جديد"
+    },
+    "rating": {
+      "out_of": "من 5",
+      "reviews": "تقييم",
+      "sales": "مبيعة"
+    },
+    "price": {
+      "currency": "دج",
+      "save": "وفّر {amount} دج"
+    },
+    "color": {
+      "label": "اللون"
+    },
+    "size": {
+      "label": "المقاس",
+      "unit": "EU"
+    },
+    "quantity": {
+      "label": "الكمية",
+      "low_stock": "متبقي {count} قطع فقط!",
+      "out_of_stock": "نفذت الكمية"
+    },
+    "buttons": {
+      "add_to_cart": "أضف إلى السلة",
+      "buy_now": "شراء الآن"
+    }
+  },
+  "shop": {
+    "hero": {
+      "title": "اكتشف أفضل المنتجات بأسعار مذهلة",
+      "subtitle": "تسوّق الآن واستمتع بعروض حصرية وخصومات تصل إلى 50% على أفضل المنتجات العالمية",
+      "stats": {
+        "products": "+5000",
+        "products_label": "منتج متاح",
+        "customers": "+10K",
+        "customers_label": "عميل سعيد",
+        "rating": "4.9⭐",
+        "rating_label": "تقييم المتجر"
+      }
+    },
+    "categories": {
+      "section_title": "تصفح الأقسام",
+      "all": "الكل",
+      "scroll_forward": "تمرير للأمام",
+      "scroll_back": "تمرير للخلف"
+    },
+    "toolbar": {
+      "search_placeholder": "ابحث في المنتجات بالاسم...",
+      "filter_btn": "الفلتر",
+      "sort_btn_default": "الترتيب الافتراضي"
+    },
+    "sort": {
+      "default": "الترتيب الافتراضي",
+      "max_price": "السعر: من الأقل للأعلى",
+      "min_price": "السعر: من الأعلى للأقل",
+      "rating": "الأعلى تقييماً",
+      "reviews": "الأكثر مراجعات",
+      "newest": "الأحدث أولاً",
+      "oldest": "الأقدم أولاً"
+    },
+    "filter": {
+      "title": "خيارات الفلتر",
+      "reset": "إعادة تعيين",
+      "price_range": "💰 نطاق السعر",
+      "price_from": "من",
+      "price_to": "إلى",
+      "price_currency": "دج",
+      "rating_title": "⭐ الحد الأدنى للتقييم",
+      "rating_all": "الكل",
+      "product_type_title": "🏷️ نوع المنتج",
+      "badges": {
+        "new": "🆕 جديد",
+        "sale": "🔖 خصم",
+        "hot": "🔥 رائج",
+        "none": "📦 عادي"
+      }
+    },
+    "active_filters": {
+      "search_label": "🔍 \"{query}\"",
+      "category_label": "📂 {name}",
+      "sort_label": "📊 {sort}",
+      "filters_count": "🔧 {count} فلتر نشط"
+    },
+    "product_card": {
+      "in_stock": "in stock",
+      "add_to_cart": "Add to cart",
+      "currency": "DZ"
     }
   }
 }

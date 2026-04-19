@@ -24,7 +24,8 @@
     "quantity_invalid": "Please enter a valid quantity",
     "delete_cart_item_failed": "Failed to remove item from cart",
     "item_removed_from_cart_success": "Item removed from cart",
-    "quantity_invalid_or_remove": "Please enter a valid quantity or remove the product"
+    "quantity_invalid_or_remove": "Please enter a valid quantity or remove the product",
+    "review_sent_success": "Your review has been submitted successfully"
   },
   "login": {
     "fields": {
@@ -90,6 +91,10 @@
       "sign_up": "Sign up",
       "sign_in": "Sign in",
       "contact_info": "Contact Information"
+    },
+    "change_password": {
+      "title_send": "Nous vous enverrons un code de vérification à cet e-mail",
+      "title_sent": "Le code a été envoyé"
     }
   },
   "features": {
@@ -233,7 +238,8 @@
       "size": "Size",
       "quantity": "Quantity",
       "total": "Total Price:",
-      "currency": "DZD"
+      "currency": "DZD",
+      "price": "Price"
     }
   },
   "cart": {
@@ -361,6 +367,103 @@
         "confirm_mismatch": "Passwords do not match",
         "send_failed": "Something went wrong while sending"
       }
+    }
+  },
+  "product_detail": {
+    "gallery": {
+      "image_alt": "Image {index}",
+      "thumbnail_alt": "Thumbnail {index}",
+      "scroll_forward": "Scroll forward",
+      "scroll_back": "Scroll back",
+      "badge_sale": "{discount}% OFF",
+      "badge_new": "New"
+    },
+    "rating": {
+      "out_of": "out of 5",
+      "reviews": "reviews",
+      "sales": "sold"
+    },
+    "price": {
+      "currency": "DZD",
+      "save": "Save {amount} DZD"
+    },
+    "color": {
+      "label": "Color"
+    },
+    "size": {
+      "label": "Size",
+      "unit": "EU"
+    },
+    "quantity": {
+      "label": "Quantity",
+      "low_stock": "Only {count} items left!",
+      "out_of_stock": "Out of stock"
+    },
+    "buttons": {
+      "add_to_cart": "Add to Cart",
+      "buy_now": "Buy Now"
+    }
+  },
+  "shop": {
+    "hero": {
+      "title": "Discover the Best Products at Amazing Prices",
+      "subtitle": "Shop now and enjoy exclusive offers and discounts up to 50% on the best products worldwide",
+      "stats": {
+        "products": "+5000",
+        "products_label": "Available Products",
+        "customers": "+10K",
+        "customers_label": "Happy Customers",
+        "rating": "4.9⭐",
+        "rating_label": "Store Rating"
+      }
+    },
+    "categories": {
+      "section_title": "Browse Categories",
+      "all": "All",
+      "scroll_forward": "Scroll forward",
+      "scroll_back": "Scroll back"
+    },
+    "toolbar": {
+      "search_placeholder": "Search products by name...",
+      "filter_btn": "Filter",
+      "sort_btn_default": "Default Sort"
+    },
+    "sort": {
+      "default": "Default Sort",
+      "max_price": "Price: Low to High",
+      "min_price": "Price: High to Low",
+      "rating": "Highest Rated",
+      "reviews": "Most Reviewed",
+      "newest": "Newest First",
+      "oldest": "Oldest First"
+    },
+    "filter": {
+      "title": "Filter Options",
+      "reset": "Reset",
+      "price_range": "💰 Price Range",
+      "price_from": "From",
+      "price_to": "To",
+      "price_currency": "DZD",
+      "rating_title": "⭐ Minimum Rating",
+      "rating_all": "All",
+      "product_type_title": "🏷️ Product Type",
+      "badges": {
+        "new": "🆕 New",
+        "sale": "🔖 Sale",
+        "hot": "🔥 Hot",
+        "none": "📦 Regular"
+      }
+    },
+    "active_filters": {
+      "search_label": "🔍 \"{query}\"",
+      "category_label": "📂 {name}",
+      "sort_label": "📊 {sort}",
+      "filters_count": "🔧 {count} active filters"
+    },
+    "product_card": {
+      "in_stock": "in stock",
+      "add_to_cart": "Add to cart",
+      "currency": "DZ"
     }
   }
 }

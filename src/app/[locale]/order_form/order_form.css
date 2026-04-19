@@ -1,3 +1,6 @@
+/* ============================================
+   ORDER FORM PAGE
+   ============================================ */
 .order-form-content {
   margin: 0 20px;
   padding: 32px 16px;
@@ -116,7 +119,9 @@
   }
 }
 
-/* ===== Card Base ===== */
+/* ============================================
+       CARD
+       ============================================ */
 .card {
   background: #fff;
   border-radius: var(--radius);
@@ -125,7 +130,7 @@
   overflow: hidden;
 }
 
-/* ===== Card Header ===== */
+/* ===== Card Headers ===== */
 .card-header-blue {
   background: linear-gradient(90deg, var(--secondary), var(--secondary-dark));
   padding: 16px 20px;
@@ -161,12 +166,13 @@
   margin-top: 4px;
 }
 
-/* ===== Product Card ===== */
+/* ============================================
+       PRODUCT CARD
+       ============================================ */
 .product-body {
   height: 368px;
   padding: 20px;
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -189,22 +195,18 @@
   position: absolute;
   width: 30px;
   aspect-ratio: 1;
-  left: 0px;
+  left: 0;
   padding: 5px;
   border-radius: 50%;
   border: none;
-  line-height: 0px;
+  line-height: 0;
   background-color: var(--primary);
   transition: var(--transition);
+  cursor: pointer;
 }
 
 .product-top .btn-close:hover {
   background-color: var(--primary-dark);
-}
-
-.product-image-wrap {
-  position: relative;
-  flex-shrink: 0;
 }
 
 .product-image-wrap img {
@@ -214,18 +216,6 @@
   border-radius: 14px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.discount-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ef4444;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 999px;
 }
 
 .product-info {
@@ -262,34 +252,6 @@
   overflow: hidden;
 }
 
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 8px;
-}
-
-.stars {
-  display: flex;
-}
-
-.star {
-  width: 14px;
-  height: 14px;
-}
-
-.star.filled {
-  fill: #facc15;
-}
-.star.empty {
-  fill: #d1d5db;
-}
-
-.rating-count {
-  font-size: 11px;
-  color: #6b7280;
-}
-
 .divider-dashed {
   border: none;
   border-top: 1px dashed #e5e7eb;
@@ -316,52 +278,17 @@
 .detail-icon {
   font-size: 16px;
 }
-
 .detail-label {
   font-size: 11px;
   color: #9ca3af;
 }
-
 .detail-value {
   font-size: 12px;
   font-weight: 600;
   color: #1f2937;
 }
-
 .detail-value.green {
   color: #059669;
-}
-
-/* ===== Price ===== */
-.price-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.price-original {
-  font-size: 12px;
-  color: #9ca3af;
-  text-decoration: line-through;
-}
-
-.price-current {
-  font-size: 24px;
-  font-weight: 800;
-  color: #059669;
-}
-
-.price-save-label {
-  font-size: 11px;
-  color: #6b7280;
-  text-align: left;
-}
-
-.price-save-value {
-  font-size: 15px;
-  font-weight: 700;
-  color: #ef4444;
-  text-align: left;
 }
 
 /* ===== Product Footer ===== */
@@ -379,12 +306,6 @@
 .product-footer span {
   color: black;
   font-size: x-large;
-}
-
-.order-id {
-  font-family: monospace;
-  font-weight: 600;
-  color: #374151;
 }
 
 .shipping-badge {
@@ -434,19 +355,19 @@
   font-size: 20px;
   margin-bottom: 4px;
 }
-
 .trust-text {
   font-size: 11px;
   font-weight: 600;
   color: #374151;
 }
-
 .trust-sub {
   font-size: 10px;
   color: #9ca3af;
 }
 
-/* ===== Form ===== */
+/* ============================================
+       FORM
+       ============================================ */
 .form-body {
   padding: 20px;
 }
@@ -577,15 +498,7 @@
   flex-shrink: 0;
 }
 
-.field-info {
-  color: #3b82f6;
-  cursor: pointer;
-  font-size: x-small;
-  text-decoration: underline;
-  margin-top: 5px;
-}
-
-/* ===== Divider with Text ===== */
+/* ===== Section Divider ===== */
 .section-divider {
   display: flex;
   align-items: center;
@@ -606,6 +519,7 @@
   white-space: nowrap;
 }
 
+/* ===== Delivery Options ===== */
 .Delivery-options {
   display: flex;
   flex-direction: column;
@@ -624,24 +538,15 @@
   border: 2px solid blue;
   color: black;
   transition: var(--transition);
+  cursor: pointer;
 }
 
-.option:hover {
-  background-color: #9cff9f;
-  border: 2px solid green;
-}
+.option:hover,
 .option.active {
   background-color: #9cff9f;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  border-radius: var(--radius);
-  border: 2px solid green;
-  color: black;
-  transition: var(--transition);
+  border-color: green;
 }
+
 /* ===== Submit Button ===== */
 .card .btn-submit {
   width: 100%;
@@ -665,24 +570,25 @@
   margin-top: 4px;
 }
 
-.btn-submit:hover {
+.card .btn-submit:hover {
   opacity: 0.92;
 }
-.btn-submit:active {
+.card .btn-submit:active {
   transform: scale(0.98);
 }
-.btn-submit:disabled {
+.card .btn-submit:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
 
-.btn-submit svg {
+.card .btn-submit svg {
   width: 20px;
   height: 20px;
   stroke: #fff;
   fill: none;
 }
 
+/* ===== Spinner ===== */
 .spin {
   animation: spin 0.8s linear infinite;
   height: 50%;
@@ -701,7 +607,9 @@
   margin-top: 10px;
 }
 
-/* ===== Success Screen ===== */
+/* ============================================
+       SUCCESS SCREEN
+       ============================================ */
 .success-body {
   padding: 40px 24px;
   text-align: center;
@@ -758,7 +666,6 @@
 .info-row:last-child {
   border-bottom: none;
 }
-
 .info-row-label {
   color: #6b7280;
 }
@@ -771,6 +678,7 @@
   gap: 6px;
 }
 
+/* ===== New Order Button ===== */
 .btn-new-order {
   width: 100%;
   background: linear-gradient(90deg, #3b82f6, #4f46e5);
@@ -798,19 +706,4 @@
   height: 18px;
   stroke: #fff;
   fill: none;
-}
-
-/* ===== Footer ===== */
-.page-footer {
-  text-align: center;
-  padding: 24px 16px;
-  font-size: 12px;
-  color: #9ca3af;
-  margin-top: 32px;
-  border-top: 1px solid #e5e7eb;
-  background: #fff;
-}
-
-.page-footer p + p {
-  margin-top: 4px;
 }

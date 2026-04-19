@@ -24,7 +24,8 @@
     "quantity_invalid": "Por favor, introduzca una cantidad válida",
     "delete_cart_item_failed": "Error al eliminar el artículo del carrito",
     "item_removed_from_cart_success": "Artículo eliminado del carrito",
-    "quantity_invalid_or_remove": "Por favor, introduzca una cantidad válida o elimine el producto"
+    "quantity_invalid_or_remove": "Por favor, introduzca una cantidad válida o elimine el producto",
+    "review_sent_success": "Tu reseña ha sido enviada con éxito"
   },
   "login": {
     "fields": {
@@ -237,7 +238,8 @@
       "size": "Talla",
       "quantity": "Cantidad",
       "total": "Precio total:",
-      "currency": "DZD"
+      "currency": "DZD",
+      "price": "Precio"
     }
   },
   "cart": {
@@ -365,6 +367,103 @@
         "confirm_mismatch": "Las contraseñas no coinciden",
         "send_failed": "Algo salió mal durante el envío"
       }
+    }
+  },
+  "product_detail": {
+    "gallery": {
+      "image_alt": "Imagen {index}",
+      "thumbnail_alt": "Miniatura {index}",
+      "scroll_forward": "Desplazar hacia adelante",
+      "scroll_back": "Desplazar hacia atrás",
+      "badge_sale": "{discount}% DE DESCUENTO",
+      "badge_new": "Nuevo"
+    },
+    "rating": {
+      "out_of": "de 5",
+      "reviews": "reseñas",
+      "sales": "vendidos"
+    },
+    "price": {
+      "currency": "DZD",
+      "save": "Ahorra {amount} DZD"
+    },
+    "color": {
+      "label": "Color"
+    },
+    "size": {
+      "label": "Talla",
+      "unit": "EU"
+    },
+    "quantity": {
+      "label": "Cantidad",
+      "low_stock": "¡Solo quedan {count} unidades!",
+      "out_of_stock": "Agotado"
+    },
+    "buttons": {
+      "add_to_cart": "Añadir al carrito",
+      "buy_now": "Comprar ahora"
+    }
+  },
+  "shop": {
+    "hero": {
+      "title": "Descubre los Mejores Productos a Precios Increíbles",
+      "subtitle": "Compra ahora y disfruta de ofertas exclusivas y descuentos de hasta el 50% en los mejores productos del mundo",
+      "stats": {
+        "products": "+5000",
+        "products_label": "Productos disponibles",
+        "customers": "+10K",
+        "customers_label": "Clientes satisfechos",
+        "rating": "4.9⭐",
+        "rating_label": "Valoración de la tienda"
+      }
+    },
+    "categories": {
+      "section_title": "Explorar categorías",
+      "all": "Todo",
+      "scroll_forward": "Desplazar hacia adelante",
+      "scroll_back": "Desplazar hacia atrás"
+    },
+    "toolbar": {
+      "search_placeholder": "Buscar productos por nombre...",
+      "filter_btn": "Filtrar",
+      "sort_btn_default": "Orden predeterminado"
+    },
+    "sort": {
+      "default": "Orden predeterminado",
+      "max_price": "Precio: de menor a mayor",
+      "min_price": "Precio: de mayor a menor",
+      "rating": "Mejor valorados",
+      "reviews": "Más reseñas",
+      "newest": "Más recientes primero",
+      "oldest": "Más antiguos primero"
+    },
+    "filter": {
+      "title": "Opciones de filtro",
+      "reset": "Restablecer",
+      "price_range": "💰 Rango de precios",
+      "price_from": "Desde",
+      "price_to": "Hasta",
+      "price_currency": "DZD",
+      "rating_title": "⭐ Valoración mínima",
+      "rating_all": "Todo",
+      "product_type_title": "🏷️ Tipo de producto",
+      "badges": {
+        "new": "🆕 Nuevo",
+        "sale": "🔖 Oferta",
+        "hot": "🔥 Tendencia",
+        "none": "📦 Regular"
+      }
+    },
+    "active_filters": {
+      "search_label": "🔍 \"{query}\"",
+      "category_label": "📂 {name}",
+      "sort_label": "📊 {sort}",
+      "filters_count": "🔧 {count} filtros activos"
+    },
+    "product_card": {
+      "in_stock": "en stock",
+      "add_to_cart": "Añadir al carrito",
+      "currency": "DZD"
     }
   }
 }

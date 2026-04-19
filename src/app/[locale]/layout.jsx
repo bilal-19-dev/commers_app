@@ -4,7 +4,6 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import "../globals.css";
 import "./prodect_detail/prodect_detail.css";
 import "./orders/Order.css";
-import "./order_detail/order_detail.css";
 import "./car/car.css";
 import "./shop/shop.css";
 import "./order_form/order_form.css";

@@ -1,10 +1,10 @@
-"use client";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { Account, apiFetch } from "../data/FETCH.js";
-import { Field } from "./order_form.jsx";
-import { wilayas } from "../data/Wilaya.js";
-import { URL } from "../data/URL.js";
-import { Use_them } from "../hooks/ThemProvider.js";
+'use client';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Account, apiFetch } from '../data/FETCH.js';
+import { Field } from './order_form.jsx';
+import { wilayas } from '../data/Wilaya.js';
+import { URL } from '../data/URL.js';
+import { Use_them } from '../hooks/ThemProvider.js';
 import {
   LocationIcon,
   PhoneIcon,
@@ -20,19 +20,20 @@ import {
   ClockIcon,
   XIcon,
   PasswordStarsIcon,
-} from "../data/Icons.jsx";
-import { useTranslations } from "next-intl";
+} from '../data/Icons.jsx';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/app/navigation';
 
 // ─── مكوّن بطاقة الطلب ───────────────────────────────────────────
 const OrderCard = ({ order }) => {
-  const t = useTranslations("orders");
+  const t = useTranslations('orders');
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef(null);
 
   const toggleExpanded = () => {
     const el = contentRef.current;
     if (!el) return;
-    el.style.height = isExpanded ? "0px" : el.scrollHeight + "px";
+    el.style.height = isExpanded ? '0px' : el.scrollHeight + 'px';
     setIsExpanded((prev) => !prev);
   };
 
@@ -41,17 +42,17 @@ const OrderCard = ({ order }) => {
       <div className="order-header">
         <div className="order-info-group">
           <div className="info-item">
-            <span className="info-label">{t("order_card.order_id")}</span>
+            <span className="info-label">{t('order_card.order_id')}</span>
             <span className="info-value">#{order.id}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">{t("order_card.date_placed")}</span>
+            <span className="info-label">{t('order_card.date_placed')}</span>
             <span className="info-value">
               {order.order_date.substring(0, 10)}
             </span>
           </div>
           <div className="info-item">
-            <span className="info-label">{t("order_card.item_count")}</span>
+            <span className="info-label">{t('order_card.item_count')}</span>
             <span className="info-value">{order.items_count}</span>
           </div>
         </div>
@@ -61,13 +62,13 @@ const OrderCard = ({ order }) => {
             {order.status}
           </div>
           <button
-            className={`btn-toggle ${isExpanded ? "active" : ""}`}
+            className={`btn-toggle ${isExpanded ? 'active' : ''}`}
             onClick={toggleExpanded}
             aria-expanded={isExpanded}
           >
             {isExpanded
-              ? t("order_card.hide_products")
-              : t("order_card.show_products")}
+              ? t('order_card.hide_products')
+              : t('order_card.show_products')}
             <span className="toggle-icon">▼</span>
           </button>
         </div>
@@ -78,8 +79,8 @@ const OrderCard = ({ order }) => {
         className="order-items fade-in"
         style={{
           height: 0,
-          overflow: "hidden",
-          transition: "height 0.3s ease",
+          overflow: 'hidden',
+          transition: 'height 0.3s ease',
         }}
       >
         <div className="productsGrid">
@@ -97,13 +98,13 @@ const OrderCard = ({ order }) => {
               <div className="productDetails">
                 <h4 className="productName">{item.product.name}</h4>
                 <p className="productVariant">
-                  {t("order_card.color")}: {item.color} — {t("order_card.size")}
-                  : {item.size || "L"}
+                  {t('order_card.color')}: {item.color} — {t('order_card.size')}
+                  : {item.size || 'L'}
                 </p>
                 <div className="productPriceRow">
                   <span className="productPrice">${item.product.price}</span>
                   <span className="productQuantity">
-                    {t("order_card.qty")}: {item.quantity}
+                    {t('order_card.qty')}: {item.quantity}
                   </span>
                 </div>
               </div>
@@ -114,7 +115,7 @@ const OrderCard = ({ order }) => {
 
       <div className="order-footer">
         <span className="order-total-label">
-          {t("order_card.order_total")}:
+          {t('order_card.order_total')}:
         </span>
         <span className="order-total-amount">${order.total_price}</span>
       </div>
@@ -138,7 +139,7 @@ const SpinnerButton = ({
   loading,
   label,
   className,
-  type = "submit",
+  type = 'submit',
   onClick,
   disabled,
 }) => (
@@ -172,48 +173,48 @@ const SpinnerButton = ({
 
 // ─── المكوّن الرئيسي ──────────────────────────────────────────────
 export default function Order_component() {
-  const t = useTranslations("orders");
-  const toastT = useTranslations("toast");
+  const t = useTranslations('orders');
+  const toastT = useTranslations('toast');
   const { setmessge, setSeverity, setsnack } = Use_them();
-
+  const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [profile, setProfile] = useState({});
   const [data, setData] = useState({});
   const [formData, setFormData] = useState({
-    image: "",
-    firstName: "",
-    lastName: "",
-    wilaya: "",
-    commune: "",
-    phone1: "",
-    phone2: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    code: "",
+    image: '',
+    firstName: '',
+    lastName: '',
+    wilaya: '',
+    commune: '',
+    phone1: '',
+    phone2: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    code: '',
   });
   const [errors, setErrors] = useState({});
   const [loding, setLoding] = useState(true);
   const [loading, setLoading] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
-  const [passwordStep, setPasswordStep] = useState("send");
-  const [activeFilter, setActiveFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [passwordStep, setPasswordStep] = useState('send');
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const passwordFormRef = useRef(null);
 
   const FILTERS = [
-    { key: "all", label: t("filters.all") },
-    { key: "delivered", label: t("filters.delivered") },
-    { key: "shipped", label: t("filters.shipped") },
-    { key: "pending", label: t("filters.pending") },
-    { key: "cancelled", label: t("filters.cancelled") },
+    { key: 'all', label: t('filters.all') },
+    { key: 'delivered', label: t('filters.delivered') },
+    { key: 'shipped', label: t('filters.shipped') },
+    { key: 'pending', label: t('filters.pending') },
+    { key: 'cancelled', label: t('filters.cancelled') },
   ];
 
   const activeWilaya = formData.wilaya || data.wilaya;
   const selectedWilaya = wilayas.find(
-    (w) => w.name.toString() === activeWilaya,
+    (w) => w.name.toString() === activeWilaya
   );
   const communes = selectedWilaya?.communes ?? [];
 
@@ -223,26 +224,31 @@ export default function Order_component() {
       setSeverity(sev);
       setsnack(true);
     },
-    [setmessge, setSeverity, setsnack],
+    [setmessge, setSeverity, setsnack]
   );
 
   const fetchOrders = useCallback(async () => {
     try {
       const res = await Account();
+      if (res.user.username === '@Anonimo' || res.error_user) {
+        router.push('/');
+        return;
+      }
       setOrders(Array.isArray(res?.orders) ? res.orders : []);
       setProfile(res.user);
       setData({
         image: res.user.image ?? null,
-        firstName: res.user.first_name ?? "",
-        lastName: res.user.last_name ?? "",
-        wilaya: res.user?.address_line?.wilaya ?? "",
-        commune: res.user?.address_line?.baldya ?? "",
-        email: res.user.username ?? "",
-        phone1: res.user.phone_numbers?.[0] ?? "",
-        phone2: res.user.phone_numbers?.[1] ?? "",
+        firstName: res.user.first_name ?? '',
+        lastName: res.user.last_name ?? '',
+        wilaya: res.user?.address_line?.wilaya ?? '',
+        commune: res.user?.address_line?.baldya ?? '',
+        email: res.user.username ?? '',
+        phone1: res.user.phone_numbers?.[0] ?? '',
+        phone2: res.user.phone_numbers?.[1] ?? '',
         checked: res.user.checked ?? false,
       });
     } catch (_) {
+      router.push('/');
     } finally {
       setLoding(false);
     }
@@ -254,21 +260,21 @@ export default function Order_component() {
 
   const stats = {
     total: orders.length,
-    delivered: orders.filter((o) => o.status?.toLowerCase() === "delivered")
+    delivered: orders.filter((o) => o.status?.toLowerCase() === 'delivered')
       .length,
-    processing: orders.filter((o) => o.status?.toLowerCase() === "pending")
+    processing: orders.filter((o) => o.status?.toLowerCase() === 'pending')
       .length,
-    cancelled: orders.filter((o) => o.status?.toLowerCase() === "cancelled")
+    cancelled: orders.filter((o) => o.status?.toLowerCase() === 'cancelled')
       .length,
   };
 
   const filteredOrders = orders.filter((order) => {
     const matchesFilter =
-      activeFilter === "all" || order.status.toLowerCase() === activeFilter;
+      activeFilter === 'all' || order.status.toLowerCase() === activeFilter;
     const matchesSearch =
       String(order.id).includes(searchQuery) ||
       (order.items || []).some((item) =>
-        item.product?.name?.toLowerCase().includes(searchQuery.toLowerCase()),
+        item.product?.name?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     return matchesFilter && matchesSearch;
   });
@@ -276,8 +282,8 @@ export default function Order_component() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => {
-      if (name === "wilaya") return { ...prev, wilaya: value, commune: "" };
-      if (name === "email") return { ...prev, email: value.toLowerCase() };
+      if (name === 'wilaya') return { ...prev, wilaya: value, commune: '' };
+      if (name === 'email') return { ...prev, email: value.toLowerCase() };
       return { ...prev, [name]: value };
     });
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
@@ -285,18 +291,18 @@ export default function Order_component() {
 
   const handleDeleteImage = async () => {
     if (formData.image) {
-      setFormData((prev) => ({ ...prev, image: "" }));
+      setFormData((prev) => ({ ...prev, image: '' }));
       return;
     }
     try {
       const res = await apiFetch(`http://${URL}:8000/api/account/me/`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
       if (!res.ok) throw new Error();
       setData((prev) => ({ ...prev, image: null }));
-      handleClick(toastT("profile_image_deleted_success"), "success");
+      handleClick(toastT('profile_image_deleted_success'), 'success');
     } catch {
-      handleClick(toastT("profile_update_failed"), "error");
+      handleClick(toastT('profile_update_failed'), 'error');
     }
   };
 
@@ -324,25 +330,25 @@ export default function Order_component() {
       (!wilaya || wilaya === data.wilaya) &&
       (!commune || commune === data.commune);
 
-    if (noChange) newErrors.validate = t("edit_form.errors.no_change");
+    if (noChange) newErrors.validate = t('edit_form.errors.no_change');
 
     const phoneRegex = /^0[5-7][0-9]{8}$/;
     if (firstName && firstName.trim().length < 3)
-      newErrors.firstName = t("edit_form.errors.first_name_min");
+      newErrors.firstName = t('edit_form.errors.first_name_min');
     if (lastName && lastName.trim().length < 3)
-      newErrors.lastName = t("edit_form.errors.last_name_min");
+      newErrors.lastName = t('edit_form.errors.last_name_min');
     if (wilaya && !commune)
-      newErrors.commune = t("edit_form.errors.commune_required");
+      newErrors.commune = t('edit_form.errors.commune_required');
     if (commune && !wilaya)
-      newErrors.wilaya = t("edit_form.errors.wilaya_required");
+      newErrors.wilaya = t('edit_form.errors.wilaya_required');
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-      newErrors.email = t("edit_form.errors.email_invalid");
+      newErrors.email = t('edit_form.errors.email_invalid');
     if (phone1 && !phoneRegex.test(phone1))
-      newErrors.phone1 = t("edit_form.errors.phone_invalid");
+      newErrors.phone1 = t('edit_form.errors.phone_invalid');
     if (phone2 && !phoneRegex.test(phone2))
-      newErrors.phone2 = t("edit_form.errors.phone_invalid");
+      newErrors.phone2 = t('edit_form.errors.phone_invalid');
     if (phone1 && phone2 && phone1 === phone2)
-      newErrors.phone2 = t("edit_form.errors.phone2_same");
+      newErrors.phone2 = t('edit_form.errors.phone2_same');
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -350,44 +356,44 @@ export default function Order_component() {
     }
 
     const send_data = new FormData();
-    if (image) send_data.append("image", image);
-    if (firstName) send_data.append("first_name", firstName);
-    if (lastName) send_data.append("last_name", lastName);
+    if (image) send_data.append('image', image);
+    if (firstName) send_data.append('first_name', firstName);
+    if (lastName) send_data.append('last_name', lastName);
     if (phone1)
       send_data.append(
-        "phone_numbers",
-        JSON.stringify(phone2 ? [phone1, phone2] : [phone1]),
+        'phone_numbers',
+        JSON.stringify(phone2 ? [phone1, phone2] : [phone1])
       );
-    if (email) send_data.append("username", email);
+    if (email) send_data.append('username', email);
     if (wilaya || commune)
       send_data.append(
-        "address_line",
+        'address_line',
         JSON.stringify({
           ...(wilaya && { wilaya }),
           ...(commune && { baldya: commune }),
-        }),
+        })
       );
 
     setLoading(true);
     try {
       const res = await apiFetch(`http://${URL}:8000/api/account/me/`, {
-        method: "PATCH",
+        method: 'PATCH',
         body: send_data,
       });
       if (!res.ok) {
         const errorData = await res.json();
         setErrors({
-          validate: errorData.error || t("edit_form.errors.update_failed"),
+          validate: errorData.error || t('edit_form.errors.update_failed'),
           ...errorData,
         });
         throw new Error();
       }
-      handleClick(toastT("profile_update_success"), "success");
+      handleClick(toastT('profile_update_success'), 'success');
       setOpenEdit(false);
       setErrors({});
       fetchOrders();
     } catch {
-      handleClick(toastT("profile_update_failed"), "error");
+      handleClick(toastT('profile_update_failed'), 'error');
     } finally {
       setLoading(false);
     }
@@ -398,26 +404,26 @@ export default function Order_component() {
     setLoading(true);
     try {
       const res = await apiFetch(`http://${URL}:8000/api/Send_otp_Code/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: data.email }),
       });
       if (!res.ok) {
         const errorData = await res.json();
         setErrors({
-          validate: errorData.error || t("password_form.errors.send_failed"),
-          email: errorData.email || "",
+          validate: errorData.error || t('password_form.errors.send_failed'),
+          email: errorData.email || '',
         });
         throw new Error();
       }
-      handleClick(toastT("code_sent_success"), "success");
+      handleClick(toastT('code_sent_success'), 'success');
       if (passwordFormRef.current) {
         passwordFormRef.current.style.height =
-          passwordFormRef.current.scrollHeight + "px";
+          passwordFormRef.current.scrollHeight + 'px';
       }
-      setPasswordStep("verify");
+      setPasswordStep('verify');
     } catch {
-      handleClick(toastT("profile_update_failed"), "error");
+      handleClick(toastT('profile_update_failed'), 'error');
     } finally {
       setLoading(false);
     }
@@ -428,15 +434,15 @@ export default function Order_component() {
     const { code, password, confirmPassword } = formData;
     const newErrors = {};
 
-    if (!code) newErrors.code = t("password_form.errors.code_required");
+    if (!code) newErrors.code = t('password_form.errors.code_required');
     if (!password)
-      newErrors.password = t("password_form.errors.password_required");
+      newErrors.password = t('password_form.errors.password_required');
     else if (password.length < 6)
-      newErrors.password = t("password_form.errors.password_min");
+      newErrors.password = t('password_form.errors.password_min');
     if (!confirmPassword)
-      newErrors.confirmPassword = t("password_form.errors.confirm_required");
+      newErrors.confirmPassword = t('password_form.errors.confirm_required');
     else if (password !== confirmPassword)
-      newErrors.confirmPassword = t("password_form.errors.confirm_mismatch");
+      newErrors.confirmPassword = t('password_form.errors.confirm_mismatch');
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -445,29 +451,29 @@ export default function Order_component() {
 
     setLoading(true);
     const send_data = new FormData();
-    send_data.append("password", confirmPassword);
-    send_data.append("code", code);
+    send_data.append('password', confirmPassword);
+    send_data.append('code', code);
 
     try {
       const res = await apiFetch(`http://${URL}:8000/api/account/me/`, {
-        method: "PATCH",
+        method: 'PATCH',
         body: send_data,
       });
       if (!res.ok) {
         const errorData = await res.json();
         setErrors({
-          validate: errorData.error || t("edit_form.errors.update_failed"),
-          password: errorData.password || "",
-          code: errorData.code || "",
+          validate: errorData.error || t('edit_form.errors.update_failed'),
+          password: errorData.password || '',
+          code: errorData.code || '',
         });
         throw new Error();
       }
-      handleClick(toastT("password_updated_success"), "success");
+      handleClick(toastT('password_updated_success'), 'success');
       setOpenPassword(false);
-      setPasswordStep("send");
+      setPasswordStep('send');
       setErrors({});
     } catch {
-      handleClick(toastT("profile_update_failed"), "error");
+      handleClick(toastT('profile_update_failed'), 'error');
     } finally {
       setLoading(false);
     }
@@ -475,9 +481,9 @@ export default function Order_component() {
 
   const closePasswordModal = () => {
     setOpenPassword(false);
-    setPasswordStep("send");
+    setPasswordStep('send');
     setErrors({});
-    if (passwordFormRef.current) passwordFormRef.current.style.height = "0px";
+    if (passwordFormRef.current) passwordFormRef.current.style.height = '0px';
   };
 
   return (
@@ -491,19 +497,19 @@ export default function Order_component() {
                 <button className="edit" onClick={() => setOpenEdit(true)}>
                   <EditIcon />
                 </button>
-                <img src={profile.image || "/default.jpg"} alt="profile" />
+                <img src={profile.image || '/default.jpg'} alt="profile" />
               </div>
               <h1>
                 {profile.first_name} {profile.last_name}
               </h1>
               <p
-                className={`status ${profile.checked ? "active" : "disactive"}`}
+                className={`status ${profile.checked ? 'active' : 'disactive'}`}
               >
-                {profile.checked ? t("profile.active") : t("profile.inactive")}
+                {profile.checked ? t('profile.active') : t('profile.inactive')}
               </p>
               <div>
                 <p>
-                  <EmailIcon /> {profile.username || "@gmail.com"}
+                  <EmailIcon /> {profile.username || '@gmail.com'}
                 </p>
                 {Array.isArray(profile.phone_numbers) &&
                 profile.phone_numbers.length > 0 ? (
@@ -513,19 +519,19 @@ export default function Order_component() {
                       ` / ${profile.phone_numbers[1]}`}
                   </p>
                 ) : (
-                  <p>{t("profile.no_phone")}</p>
+                  <p>{t('profile.no_phone')}</p>
                 )}
                 {profile?.address_line?.wilaya && (
                   <p>
-                    <LocationIcon /> {profile.address_line.wilaya} /{" "}
+                    <LocationIcon /> {profile.address_line.wilaya} /{' '}
                     {profile.address_line.baldya}
                   </p>
                 )}
               </div>
               {!data.checked && (
                 <p className="active-account">
-                  {t("profile.activate_msg")}{" "}
-                  <span>{t("profile.activate_link")}</span>
+                  {t('profile.activate_msg')}{' '}
+                  <span>{t('profile.activate_link')}</span>
                 </p>
               )}
             </div>
@@ -535,8 +541,8 @@ export default function Order_component() {
           <div className="order--header">
             <div className="headerTop">
               <div className="titleSection">
-                <h1>{t("header.title")}</h1>
-                <p className="subtitle">{t("header.subtitle")}</p>
+                <h1>{t('header.title')}</h1>
+                <p className="subtitle">{t('header.subtitle')}</p>
               </div>
             </div>
             <div className="controls">
@@ -544,7 +550,7 @@ export default function Order_component() {
                 <SearchIcon className="searchIcon" />
                 <input
                   type="text"
-                  placeholder={t("header.search_placeholder")}
+                  placeholder={t('header.search_placeholder')}
                   className="searchInput"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -554,7 +560,7 @@ export default function Order_component() {
                 {FILTERS.map((filter) => (
                   <button
                     key={filter.key}
-                    className={`filterBtn ${activeFilter === filter.key ? "active" : ""}`}
+                    className={`filterBtn ${activeFilter === filter.key ? 'active' : ''}`}
                     onClick={() => setActiveFilter(filter.key)}
                   >
                     {filter.label}
@@ -575,25 +581,25 @@ export default function Order_component() {
               <div className="statsGrid">
                 <StatCard
                   icon={<PackageIcon />}
-                  label={t("stats.total_orders")}
+                  label={t('stats.total_orders')}
                   value={stats.total}
                   color="blue"
                 />
                 <StatCard
                   icon={<CheckIcon />}
-                  label={t("stats.delivered")}
+                  label={t('stats.delivered')}
                   value={stats.delivered}
                   color="green"
                 />
                 <StatCard
                   icon={<ClockIcon />}
-                  label={t("stats.in_progress")}
+                  label={t('stats.in_progress')}
                   value={stats.processing}
                   color="orange"
                 />
                 <StatCard
                   icon={<XIcon />}
-                  label={t("stats.cancelled")}
+                  label={t('stats.cancelled')}
                   value={stats.cancelled}
                   color="red"
                 />
@@ -608,16 +614,16 @@ export default function Order_component() {
                 ) : (
                   <div className="emptyState">
                     <div className="emptyIcon">📭</div>
-                    <h3>{t("empty.title")}</h3>
-                    <p>{t("empty.subtitle")}</p>
+                    <h3>{t('empty.title')}</h3>
+                    <p>{t('empty.subtitle')}</p>
                     <button
                       className="btn btnPrimary"
                       onClick={() => {
-                        setActiveFilter("all");
-                        setSearchQuery("");
+                        setActiveFilter('all');
+                        setSearchQuery('');
                       }}
                     >
-                      {t("empty.clear_filters")}
+                      {t('empty.clear_filters')}
                     </button>
                   </div>
                 )}
@@ -630,7 +636,7 @@ export default function Order_component() {
       {/* ─── نافذة تعديل الملف الشخصي ─── */}
       <div
         className="fixed-body"
-        style={{ display: openEdit ? "flex" : "none" }}
+        style={{ display: openEdit ? 'flex' : 'none' }}
       >
         <form className="form-body" onSubmit={handleSubmit} noValidate>
           {/* صورة الملف الشخصي */}
@@ -649,7 +655,7 @@ export default function Order_component() {
                 src={
                   formData.image
                     ? URL.createObjectURL(formData.image)
-                    : data.image || "/default.jpg"
+                    : data.image || '/default.jpg'
                 }
                 alt="preview"
               />
@@ -673,7 +679,7 @@ export default function Order_component() {
           {/* الاسم واللقب */}
           <div className="form-grid-2">
             <Field
-              label={t("edit_form.first_name")}
+              label={t('edit_form.first_name')}
               required
               error={errors.firstName}
               icon={<PersonIcon />}
@@ -681,14 +687,14 @@ export default function Order_component() {
               <input
                 type="text"
                 name="firstName"
-                value={formData.firstName || data.firstName || ""}
+                value={formData.firstName || data.firstName || ''}
                 onChange={handleChange}
-                placeholder={t("edit_form.placeholders.first_name")}
-                className={`form-input${errors.firstName ? " error" : ""}`}
+                placeholder={t('edit_form.placeholders.first_name')}
+                className={`form-input${errors.firstName ? ' error' : ''}`}
               />
             </Field>
             <Field
-              label={t("edit_form.last_name")}
+              label={t('edit_form.last_name')}
               required
               error={errors.lastName}
               icon={<PersonIcon />}
@@ -696,10 +702,10 @@ export default function Order_component() {
               <input
                 type="text"
                 name="lastName"
-                value={formData.lastName || data.lastName || ""}
+                value={formData.lastName || data.lastName || ''}
                 onChange={handleChange}
-                placeholder={t("edit_form.placeholders.last_name")}
-                className={`form-input${errors.lastName ? " error" : ""}`}
+                placeholder={t('edit_form.placeholders.last_name')}
+                className={`form-input${errors.lastName ? ' error' : ''}`}
               />
             </Field>
           </div>
@@ -707,44 +713,44 @@ export default function Order_component() {
           {/* الولاية والبلدية */}
           <div className="Wilaya">
             <Field
-              label={t("edit_form.wilaya")}
+              label={t('edit_form.wilaya')}
               required
               error={errors.wilaya}
               icon={<LocationIcon />}
             >
               <select
                 name="wilaya"
-                value={formData.wilaya || data.wilaya || ""}
+                value={formData.wilaya || data.wilaya || ''}
                 onChange={handleChange}
-                className={`form-select${errors.wilaya ? " error" : ""}`}
+                className={`form-select${errors.wilaya ? ' error' : ''}`}
               >
                 <option value="">
-                  {t("edit_form.placeholders.select_wilaya")}
+                  {t('edit_form.placeholders.select_wilaya')}
                 </option>
                 {wilayas.map((w) => (
                   <option key={w.code} value={w.name.toString()}>
-                    {w.code.toString().padStart(2, "0")} - {w.name}
+                    {w.code.toString().padStart(2, '0')} - {w.name}
                   </option>
                 ))}
               </select>
             </Field>
             <Field
-              label={t("edit_form.commune")}
+              label={t('edit_form.commune')}
               required
               error={errors.commune}
               icon={<HomeIcon />}
             >
               <select
                 name="commune"
-                value={formData.commune || data.commune || ""}
+                value={formData.commune || data.commune || ''}
                 onChange={handleChange}
                 disabled={!activeWilaya}
-                className={`form-select${errors.commune ? " error" : ""}`}
+                className={`form-select${errors.commune ? ' error' : ''}`}
               >
                 <option value="">
                   {activeWilaya
-                    ? t("edit_form.placeholders.select_commune")
-                    : t("edit_form.placeholders.select_wilaya_first")}
+                    ? t('edit_form.placeholders.select_commune')
+                    : t('edit_form.placeholders.select_wilaya_first')}
                 </option>
                 {communes.map((c) => (
                   <option key={c} value={c}>
@@ -758,14 +764,14 @@ export default function Order_component() {
           <div className="section-divider">
             <div className="section-divider-line" />
             <span className="section-divider-text">
-              {t("edit_form.contact_divider")}
+              {t('edit_form.contact_divider')}
             </span>
             <div className="section-divider-line" />
           </div>
 
           {/* البريد الإلكتروني */}
           <Field
-            label={t("edit_form.email")}
+            label={t('edit_form.email')}
             required
             error={errors.email}
             icon={<EmailIcon />}
@@ -773,17 +779,17 @@ export default function Order_component() {
             <input
               type="text"
               name="email"
-              value={formData.email || data.email || ""}
+              value={formData.email || data.email || ''}
               onChange={handleChange}
-              placeholder={t("edit_form.placeholders.email")}
-              className={`form-input${errors.email ? " error" : ""}`}
+              placeholder={t('edit_form.placeholders.email')}
+              className={`form-input${errors.email ? ' error' : ''}`}
             />
           </Field>
 
           {/* الهاتف */}
           <div className="phone">
             <Field
-              label={t("edit_form.phone1")}
+              label={t('edit_form.phone1')}
               required
               error={errors.phone1}
               icon={<PhoneIcon />}
@@ -791,27 +797,27 @@ export default function Order_component() {
               <input
                 type="tel"
                 name="phone1"
-                value={formData.phone1 || data.phone1 || ""}
+                value={formData.phone1 || data.phone1 || ''}
                 onChange={handleChange}
-                placeholder={t("edit_form.placeholders.phone1")}
+                placeholder={t('edit_form.placeholders.phone1')}
                 maxLength={10}
-                className={`form-input phone-input${errors.phone1 ? " error" : ""}`}
+                className={`form-input phone-input${errors.phone1 ? ' error' : ''}`}
               />
             </Field>
             <Field
-              label={t("edit_form.phone2")}
+              label={t('edit_form.phone2')}
               error={errors.phone2}
-              hint={t("edit_form.phone2_hint")}
+              hint={t('edit_form.phone2_hint')}
               icon={<PhoneIcon />}
             >
               <input
                 type="tel"
                 name="phone2"
-                value={formData.phone2 || data.phone2 || ""}
+                value={formData.phone2 || data.phone2 || ''}
                 onChange={handleChange}
-                placeholder={t("edit_form.placeholders.phone2")}
+                placeholder={t('edit_form.placeholders.phone2')}
                 maxLength={10}
-                className={`form-input phone-input${errors.phone2 ? " error" : ""}`}
+                className={`form-input phone-input${errors.phone2 ? ' error' : ''}`}
               />
             </Field>
           </div>
@@ -841,7 +847,7 @@ export default function Order_component() {
               <path d="M12 16v3" />
               <path d="M10 17l2 2 2-2" />
             </svg>
-            {t("edit_form.change_password_btn")}
+            {t('edit_form.change_password_btn')}
           </button>
 
           <Field error={errors.validate}>
@@ -852,48 +858,48 @@ export default function Order_component() {
                 disabled={loading}
                 onClick={() => setOpenEdit(false)}
               >
-                {t("edit_form.cancel_btn")}
+                {t('edit_form.cancel_btn')}
               </button>
               <SpinnerButton
                 loading={loading}
-                label={t("edit_form.save_btn")}
+                label={t('edit_form.save_btn')}
                 className="save"
               />
             </div>
           </Field>
 
-          <p className="form-note">{t("edit_form.security_note")}</p>
+          <p className="form-note">{t('edit_form.security_note')}</p>
         </form>
       </div>
 
       {/* ─── نافذة تغيير كلمة المرور ─── */}
       <div
         className="fixed-body"
-        style={{ display: openPassword ? "flex" : "none" }}
+        style={{ display: openPassword ? 'flex' : 'none' }}
       >
         <form
           className="code-body"
           onSubmit={
-            passwordStep === "send" ? handleSendCode : handleChangePassword
+            passwordStep === 'send' ? handleSendCode : handleChangePassword
           }
           noValidate
         >
           <h3>
-            {passwordStep === "verify"
-              ? t("password_form.title_sent")
-              : t("password_form.title_send")}
+            {passwordStep === 'verify'
+              ? t('password_form.title_sent')
+              : t('password_form.title_send')}
           </h3>
 
           <div className="inputs">
             <Field
-              label={t("password_form.email_label")}
+              label={t('password_form.email_label')}
               error={errors.email}
               icon={<EmailIcon />}
             >
               <input
                 type="text"
                 name="email"
-                value={data.email || ""}
+                value={data.email || ''}
                 disabled
                 className="form-input"
               />
@@ -903,12 +909,12 @@ export default function Order_component() {
               ref={passwordFormRef}
               style={{
                 height: 0,
-                overflow: "hidden",
-                transition: "height 0.3s ease",
+                overflow: 'hidden',
+                transition: 'height 0.3s ease',
               }}
             >
               <Field
-                label={t("password_form.code_label")}
+                label={t('password_form.code_label')}
                 error={errors.code}
                 icon={<PasswordStarsIcon />}
                 required
@@ -918,11 +924,11 @@ export default function Order_component() {
                   name="code"
                   onChange={handleChange}
                   maxLength={6}
-                  className={`form-input phone-input${errors.code ? " error" : ""}`}
+                  className={`form-input phone-input${errors.code ? ' error' : ''}`}
                 />
               </Field>
               <Field
-                label={t("password_form.password_label")}
+                label={t('password_form.password_label')}
                 required
                 error={errors.password}
                 icon={<PasswordIcon />}
@@ -932,12 +938,12 @@ export default function Order_component() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder={t("password_form.placeholders.password")}
-                  className={`form-input${errors.password ? " error" : ""}`}
+                  placeholder={t('password_form.placeholders.password')}
+                  className={`form-input${errors.password ? ' error' : ''}`}
                 />
               </Field>
               <Field
-                label={t("password_form.confirm_password_label")}
+                label={t('password_form.confirm_password_label')}
                 required
                 error={errors.confirmPassword}
                 icon={<PasswordCheckIcon />}
@@ -947,8 +953,8 @@ export default function Order_component() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder={t("password_form.placeholders.confirm_password")}
-                  className={`form-input${errors.confirmPassword ? " error" : ""}`}
+                  placeholder={t('password_form.placeholders.confirm_password')}
+                  className={`form-input${errors.confirmPassword ? ' error' : ''}`}
                 />
               </Field>
             </div>
@@ -962,11 +968,11 @@ export default function Order_component() {
                 disabled={loading}
                 onClick={closePasswordModal}
               >
-                {t("password_form.cancel_btn")}
+                {t('password_form.cancel_btn')}
               </button>
               <SpinnerButton
                 loading={loading}
-                label={t("password_form.send_btn")}
+                label={t('password_form.send_btn')}
                 className="save"
               />
             </div>

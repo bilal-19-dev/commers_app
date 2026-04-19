@@ -1,29 +1,29 @@
-"use client";
+'use client';
 import React, {
   useEffect,
   useState,
   useCallback,
   useRef,
   startTransition,
-} from "react";
-import { useRouter, Link, usePathname } from "@/app/navigation";
-import { useParams } from "next/navigation";
+} from 'react';
+import { useRouter, Link, usePathname } from '@/app/navigation';
+import { useParams } from 'next/navigation';
 import {
   useDeviceDimensions,
   useViewportSize,
-} from "../hooks/useDeviceDimensions";
+} from '../hooks/useDeviceDimensions';
 import {
   calculateOptimalDimensions,
   calculateOptimalGridColumns,
   getPerformanceSettings,
-} from "../utils/deviceUtils";
-import { URL } from "../data/URL.js";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import { Account, apiFetch } from "../data/FETCH.js";
-import { Use_them } from "../hooks/ThemProvider";
-import { Field } from "./order_form.jsx";
-import { wilayas } from "../data/Wilaya.js";
+} from '../utils/deviceUtils';
+import { URL } from '../data/URL.js';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import { Account, apiFetch } from '../data/FETCH.js';
+import { Use_them } from '../hooks/ThemProvider';
+import { Field } from './order_form.jsx';
+import { wilayas } from '../data/Wilaya.js';
 import {
   TranslateIcon,
   LocationIcon,
@@ -40,18 +40,18 @@ import {
   ZapIcon,
   ShieldIcon,
   TruckIcon,
-} from "../data/Icons.jsx";
-import { useTranslations } from "next-intl";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { locales } from "../config";
+} from '../data/Icons.jsx';
+import { useTranslations, useLocale } from 'next-intl';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { locales } from '../config';
 
 // ─── ثوابت خارج المكوّنات ────────────────────────────────────────
-const ANON_CREDENTIALS = { username: "@Anonimo", password: "@A.123456" };
+const ANON_CREDENTIALS = { username: '@Anonimo', password: '@A.123456' };
 
 // ─── Spinner مشترك ───────────────────────────────────────────────
-function Spinner({ color = "white" }) {
+function Spinner({ color = 'white' }) {
   return (
     <svg className="spin" viewBox="0 0 24 24" fill="none">
       <circle
@@ -97,8 +97,8 @@ export default function Home_component({ data }) {
 
 // ─── Navbar ──────────────────────────────────────────────────────
 function Navbar({ setvalue }) {
-  const t = useTranslations("navbar");
-  const toastT = useTranslations("toast");
+  const t = useTranslations('navbar');
+  const toastT = useTranslations('toast');
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
@@ -123,7 +123,7 @@ function Navbar({ setvalue }) {
       setSeverity(sev);
       setsnack(true);
     },
-    [setmessge, setSeverity, setsnack],
+    [setmessge, setSeverity, setsnack]
   );
   const handleChangeLocale = (locale) => {
     startTransition(() => {
@@ -136,22 +136,22 @@ function Navbar({ setvalue }) {
   const logout = async () => {
     try {
       const res = await apiFetch(`http://${URL}:8000/api/logout/`, {
-        method: "POST",
+        method: 'POST',
       });
       if (!res.ok) throw new Error();
-
       // إعادة تعيين الحساب الافتراضي
       await fetch(`http://${URL}:8000/api/token/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(ANON_CREDENTIALS),
-        credentials: "include",
+        credentials: 'include',
       });
 
-      handleClick(toastT("logout_success"), "success");
+      handleClick(toastT('logout_success'), 'success');
       setTimeout(() => location.reload(), 500);
+      localStorage.setItem('logeed', 'false');
     } catch {
-      handleClick(toastT("logout_failed"), "error");
+      handleClick(toastT('logout_failed'), 'error');
     }
   };
 
@@ -160,18 +160,18 @@ function Navbar({ setvalue }) {
     const el = navRef.current;
     if (!el) return;
     if (!mobileMenuOpen) {
-      el.style.display = "flex";
-      el.style.height = el.scrollHeight + 65 + "px";
-      el.style.padding = "20px";
-      el.style.marginTop = "20px";
-      el.style.gap = "15px";
+      el.style.display = 'flex';
+      el.style.height = el.scrollHeight + 65 + 'px';
+      el.style.padding = '20px';
+      el.style.marginTop = '20px';
+      el.style.gap = '15px';
     } else {
-      el.style.height = "0px";
-      el.style.padding = "0px";
-      el.style.marginTop = "0px";
-      el.style.gap = "0px";
+      el.style.height = '0px';
+      el.style.padding = '0px';
+      el.style.marginTop = '0px';
+      el.style.gap = '0px';
       setTimeout(() => {
-        el.style.display = "none";
+        el.style.display = 'none';
       }, 300);
     }
   }, [mobileMenuOpen]);
@@ -187,7 +187,7 @@ function Navbar({ setvalue }) {
       try {
         const res = await Account();
         setLoged({
-          isLoggedIn: res.user.username !== "@Anonimo",
+          isLoggedIn: res.user.username !== '@Anonimo',
           isUser: res.user.isuser,
         });
         setAccount(res);
@@ -208,17 +208,11 @@ function Navbar({ setvalue }) {
         {/* روابط التنقل */}
         <nav className="nav">
           <Link href="/">
-            <span className="nav-link">{t("home")}</span>
+            <span className="nav-link">{t('home')}</span>
           </Link>
           <Link href="/shop">
-            <span className="nav-link">{t("products")}</span>
+            <span className="nav-link">{t('products')}</span>
           </Link>
-          <a href="#" className="nav-link">
-            {t("about")}
-          </a>
-          <a href="#" className="nav-link">
-            {t("contact")}
-          </a>
         </nav>
 
         {/* الإجراءات */}
@@ -226,7 +220,7 @@ function Navbar({ setvalue }) {
           <Link href="/car">
             <div className="cart-icon">
               <ShoppingCartIcon />
-              <span className={`cart-badge ${cartCount > 0 ? "active" : ""}`}>
+              <span className={`cart-badge ${cartCount > 0 ? 'active' : ''}`}>
                 {cartCount}
               </span>
             </div>
@@ -235,7 +229,7 @@ function Navbar({ setvalue }) {
             <IconButton
               aria-label="more"
               onClick={handleClick_tra}
-              style={{ padding: "0px" }}
+              style={{ padding: '0px' }}
             >
               <TranslateIcon />
             </IconButton>
@@ -251,15 +245,15 @@ function Navbar({ setvalue }) {
           {loged.isUser && loged.isLoggedIn ? (
             <>
               <img
-                onClick={() => router.push("/orders")}
-                src={account?.user?.image || "/default.jpg"}
+                onClick={() => router.push('/orders')}
+                src={account?.user?.image || '/default.jpg'}
                 alt="profile"
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               />
               <a
                 onClick={logout}
                 className="log-out-btn"
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -273,16 +267,16 @@ function Navbar({ setvalue }) {
                   <path d="M16 17l5-5-5-5" />
                   <path d="M21 12H9" />
                 </svg>
-                {t("logout")}
+                {t('logout')}
               </a>
             </>
           ) : (
             <a
-              onClick={() => setvalue("flex")}
+              onClick={() => setvalue('flex')}
               className="sign-in-btn"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
             >
-              {t("login")}
+              {t('login')}
             </a>
           )}
 
@@ -296,22 +290,19 @@ function Navbar({ setvalue }) {
       </div>
 
       {/* القائمة المحمول */}
-      <nav className="mobile-nave" ref={navRef} style={{ display: "none" }}>
+      <nav className="mobile-nave" ref={navRef} style={{ display: 'none' }}>
         <Link href="/">
-          <span className="nav-link">{t("home")}</span>
+          <span className="nav-link">{t('home')}</span>
         </Link>
         <Link href="/shop">
-          <span className="nav-link">{t("products")}</span>
+          <span className="nav-link">{t('products')}</span>
         </Link>
-        <a href="#" className="nav-link">
-          {t("about")}
-        </a>
         {loged.isUser && loged.isLoggedIn && (
           <>
             <a
               onClick={logout}
               className="log-out-btn-mobile"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -325,7 +316,7 @@ function Navbar({ setvalue }) {
                 <path d="M16 17l5-5-5-5" />
                 <path d="M21 12H9" />
               </svg>
-              {t("logout")}
+              {t('logout')}
             </a>
           </>
         )}
@@ -366,7 +357,7 @@ const Product_Card = ({
                   style={{ backgroundColor: color.color }}
                   title={color.color}
                 />
-              ) : null,
+              ) : null
             )}
           </div>
           {Array.isArray(sizes) && (
@@ -390,17 +381,17 @@ const Product_Card = ({
 
 // ─── قسم المنتجات ────────────────────────────────────────────────
 const Pro = ({ prodect }) => {
-  const t = useTranslations("pro");
+  const t = useTranslations('pro');
   return (
     <section className="pro">
       <div className="products-header">
         <div className="products-title-section">
-          <h2>{t("title")}</h2>
-          <p>{t("subtitle")}</p>
+          <h2>{t('title')}</h2>
+          <p>{t('subtitle')}</p>
         </div>
         <Link href="/shop">
           <span className="view-all-btn">
-            {t("view_all")} <ArrowRightIcon />
+            {t('view_all')} <ArrowRightIcon />
           </span>
         </Link>
       </div>
@@ -424,21 +415,21 @@ const Pro = ({ prodect }) => {
 
 // ─── محتوى الفوتر ────────────────────────────────────────────────
 function Footer_content() {
-  const t = useTranslations("footer");
+  const t = useTranslations('footer');
   return (
     <div className="footer">
-      <h3 className="footer-title">{t("title")}</h3>
+      <h3 className="footer-title">{t('title')}</h3>
       <div className="footer-content">
         <div className="footer-item">
-          <span className="footer-label">{t("email_label")}</span>
+          <span className="footer-label">{t('email_label')}</span>
           <span>Gmail_Gmail@support.com</span>
         </div>
         <div className="footer-item">
-          <span className="footer-label">{t("mobile_label")}</span>
+          <span className="footer-label">{t('mobile_label')}</span>
           <span>0666666666 / 07777777777 / 0555555555 / 02222222222</span>
         </div>
         <div className="footer-item">
-          <span className="footer-label">{t("social_label")}</span>
+          <span className="footer-label">{t('social_label')}</span>
           <div className="footer-social">
             <a href="#">Facebook.com</a>
             <a href="#">Instagram.com</a>
@@ -452,30 +443,30 @@ function Footer_content() {
 
 // ─── مكوّن تسجيل الدخول / التسجيل ───────────────────────────────
 const Login = ({ setvalue, value, token }) => {
-  const t = useTranslations("login");
-  const toastT = useTranslations("toast");
+  const t = useTranslations('login');
+  const toastT = useTranslations('toast');
+  const locale = useLocale();
   const { setmessge, setSeverity, setsnack } = Use_them();
-
+  const [scroll, setscroll] = useState(0);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    wilaya: "",
-    commune: "",
-    email: "",
-    phone1: "",
-    phone2: "",
-    password: "",
-    confirmPassword: "",
-    code: "",
+    firstName: '',
+    lastName: '',
+    wilaya: '',
+    commune: '',
+    email: '',
+    phone1: '',
+    phone2: '',
+    password: '',
+    confirmPassword: '',
+    code: '',
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [activeForm, setActiveForm] = useState("signin"); // "signin" | "signup"
+  const [activeForm, setActiveForm] = useState('signin'); // "signin" | "signup"
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [passwordStep, setPasswordStep] = useState("send"); // "send" | "verify"
 
   const selectedWilaya = wilayas.find(
-    (w) => w.name.toString() === formData.wilaya,
+    (w) => w.name.toString() === formData.wilaya
   );
   const communes = selectedWilaya?.communes ?? [];
 
@@ -485,50 +476,50 @@ const Login = ({ setvalue, value, token }) => {
       setSeverity(sev);
       setsnack(true);
     },
-    [setmessge, setSeverity, setsnack],
+    [setmessge, setSeverity, setsnack]
   );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) =>
-      name === "wilaya"
-        ? { ...prev, wilaya: value, commune: "" }
-        : { ...prev, [name]: value },
+      name === 'wilaya'
+        ? { ...prev, wilaya: value, commune: '' }
+        : { ...prev, [name]: value }
     );
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   // ─── CSS Variables للتبديل بين الفورمين ──────────────────────
   useEffect(() => {
-    const isSignIn = activeForm === "signin";
+    const isSignIn = activeForm === 'signin';
     document.documentElement.style.setProperty(
-      "--in",
-      isSignIn ? "opacity_2" : "opacity_1",
+      '--in',
+      isSignIn ? 'opacity_2' : 'opacity_1'
     );
     document.documentElement.style.setProperty(
-      "--up",
-      !isSignIn ? "opacity_2" : "opacity_1",
+      '--up',
+      !isSignIn ? 'opacity_2' : 'opacity_1'
     );
-    document.documentElement.style.setProperty("--login", "opacity_2");
+    document.documentElement.style.setProperty('--login', 'opacity_2');
     document.documentElement.style.setProperty(
-      "--in_display",
-      isSignIn ? "flex" : "none",
+      '--in_display',
+      isSignIn ? 'flex' : 'none'
     );
     document.documentElement.style.setProperty(
-      "--up_display",
-      !isSignIn ? "grid" : "none",
+      '--up_display',
+      !isSignIn ? 'grid' : 'none'
     );
   }, [activeForm]);
 
   // ─── تعيين الحساب الافتراضي إن لم يكن هناك token ────────────
   useEffect(() => {
     if (!token) {
-      localStorage.setItem("logeed", "false");
+      localStorage.setItem('logeed', 'false');
       fetch(`http://${URL}:8000/api/token/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(ANON_CREDENTIALS),
-        credentials: "include",
+        credentials: 'include',
       });
     }
   }, []);
@@ -538,10 +529,10 @@ const Login = ({ setvalue, value, token }) => {
     const newErrors = {};
     const { password, email } = formData;
 
-    if (!email) newErrors.email = t("errors.email_required");
+    if (!email) newErrors.email = t('errors.email_required');
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase()))
-      newErrors.email = t("errors.email_invalid");
-    if (!password) newErrors.password = t("errors.password_required");
+      newErrors.email = t('errors.email_invalid');
+    if (!password) newErrors.password = t('errors.password_required');
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -550,26 +541,26 @@ const Login = ({ setvalue, value, token }) => {
 
     try {
       const res = await fetch(`http://${URL}:8000/api/token/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: email, password }),
-        credentials: "include",
+        credentials: 'include',
       });
       if (!res.ok) {
         const errorData = await res.json();
         setErrors({
-          validate: t("errors.credentials_invalid"),
+          validate: t('errors.credentials_invalid'),
           email: errorData.email,
           password: errorData.password,
         });
-        handleClick(toastT("login_failed"), "error");
+        handleClick(toastT('login_failed'), 'error');
         return false;
       }
-      handleClick(toastT("login_success"), "success");
+      handleClick(toastT('login_success'), 'success');
       setTimeout(() => location.reload(), 1000);
       return true;
     } catch {
-      handleClick(toastT("login_failed"), "error");
+      handleClick(toastT('login_failed'), 'error');
       return false;
     }
   };
@@ -591,38 +582,38 @@ const Login = ({ setvalue, value, token }) => {
     } = formData;
 
     if (!firstName.trim())
-      newErrors.firstName = t("errors.first_name_required");
+      newErrors.firstName = t('errors.first_name_required');
     else if (firstName.trim().length < 2)
-      newErrors.firstName = t("errors.first_name_min_length");
+      newErrors.firstName = t('errors.first_name_min_length');
 
-    if (!lastName.trim()) newErrors.lastName = t("errors.last_name_required");
+    if (!lastName.trim()) newErrors.lastName = t('errors.last_name_required');
     else if (lastName.trim().length < 2)
-      newErrors.lastName = t("errors.last_name_min_length");
+      newErrors.lastName = t('errors.last_name_min_length');
 
-    if (!email) newErrors.email = t("errors.email_required");
+    if (!email) newErrors.email = t('errors.email_required');
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase()))
-      newErrors.email = t("errors.email_invalid");
+      newErrors.email = t('errors.email_invalid');
 
-    if (!wilaya) newErrors.wilaya = t("errors.wilaya_required");
-    if (!commune) newErrors.commune = t("errors.commune_required");
+    if (!wilaya) newErrors.wilaya = t('errors.wilaya_required');
+    if (!commune) newErrors.commune = t('errors.commune_required');
 
-    if (!phone1.trim()) newErrors.phone1 = t("errors.phone1_required");
+    if (!phone1.trim()) newErrors.phone1 = t('errors.phone1_required');
     else if (!phoneRegex.test(phone1))
-      newErrors.phone1 = t("errors.phone_invalid");
+      newErrors.phone1 = t('errors.phone_invalid');
 
     if (phone2.trim() && !phoneRegex.test(phone2))
-      newErrors.phone2 = t("errors.phone_invalid");
+      newErrors.phone2 = t('errors.phone_invalid');
     if (phone1 && phone2 && phone1 === phone2)
-      newErrors.phone2 = t("errors.phone2_same_as_phone1");
+      newErrors.phone2 = t('errors.phone2_same_as_phone1');
 
-    if (!password) newErrors.password = t("errors.password_required");
+    if (!password) newErrors.password = t('errors.password_required');
     else if (password.length < 6)
-      newErrors.password = t("errors.password_min_length");
+      newErrors.password = t('errors.password_min_length');
 
     if (!confirmPassword)
-      newErrors.confirmPassword = t("errors.confirm_password_required");
+      newErrors.confirmPassword = t('errors.confirm_password_required');
     else if (password !== confirmPassword)
-      newErrors.confirmPassword = t("errors.confirm_password_mismatch");
+      newErrors.confirmPassword = t('errors.confirm_password_mismatch');
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -631,8 +622,8 @@ const Login = ({ setvalue, value, token }) => {
 
     try {
       const res = await fetch(`http://${URL}:8000/api/register/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           first_name: firstName,
           last_name: lastName,
@@ -641,31 +632,63 @@ const Login = ({ setvalue, value, token }) => {
           username: email,
           address_line: { wilaya, baldya: commune },
         }),
-        credentials: "include",
+        credentials: 'include',
       });
       if (!res.ok) {
         const errorData = await res.json();
         setErrors({
-          validate: errorData.error || t("errors.register_failed"),
-          firstName: errorData.firstName || "",
-          lastName: errorData.lastName || "",
-          phone1: errorData.phone1 || "",
-          phone2: errorData.phone2 || "",
-          email: errorData.username || "",
-          wilaya: errorData.wilaya || "",
-          commune: errorData.commune || "",
+          validate: errorData.error || t('errors.register_failed'),
+          firstName: errorData.firstName || '',
+          lastName: errorData.lastName || '',
+          phone1: errorData.phone1 || '',
+          phone2: errorData.phone2 || '',
+          email: errorData.username || '',
+          wilaya: errorData.wilaya || '',
+          commune: errorData.commune || '',
         });
-        handleClick(toastT("order_send_failed"), "error");
+        handleClick(toastT('order_send_failed'), 'error');
         return false;
       }
-      handleClick(toastT("order_sent_success"), "success");
+      handleClick(toastT('order_sent_success'), 'success');
       // تسجيل الدخول تلقائياً بعد التسجيل
       await validateSignIn();
       return true;
     } catch {
-      handleClick(toastT("order_send_failed"), "error");
+      handleClick(toastT('order_send_failed'), 'error');
       return false;
     }
+  };
+
+  const SandeCode = async () => {
+    const newErrors = {};
+    if (!formData.email) newErrors.email = t('errors.email_required');
+    else if (!/^[^\s@]+@[^\s@]+.[^\s@]+$/.test(formData.email.toLowerCase()))
+      newErrors.email = t('errors.email_invalid');
+    if (Object.keys(newErrors).length === 0) {
+      setLoading(true);
+      try {
+        const res = await apiFetch(`http://${URL}:8000/api/Send_otp_Code/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: formData.email }),
+        });
+        if (!res.ok) {
+          const errorData = await res.json();
+          newErrors.validate = errorData.error || t('errors.send_failed_retry');
+          newErrors.email = errorData.email || '';
+          throw new Error(errorData.message || 'Failed to update profile');
+        }
+        await res.json();
+        handleClick(toastT('code_sent_success'), 'success');
+        setscroll(329);
+        setLoading(false);
+      } catch {
+        handleClick(toastT('send_failed'), 'error');
+        setLoading(false);
+      }
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmitSignIn = async (e) => {
@@ -682,86 +705,57 @@ const Login = ({ setvalue, value, token }) => {
     setLoading(false);
   };
 
-  // ─── إرسال كود إعادة تعيين كلمة المرور ──────────────────────
-  const handleSendCode = async (e) => {
+  const handlecodeSande = async (e) => {
     e.preventDefault();
-    const newErrors = {};
-    if (!formData.email) newErrors.email = t("errors.email_required");
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.toLowerCase()))
-      newErrors.email = t("errors.email_invalid");
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await apiFetch(`http://${URL}:8000/api/Send_otp_Code/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: formData.email }),
-      });
-      if (!res.ok) {
-        const errorData = await res.json();
-        setErrors({
-          validate: errorData.error || t("errors.send_failed_retry"),
-          email: errorData.email || "",
-        });
-        throw new Error();
-      }
-      handleClick(toastT("code_sent_success"), "success");
-      setPasswordStep("verify");
-    } catch {
-      handleClick(toastT("send_failed"), "error");
-    } finally {
-      setLoading(false);
-    }
+    SandeCode();
   };
-
-  // ─── التحقق من الكود ──────────────────────────────────────────
-  const handleVerifyCode = async (e) => {
-    e.preventDefault();
+  const ValidateCode = async () => {
     const { code, email } = formData;
-    if (!code) {
-      setErrors({ code: t("errors.code_required") });
+    const newErrors = {};
+    if (!code) newErrors.code = t('errors.code_required');
+    const send_data = new FormData();
+    if (Object.keys(newErrors).length === 0) {
+      setLoading(true);
+      try {
+        send_data.append('username', email);
+        send_data.append('code', code);
+        const res = await apiFetch(`http://${URL}:8000/api/VerifyOTPView/`, {
+          method: 'POST',
+          body: send_data,
+        });
+        if (!res.ok) {
+          const errorData = await res.json();
+          newErrors.validate = errorData.error || t('errors.send_failed_retry');
+          newErrors.password = errorData.password || '';
+          newErrors.code = errorData.code || '';
+          throw new Error(errorData.message || 'Failed to update profile');
+        }
+        await res.json();
+        setvalue('none');
+        setErrors({});
+        setShowPasswordModal('none');
+        setLoading(false);
+        location.reload();
+      } catch {
+        handleClick(toastT('send_failed'), 'error');
+        setLoading(false);
+      }
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handlecodeSubmit = async (e) => {
+    e.preventDefault();
+    if (!(await ValidateCode())) {
+      setLoading(false);
       return;
     }
-
-    setLoading(true);
-    const body = new FormData();
-    body.append("username", email);
-    body.append("code", code);
-
-    try {
-      const res = await apiFetch(`http://${URL}:8000/api/VerifyOTPView/`, {
-        method: "POST",
-        body,
-      });
-      if (!res.ok) {
-        const errorData = await res.json();
-        setErrors({
-          validate: errorData.error || t("errors.send_failed_retry"),
-          code: errorData.code || "",
-        });
-        throw new Error();
-      }
-      handleClick(toastT("password_updated_success"), "success");
-      setShowPasswordModal(false);
-      setPasswordStep("send");
-      setErrors({});
-      setvalue("none");
-      location.reload();
-    } catch {
-      handleClick(toastT("send_failed"), "error");
-    } finally {
-      setLoading(false);
-    }
+    setErrors({});
   };
 
   const closeModal = () => {
-    setvalue("none");
-    setActiveForm("signin");
+    setvalue('none');
+    setActiveForm('signin');
     setErrors({});
   };
 
@@ -779,7 +773,7 @@ const Login = ({ setvalue, value, token }) => {
           {/* فورم تسجيل الدخول */}
           <form className="Sign_in" onSubmit={handleSubmitSignIn}>
             <Field
-              label={t("fields.email")}
+              label={t('fields.email')}
               required
               error={errors.email}
               icon={<EmailIcon />}
@@ -789,13 +783,13 @@ const Login = ({ setvalue, value, token }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder={t("placeholders.email")}
-                className={`form-input${errors.email ? " error" : ""}`}
+                placeholder={t('placeholders.email')}
+                className={`form-input${errors.email ? ' error' : ''}`}
               />
             </Field>
 
             <Field
-              label={t("fields.password")}
+              label={t('fields.password')}
               required
               error={errors.password}
               icon={<PasswordIcon />}
@@ -805,21 +799,26 @@ const Login = ({ setvalue, value, token }) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder={t("placeholders.password")}
-                className={`form-input${errors.password ? " error" : ""}`}
+                placeholder={t('placeholders.password')}
+                className={`form-input${errors.password ? ' error' : ''}`}
               />
               <p
                 className="field-info"
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  color: '#3b82f6',
+                  fontSize: 'x-small',
+                }}
                 onClick={() => setShowPasswordModal(true)}
               >
-                {t("buttons.forget_password")}
+                {t('buttons.forget_password')}
               </p>
             </Field>
 
             <Field error={errors.validate}>
               <button type="submit" className="btn-submit" disabled={loading}>
-                {loading ? <Spinner /> : t("buttons.submit_signin")}
+                {loading ? <Spinner /> : t('buttons.submit_signin')}
               </button>
             </Field>
           </form>
@@ -828,7 +827,7 @@ const Login = ({ setvalue, value, token }) => {
           <form className="Sign_up" onSubmit={handleSubmitSignUp}>
             <div className="form-grid-2">
               <Field
-                label={t("fields.first_name")}
+                label={t('fields.first_name')}
                 required
                 error={errors.firstName}
                 icon={<PersonIcon />}
@@ -838,12 +837,12 @@ const Login = ({ setvalue, value, token }) => {
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
-                  placeholder={t("placeholders.first_name")}
-                  className={`form-input${errors.firstName ? " error" : ""}`}
+                  placeholder={t('placeholders.first_name')}
+                  className={`form-input${errors.firstName ? ' error' : ''}`}
                 />
               </Field>
               <Field
-                label={t("fields.last_name")}
+                label={t('fields.last_name')}
                 required
                 error={errors.lastName}
                 icon={<PersonIcon />}
@@ -853,15 +852,15 @@ const Login = ({ setvalue, value, token }) => {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
-                  placeholder={t("placeholders.last_name")}
-                  className={`form-input${errors.lastName ? " error" : ""}`}
+                  placeholder={t('placeholders.last_name')}
+                  className={`form-input${errors.lastName ? ' error' : ''}`}
                 />
               </Field>
             </div>
 
             <div className="password">
               <Field
-                label={t("fields.password")}
+                label={t('fields.password')}
                 required
                 error={errors.password}
                 icon={<PasswordIcon />}
@@ -871,12 +870,12 @@ const Login = ({ setvalue, value, token }) => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder={t("placeholders.password")}
-                  className={`form-input${errors.password ? " error" : ""}`}
+                  placeholder={t('placeholders.password')}
+                  className={`form-input${errors.password ? ' error' : ''}`}
                 />
               </Field>
               <Field
-                label={t("fields.confirm_password")}
+                label={t('fields.confirm_password')}
                 required
                 error={errors.confirmPassword}
                 icon={<PasswordCheckIcon />}
@@ -886,15 +885,15 @@ const Login = ({ setvalue, value, token }) => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder={t("placeholders.confirm_password")}
-                  className={`form-input${errors.confirmPassword ? " error" : ""}`}
+                  placeholder={t('placeholders.confirm_password')}
+                  className={`form-input${errors.confirmPassword ? ' error' : ''}`}
                 />
               </Field>
             </div>
 
             <div className="Wilaya">
               <Field
-                label={t("fields.wilaya")}
+                label={t('fields.wilaya')}
                 required
                 error={errors.wilaya}
                 icon={<LocationIcon />}
@@ -903,18 +902,18 @@ const Login = ({ setvalue, value, token }) => {
                   name="wilaya"
                   value={formData.wilaya}
                   onChange={handleChange}
-                  className={`form-select${errors.wilaya ? " error" : ""}`}
+                  className={`form-select${errors.wilaya ? ' error' : ''}`}
                 >
-                  <option value="">{t("placeholders.select_wilaya")}</option>
+                  <option value="">{t('placeholders.select_wilaya')}</option>
                   {wilayas.map((w) => (
                     <option key={w.code} value={w.name.toString()}>
-                      {w.code.toString().padStart(2, "0")} - {w.name}
+                      {w.code.toString().padStart(2, '0')} - {w.name}
                     </option>
                   ))}
                 </select>
               </Field>
               <Field
-                label={t("fields.commune")}
+                label={t('fields.commune')}
                 required
                 error={errors.commune}
                 icon={<HomeIcon />}
@@ -924,12 +923,12 @@ const Login = ({ setvalue, value, token }) => {
                   value={formData.commune}
                   onChange={handleChange}
                   disabled={!formData.wilaya}
-                  className={`form-select${errors.commune ? " error" : ""}`}
+                  className={`form-select${errors.commune ? ' error' : ''}`}
                 >
                   <option value="">
                     {formData.wilaya
-                      ? t("placeholders.select_commune")
-                      : t("placeholders.select_wilaya_first")}
+                      ? t('placeholders.select_commune')
+                      : t('placeholders.select_wilaya_first')}
                   </option>
                   {communes.map((c) => (
                     <option key={c} value={c}>
@@ -943,13 +942,13 @@ const Login = ({ setvalue, value, token }) => {
             <div className="section-divider">
               <div className="section-divider-line" />
               <span className="section-divider-text">
-                {t("labels.contact_info")}
+                {t('labels.contact_info')}
               </span>
               <div className="section-divider-line" />
             </div>
 
             <Field
-              label={t("fields.email")}
+              label={t('fields.email')}
               required
               error={errors.email}
               icon={<EmailIcon />}
@@ -959,14 +958,14 @@ const Login = ({ setvalue, value, token }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder={t("placeholders.email")}
-                className={`form-input${errors.email ? " error" : ""}`}
+                placeholder={t('placeholders.email')}
+                className={`form-input${errors.email ? ' error' : ''}`}
               />
             </Field>
 
             <div className="phone">
               <Field
-                label={t("fields.phone1")}
+                label={t('fields.phone1')}
                 required
                 error={errors.phone1}
                 icon={<PhoneIcon />}
@@ -976,15 +975,15 @@ const Login = ({ setvalue, value, token }) => {
                   name="phone1"
                   value={formData.phone1}
                   onChange={handleChange}
-                  placeholder={t("placeholders.phone1")}
+                  placeholder={t('placeholders.phone1')}
                   maxLength={10}
-                  className={`form-input phone-input${errors.phone1 ? " error" : ""}`}
+                  className={`form-input phone-input${errors.phone1 ? ' error' : ''}`}
                 />
               </Field>
               <Field
-                label={t("fields.phone2")}
+                label={t('fields.phone2')}
                 error={errors.phone2}
-                hint={t("hints.phone2_optional")}
+                hint={t('hints.phone2_optional')}
                 icon={<PhoneIcon />}
               >
                 <input
@@ -992,23 +991,23 @@ const Login = ({ setvalue, value, token }) => {
                   name="phone2"
                   value={formData.phone2}
                   onChange={handleChange}
-                  placeholder={t("placeholders.phone2")}
+                  placeholder={t('placeholders.phone2')}
                   maxLength={10}
-                  className={`form-input phone-input${errors.phone2 ? " error" : ""}`}
+                  className={`form-input phone-input${errors.phone2 ? ' error' : ''}`}
                 />
               </Field>
             </div>
 
             <Field error={errors.validate}>
               <button type="submit" className="btn-submit" disabled={loading}>
-                {loading ? <Spinner /> : t("buttons.submit_signup")}
+                {loading ? <Spinner /> : t('buttons.submit_signup')}
               </button>
             </Field>
           </form>
 
           {/* الجزء السفلي */}
           <div className="bottom">
-            <p className="or">{t("labels.or")}</p>
+            <p className="or">{t('labels.or')}</p>
             <div className="Accont">
               <button type="button">
                 <img
@@ -1018,32 +1017,32 @@ const Login = ({ setvalue, value, token }) => {
               </button>
             </div>
             <p className="method">
-              {activeForm === "signin" ? (
+              {activeForm === 'signin' ? (
                 <>
-                  {t("labels.no_account")}
+                  {t('labels.no_account')}
                   <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      setActiveForm("signup");
+                      setActiveForm('signup');
                     }}
-                    style={{ cursor: "pointer", marginLeft: "5px" }}
+                    style={{ cursor: 'pointer', marginLeft: '5px' }}
                   >
-                    {t("labels.sign_up")}
+                    {t('labels.sign_up')}
                   </a>
                 </>
               ) : (
                 <>
-                  {t("labels.have_account")}
+                  {t('labels.have_account')}
                   <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      setActiveForm("signin");
+                      setActiveForm('signin');
                     }}
-                    style={{ cursor: "pointer", marginLeft: "5px" }}
+                    style={{ cursor: 'pointer', marginLeft: '5px' }}
                   >
-                    {t("labels.sign_in")}
+                    {t('labels.sign_in')}
                   </a>
                 </>
               )}
@@ -1054,23 +1053,26 @@ const Login = ({ setvalue, value, token }) => {
 
       {/* ─── نافذة إعادة تعيين كلمة المرور ─── */}
       {showPasswordModal && (
-        <div className="fixed-body" style={{ display: "flex" }}>
+        <div className="fixed-body" style={{ display: 'flex' }}>
           <form
             className="code-body"
-            onSubmit={
-              passwordStep === "send" ? handleSendCode : handleVerifyCode
-            }
+            onSubmit={scroll === 0 ? handlecodeSande : handlecodeSubmit}
             noValidate
           >
-            <h3>
-              {passwordStep === "verify"
-                ? t("change_password.title_sent")
-                : t("change_password.title_send")}
+            <h3 style={{ fontSize: locale === 'ar' ? '' : 'x-small' }}>
+              {scroll === 310
+                ? t('change_password.title_sent')
+                : t('change_password.title_send')}
             </h3>
 
-            <div className="inputs">
+            <div
+              className="inputs"
+              style={{
+                transform: `translateX(${locale === 'ar' ? scroll : -scroll}px)`,
+              }}
+            >
               <Field
-                label={t("fields.email")}
+                label={t('fields.email')}
                 error={errors.email}
                 icon={<EmailIcon />}
               >
@@ -1079,15 +1081,14 @@ const Login = ({ setvalue, value, token }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder={t("placeholders.email")}
-                  className={`form-input${errors.email ? " error" : ""}`}
-                  disabled={passwordStep === "verify"}
+                  placeholder={t('placeholders.email')}
+                  className={`form-input${errors.email ? ' error' : ''}`}
                 />
               </Field>
 
-              {passwordStep === "verify" && (
+              <div>
                 <Field
-                  label={t("fields.code")}
+                  label={t('fields.code')}
                   error={errors.code}
                   icon={<PasswordStarsIcon />}
                   required
@@ -1097,32 +1098,31 @@ const Login = ({ setvalue, value, token }) => {
                     name="code"
                     onChange={handleChange}
                     maxLength={6}
-                    className={`form-input phone-input${errors.code ? " error" : ""}`}
+                    className={`form-input phone-input${errors.code ? ' error' : ''}`}
                   />
                 </Field>
-              )}
+              </div>
             </div>
 
             <Field error={errors.validate}>
               <div className="btn">
                 <button
                   type="button"
-                  className="btn-submit cancel"
-                  disabled={loading}
                   onClick={() => {
                     setShowPasswordModal(false);
-                    setPasswordStep("send");
-                    setErrors({});
+                    location.reload();
                   }}
+                  className="btn-submit cancel"
+                  disabled={loading}
                 >
-                  {t("buttons.cancel")}
+                  {t('buttons.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="btn-submit save"
                   disabled={loading}
                 >
-                  {loading ? <Spinner /> : t("buttons.send")}
+                  {loading ? <Spinner /> : t('buttons.send')}
                 </button>
               </div>
             </Field>
@@ -1135,7 +1135,7 @@ const Login = ({ setvalue, value, token }) => {
 
 // ─── Header ──────────────────────────────────────────────────────
 export const Header = ({ token_access }) => {
-  const [value, setValue] = useState("none");
+  const [value, setValue] = useState('none');
   return (
     <>
       <Navbar setvalue={setValue} />
@@ -1146,21 +1146,21 @@ export const Header = ({ token_access }) => {
 
 // ─── Hero ─────────────────────────────────────────────────────────
 export const Hero = () => {
-  const t = useTranslations("Hero");
+  const t = useTranslations('Hero');
   return (
     <section className="hero">
       <div className="hero-content">
         <h1 className="hero-title">
-          {t("title.line1")}
+          {t('title.line1')}
           <br />
-          {t("title.line2")}
+          {t('title.line2')}
         </h1>
-        <p className="hero-subtitle">{t("subtitle")}</p>
+        <p className="hero-subtitle">{t('subtitle')}</p>
         <div className="hero-buttons">
           <Link href="/shop">
-            <button className="btn-primary">{t("buttons.shop")}</button>
+            <button className="btn-primary">{t('buttons.shop')}</button>
           </Link>
-          <button className="btn-secondary">{t("buttons.learn")}</button>
+          <button className="btn-secondary">{t('buttons.learn')}</button>
         </div>
       </div>
     </section>
@@ -1169,16 +1169,16 @@ export const Hero = () => {
 
 // ─── Features ────────────────────────────────────────────────────
 export const Features = () => {
-  const t = useTranslations("features");
+  const t = useTranslations('features');
   const cards = [
-    { icon: <ZapIcon />, key: "fast_delivery" },
-    { icon: <ShieldIcon />, key: "secure_shopping" },
-    { icon: <TruckIcon />, key: "quality_guarantee" },
+    { icon: <ZapIcon />, key: 'fast_delivery' },
+    { icon: <ShieldIcon />, key: 'secure_shopping' },
+    { icon: <TruckIcon />, key: 'quality_guarantee' },
   ];
   return (
     <section className="why-choose">
-      <h2 className="section-title">{t("title")}</h2>
-      <p className="section-subtitle">{t("subtitle")}</p>
+      <h2 className="section-title">{t('title')}</h2>
+      <p className="section-subtitle">{t('subtitle')}</p>
       <div className="features-grid">
         {cards.map(({ icon, key }) => (
           <div key={key} className="feature-card">
@@ -1202,25 +1202,25 @@ export const Settings = () => {
   const deviceDimensions = useDeviceDimensions();
   const viewportSize = useViewportSize();
 
-  if (process.env.NODE_ENV !== "development" || viewportSize.width === 0)
+  if (process.env.NODE_ENV !== 'development' || viewportSize.width === 0)
     return null;
 
   const optimalDimensions = calculateOptimalDimensions(deviceDimensions);
   const gridColumns = calculateOptimalGridColumns(
     viewportSize.width - optimalDimensions.sidebarWidth,
     optimalDimensions.cardMinWidth,
-    optimalDimensions.cardMaxWidth,
+    optimalDimensions.cardMaxWidth
   );
   const performanceSettings = getPerformanceSettings(deviceDimensions);
 
   return (
     <div
       style={{
-        position: "fixed",
+        position: 'fixed',
         bottom: 10,
         right: 10,
-        background: "rgba(0,0,0,0.8)",
-        color: "white",
+        background: 'rgba(0,0,0,0.8)',
+        color: 'white',
         padding: 10,
         borderRadius: 5,
         fontSize: 12,
@@ -1230,12 +1230,12 @@ export const Settings = () => {
       <div>Width: {viewportSize.width}px</div>
       <div>Height: {viewportSize.height}px</div>
       <div>
-        Device:{" "}
+        Device:{' '}
         {deviceDimensions.isMobile
-          ? "Mobile"
+          ? 'Mobile'
           : deviceDimensions.isTablet
-            ? "Tablet"
-            : "Desktop"}
+            ? 'Tablet'
+            : 'Desktop'}
       </div>
       <div>Orientation: {deviceDimensions.orientation}</div>
       <div>Pixel Ratio: {deviceDimensions.devicePixelRatio}</div>
@@ -1252,10 +1252,10 @@ export const Snack_bar = () => {
   const { message, severity, snack, setsnack } = Use_them();
   const handleClose = useCallback(
     (_, reason) => {
-      if (reason === "clickaway") return;
+      if (reason === 'clickaway') return;
       setsnack(false);
     },
-    [setsnack],
+    [setsnack]
   );
 
   return (
@@ -1263,7 +1263,7 @@ export const Snack_bar = () => {
       <SnackbarAlert
         onClose={handleClose}
         severity={severity}
-        sx={{ width: "100%" }}
+        sx={{ width: '100%' }}
       >
         {message}
       </SnackbarAlert>
