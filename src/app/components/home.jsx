@@ -127,12 +127,12 @@ function Navbar({ setvalue }) {
   // ─── تسجيل الخروج ────────────────────────────────────────────
   const logout = async () => {
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/logout/`, {
+      const res = await apiFetch(`http://${URL}/api/logout/`, {
         method: 'POST',
       });
       if (!res.ok) throw new Error();
 
-      await fetch(`http://${URL}:8000/api/token/`, {
+      await fetch(`http://${URL}/api/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(ANON_CREDENTIALS),
@@ -499,7 +499,7 @@ const Login = ({ setvalue, value, token }) => {
   useEffect(() => {
     if (!token) {
       localStorage.setItem('logeed', 'false');
-      fetch(`http://${URL}:8000/api/token/`, {
+      fetch(`http://${URL}/api/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(ANON_CREDENTIALS),
@@ -524,7 +524,7 @@ const Login = ({ setvalue, value, token }) => {
     }
 
     try {
-      const res = await fetch(`http://${URL}:8000/api/token/`, {
+      const res = await fetch(`http://${URL}/api/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: email, password }),
@@ -599,7 +599,7 @@ const Login = ({ setvalue, value, token }) => {
     }
 
     try {
-      const res = await fetch(`http://${URL}:8000/api/register/`, {
+      const res = await fetch(`http://${URL}/api/register/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -652,7 +652,7 @@ const Login = ({ setvalue, value, token }) => {
 
     setLoading(true);
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/Send_otp_Code/`, {
+      const res = await apiFetch(`http://${URL}/api/Send_otp_Code/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: email }),
@@ -693,7 +693,7 @@ const Login = ({ setvalue, value, token }) => {
 
     setLoading(true);
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/VerifyOTPView/`, {
+      const res = await apiFetch(`http://${URL}/api/VerifyOTPView/`, {
         method: 'POST',
         body: send_data,
       });

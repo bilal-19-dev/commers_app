@@ -295,7 +295,7 @@ export default function Order_component() {
       return;
     }
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/account/me/`, {
+      const res = await apiFetch(`http://${URL}/api/account/me/`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error();
@@ -376,7 +376,7 @@ export default function Order_component() {
 
     setLoading(true);
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/account/me/`, {
+      const res = await apiFetch(`http://${URL}/api/account/me/`, {
         method: 'PATCH',
         body: send_data,
       });
@@ -403,7 +403,7 @@ export default function Order_component() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/Send_otp_Code/`, {
+      const res = await apiFetch(`http://${URL}/api/Send_otp_Code/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: data.email }),
@@ -465,7 +465,7 @@ export default function Order_component() {
     send_data.append('code', code);
 
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/account/me/`, {
+      const res = await apiFetch(`http://${URL}/api/account/me/`, {
         method: 'PATCH',
         body: send_data,
       });

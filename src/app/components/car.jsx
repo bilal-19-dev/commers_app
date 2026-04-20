@@ -1,13 +1,13 @@
-"use client";
-import { useState, useEffect, useCallback } from "react";
-import { URL } from "../data/URL.js";
-import { Use_them } from "../hooks/ThemProvider";
-import { useRouter } from "@/app/navigation";
-import { useTranslations } from "next-intl";
+'use client';
+import { useState, useEffect, useCallback } from 'react';
+import { URL } from '../data/URL.js';
+import { Use_them } from '../hooks/ThemProvider';
+import { useRouter } from '@/app/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function Car_component() {
-  const t = useTranslations("cart");
-  const toastT = useTranslations("toast");
+  const t = useTranslations('cart');
+  const toastT = useTranslations('toast');
   const [items, setItems] = useState();
   const [loading, setLoading] = useState(false);
   const [products, setproducts] = useState();
@@ -20,13 +20,13 @@ export default function Car_component() {
       setSeverity(sev);
       setsnack(true);
     },
-    [setmessge, setSeverity, setsnack],
+    [setmessge, setSeverity, setsnack]
   );
 
   async function fetchProducts(silent = false) {
     if (!silent) setLoading(true); // ابدأ التحميل
 
-    const productsInCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const productsInCart = JSON.parse(localStorage.getItem('cart') || '[]');
 
     if (productsInCart.length === 0) {
       setItems(undefined);
@@ -37,40 +37,44 @@ export default function Car_component() {
     const ids = [...new Set(productsInCart.map((item) => item.id))];
 
     try {
-      const res = await fetch(`http://${URL}:8000/api/products/by-ids/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch(`http://${URL}/api/products/by-ids/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids }),
       });
 
-      if (!res.ok) throw new Error("Fetch failed");
+      if (!res.ok) throw new Error('Fetch failed');
 
       const fetchedProducts = await res.json();
       setproducts(fetchedProducts);
 
       // بناء قائمة العناصر بناءً على ما في السلة حالياً
-      const itemsList = productsInCart.map(cartItem => {
-        const product = fetchedProducts.find(p => p.id === cartItem.id);
-        if (!product) return null;
-  
-        const colorInfo = product.colors.find(c => (c.color || c.color_name) === cartItem.color);
-        
-        return {
-              id: product.id,
-              product: product.primary_image,
-              name: product.name,
-          color: cartItem.color,
-              price: product.price,
-          size: cartItem.size || "/",
-          stock: colorInfo ? colorInfo.quantity : 0,
-          quantity: cartItem.quantity,
-        };
-      }).filter(Boolean); // إزالة العناصر الفارغة
-  
+      const itemsList = productsInCart
+        .map((cartItem) => {
+          const product = fetchedProducts.find((p) => p.id === cartItem.id);
+          if (!product) return null;
+
+          const colorInfo = product.colors.find(
+            (c) => (c.color || c.color_name) === cartItem.color
+          );
+
+          return {
+            id: product.id,
+            product: product.primary_image,
+            name: product.name,
+            color: cartItem.color,
+            price: product.price,
+            size: cartItem.size || '/',
+            stock: colorInfo ? colorInfo.quantity : 0,
+            quantity: cartItem.quantity,
+          };
+        })
+        .filter(Boolean); // إزالة العناصر الفارغة
+
       setItems(itemsList);
     } catch (error) {
       console.error(error);
-      handleClick(toastT("order_send_failed"), "error");
+      handleClick(toastT('order_send_failed'), 'error');
     } finally {
       setLoading(false); // إنهاء التحميل في كل الحالات
     }
@@ -84,21 +88,21 @@ export default function Car_component() {
     const order_form = items?.map((item) => ({
       order_info: {
         color: item.color,
-        size: "3",
+        size: '3',
         quantity: item.quantity,
       },
       prodect: products.find((pro) => pro.id === item.id),
     }));
 
-    localStorage.removeItem("order_info");
-    localStorage.setItem("order_info", JSON.stringify(order_form));
-    router.push("/order_form");
+    localStorage.removeItem('order_info');
+    localStorage.setItem('order_info', JSON.stringify(order_form));
+    router.push('/order_form');
   }
 
   function edit_car(i, operation, input) {
-    const productsInCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const productsInCart = JSON.parse(localStorage.getItem('cart') || '[]');
 
-    if (operation === "color") {
+    if (operation === 'color') {
       const isDuplicate = productsInCart.some(
         (product, x) =>
           x !== i &&
@@ -106,7 +110,7 @@ export default function Car_component() {
           product.color === input
       );
       if (isDuplicate) {
-        handleClick(toastT("item_already_in_cart"), "warning");
+        handleClick(toastT('item_already_in_cart'), 'warning');
         return;
       }
     }
@@ -116,75 +120,76 @@ export default function Car_component() {
       return { ...item, [operation]: input };
     });
 
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+
     // تحديث حالة items فوراً لضمان عدم اختفاء العنصر
     const updatedItems = items.map((item, x) => {
       if (x !== i) return item;
-      
+
       // إذا تغير اللون، نحتاج لتحديث الـ stock من بيانات الـ products الأصلية
       let newStock = item.stock;
-      if (operation === "color") {
-        const product = products.find(p => p.id === item.id);
-        const colorInfo = product?.colors.find(c => (c.color || c.color_name) === input);
+      if (operation === 'color') {
+        const product = products.find((p) => p.id === item.id);
+        const colorInfo = product?.colors.find(
+          (c) => (c.color || c.color_name) === input
+        );
         newStock = colorInfo ? colorInfo.quantity : 0;
       }
-  
+
       return { ...item, [operation]: input, stock: newStock };
     });
-  
+
     setItems(updatedItems);
     // اختياري: يمكنك استدعاء fetchProducts(true) للتأكد من المزامنة مع السيرفر
   }
 
   function hendel_delet_car(i) {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const deletedItem = items[i];
     const index = cart.findIndex(
-      (item) =>
-        item.id === deletedItem?.id && item.color === deletedItem?.color,
+      (item) => item.id === deletedItem?.id && item.color === deletedItem?.color
     );
 
     if (index === -1) {
-      handleClick(toastT("delete_cart_item_failed"), "error");
+      handleClick(toastT('delete_cart_item_failed'), 'error');
       return;
     }
 
     cart.splice(index, 1);
-    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(cart));
     setCart(cart);
 
     const newItems = items.filter(
       (item) =>
-        !(item.id === deletedItem?.id && item.color === deletedItem?.color),
+        !(item.id === deletedItem?.id && item.color === deletedItem?.color)
     );
 
     setItems(newItems.length > 0 ? newItems : undefined);
-    handleClick(toastT("item_removed_from_cart_success"), "success");
+    handleClick(toastT('item_removed_from_cart_success'), 'success');
   }
 
   function hendel_add_btn(i) {
     if (items[i].quantity < items[i].stock) {
       const updated = items.map((item, x) => {
         if (x !== i) return item;
-        edit_car(i, "quantity", item.quantity + 1);
+        edit_car(i, 'quantity', item.quantity + 1);
         return { ...item, quantity: item.quantity + 1 };
       });
       setItems(updated);
     } else {
-      handleClick(toastT("quantity_unavailable"), "warning");
+      handleClick(toastT('quantity_unavailable'), 'warning');
     }
   }
 
   function hendel_minus_btn(i) {
     if (items[i].quantity <= 1) {
-      handleClick(toastT("quantity_invalid_or_remove"), "warning");
+      handleClick(toastT('quantity_invalid_or_remove'), 'warning');
       return;
     }
 
     const updated = items.map((item, x) => {
       if (x !== i) return item;
-      edit_car(i, "quantity", item.quantity - 1);
+      edit_car(i, 'quantity', item.quantity - 1);
       return { ...item, quantity: item.quantity - 1 };
     });
 
@@ -218,7 +223,11 @@ export default function Car_component() {
   );
 
   if (loading && (!items || items.length === 0)) {
-    return <div className="loading-screen"><Spinner /></div>;
+    return (
+      <div className="loading-screen">
+        <Spinner />
+      </div>
+    );
   }
 
   if (!items) {
@@ -228,13 +237,13 @@ export default function Car_component() {
           <div className="cart-container">
             <div className="empty-cart">
               <div className="empty-cart-icon">🛒</div>
-              <h2>{t("empty.title")}</h2>
-              <p>{t("empty.subtitle")}</p>
+              <h2>{t('empty.title')}</h2>
+              <p>{t('empty.subtitle')}</p>
               <button
                 className="continue-shopping-btn"
-                onClick={() => router.push("/shop")}
+                onClick={() => router.push('/shop')}
               >
-                {t("empty.back_btn")}
+                {t('empty.back_btn')}
               </button>
             </div>
           </div>
@@ -250,18 +259,18 @@ export default function Car_component() {
           {/* Header */}
           <div className="cart-header">
             <div className="cart-icon">🛍️</div>
-            <h1>{t("header.title")}</h1>
-            <p>{t("header.items_count", { count: totalQuantity })}</p>
+            <h1>{t('header.title')}</h1>
+            <p>{t('header.items_count', { count: totalQuantity })}</p>
           </div>
 
-          <a onClick={() => router.push("/shop")} className="continue-link">
-            {t("continue_shopping")}
+          <a onClick={() => router.push('/shop')} className="continue-link">
+            {t('continue_shopping')}
           </a>
 
           <div className="cart-content">
             {/* قائمة المنتجات */}
             <div className="cart-items-section">
-              <h2 className="section-title">{t("selected_products")}</h2>
+              <h2 className="section-title">{t('selected_products')}</h2>
               <div className="cart-items-list">
                 {items.map((item, i) => (
                   <div key={`${item.id}-${item.color}`} className="cart-item">
@@ -272,7 +281,7 @@ export default function Car_component() {
                       <div className="item-info">
                         <h3>{item.name}</h3>
                         <p className="item-price">
-                          {item.price} {t("currency")}
+                          {item.price} {t('currency')}
                         </p>
                       </div>
                       <div className="item-actions">
@@ -300,7 +309,7 @@ export default function Car_component() {
                         <select
                           className="Size_Color"
                           value={item.color}
-                          onChange={(e) => edit_car(i, "color", e.target.value)}
+                          onChange={(e) => edit_car(i, 'color', e.target.value)}
                         >
                           {products
                             ?.find((p) => p.id === item.id)
@@ -319,7 +328,7 @@ export default function Car_component() {
                           className="remove-btn"
                           onClick={() => hendel_delet_car(i)}
                         >
-                          {t("remove_btn")}
+                          {t('remove_btn')}
                         </button>
                       </div>
                     </div>
@@ -330,33 +339,33 @@ export default function Car_component() {
 
             {/* ملخص الطلبية */}
             <div className="order-summary">
-              <h2 className="summary-title">{t("summary.title")}</h2>
+              <h2 className="summary-title">{t('summary.title')}</h2>
 
               <div className="summary-row">
-                <span>{t("summary.subtotal")}</span>
+                <span>{t('summary.subtotal')}</span>
                 <span>
-                  {subtotal} {t("currency")}
+                  {subtotal} {t('currency')}
                 </span>
               </div>
 
               <div className="summary-row">
-                <span>{t("summary.shipping")}</span>
-                <span>{t("summary.shipping_free")}</span>
+                <span>{t('summary.shipping')}</span>
+                <span>{t('summary.shipping_free')}</span>
               </div>
 
               {discount > 0 && (
                 <div className="summary-row discount">
-                  <span>{t("summary.discount", { discount })}</span>
+                  <span>{t('summary.discount', { discount })}</span>
                   <span>
-                    -{discountAmount.toFixed(2)} {t("currency")}
+                    -{discountAmount.toFixed(2)} {t('currency')}
                   </span>
                 </div>
               )}
 
               <div className="summary-row total">
-                <span>{t("summary.total")}</span>
+                <span>{t('summary.total')}</span>
                 <span>
-                  {total} {t("currency")}
+                  {total} {t('currency')}
                 </span>
               </div>
 
@@ -367,10 +376,10 @@ export default function Car_component() {
                   handle_order_form();
                 }}
               >
-                {loading ? <Spinner /> : t("summary.checkout_btn")}
+                {loading ? <Spinner /> : t('summary.checkout_btn')}
               </button>
 
-              <div className="secure-note">{t("summary.secure_note")}</div>
+              <div className="secure-note">{t('summary.secure_note')}</div>
             </div>
           </div>
         </div>

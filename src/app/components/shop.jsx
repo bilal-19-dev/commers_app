@@ -148,7 +148,7 @@ export default function Shop_commponent({ data }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`http://${URL}:8000/api/categories/`);
+        const res = await fetch(`http://${URL}/api/categories/`);
         if (!res.ok) throw new Error('Failed to fetch categories');
         setCategories(await res.json());
       } catch (_) {}

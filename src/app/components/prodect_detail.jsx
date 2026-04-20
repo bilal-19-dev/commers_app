@@ -69,7 +69,7 @@ export default function Prodect_detail_component({ data }) {
   }, []);
   const get_user_review = useCallback(async () => {
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/review/`, {
+      const res = await apiFetch(`http://${URL}/api/review/`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -82,7 +82,7 @@ export default function Prodect_detail_component({ data }) {
 
   const send_review = async (value) => {
     try {
-      const res = await apiFetch(`http://${URL}:8000/api/review/`, {
+      const res = await apiFetch(`http://${URL}/api/review/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ product: data.id, stars: value }),
@@ -101,7 +101,7 @@ export default function Prodect_detail_component({ data }) {
   const delete_review = async () => {
     try {
       await apiFetch(
-        `http://${URL}:8000/api/review/delete_by_product/?product=${data.id}`,
+        `http://${URL}/api/review/delete_by_product/?product=${data.id}`,
         { method: 'DELETE' }
       );
       setReview(null);
