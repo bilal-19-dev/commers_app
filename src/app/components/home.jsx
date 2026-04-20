@@ -8,15 +8,6 @@ import React, {
 } from 'react';
 import { useRouter, Link, usePathname } from '@/app/navigation';
 import { useParams } from 'next/navigation';
-import {
-  useDeviceDimensions,
-  useViewportSize,
-} from '../hooks/useDeviceDimensions';
-import {
-  calculateOptimalDimensions,
-  calculateOptimalGridColumns,
-  getPerformanceSettings,
-} from '../utils/deviceUtils';
 import { URL } from '../data/URL.js';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
@@ -47,10 +38,10 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { locales } from '../config';
 
-// ─── ثوابت خارج المكوّنات ────────────────────────────────────────
+// ─── ثوابت ───────────────────────────────────────────────────────
 const ANON_CREDENTIALS = { username: '@Anonimo', password: '@A.123456' };
 
-// ─── Spinner مشترك ───────────────────────────────────────────────
+// ─── Spinner ─────────────────────────────────────────────────────
 function Spinner({ color = 'white' }) {
   return (
     <svg className="spin" viewBox="0 0 24 24" fill="none">
@@ -103,19 +94,16 @@ function Navbar({ setvalue }) {
   const pathname = usePathname();
   const params = useParams();
   const { setmessge, setSeverity, setsnack, cart } = Use_them();
+
+  // true = مغلقة، false = مفتوحة
   const [mobileMenuOpen, setMobileMenuOpen] = useState(true);
   const [cartCount, setCartCount] = useState(0);
   const [loged, setLoged] = useState({ isLoggedIn: false, isUser: false });
   const [account, setAccount] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+
   const navRef = useRef(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick_tra = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const langMenuOpen = Boolean(anchorEl);
 
   const handleClick = useCallback(
     (msg, sev) => {
@@ -125,21 +113,25 @@ function Navbar({ setvalue }) {
     },
     [setmessge, setSeverity, setsnack]
   );
+
+  const handleLangMenuOpen = (e) => setAnchorEl(e.currentTarget);
+  const handleLangMenuClose = () => setAnchorEl(null);
+
   const handleChangeLocale = (locale) => {
     startTransition(() => {
       router.replace({ pathname, params }, { locale });
     });
-
-    handleClose();
+    handleLangMenuClose();
   };
-  // ─── تسجيل الخروج ─────────────────────────────────────────────
+
+  // ─── تسجيل الخروج ────────────────────────────────────────────
   const logout = async () => {
     try {
       const res = await apiFetch(`http://${URL}:8000/api/logout/`, {
         method: 'POST',
       });
       if (!res.ok) throw new Error();
-      // إعادة تعيين الحساب الافتراضي
+
       await fetch(`http://${URL}:8000/api/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -147,20 +139,23 @@ function Navbar({ setvalue }) {
         credentials: 'include',
       });
 
+      localStorage.setItem('logeed', 'false');
       handleClick(toastT('logout_success'), 'success');
       setTimeout(() => location.reload(), 500);
-      localStorage.setItem('logeed', 'false');
     } catch {
       handleClick(toastT('logout_failed'), 'error');
     }
   };
 
-  // ─── تحريك القائمة المحمول ────────────────────────────────────
+  // ─── تحريك قائمة الموبايل ────────────────────────────────────
   useEffect(() => {
     const el = navRef.current;
     if (!el) return;
+
     if (!mobileMenuOpen) {
       el.style.display = 'flex';
+      // force reflow
+      void el.offsetHeight;
       el.style.height = el.scrollHeight + 65 + 'px';
       el.style.padding = '20px';
       el.style.marginTop = '20px';
@@ -176,12 +171,12 @@ function Navbar({ setvalue }) {
     }
   }, [mobileMenuOpen]);
 
-  // ─── تحديث عداد السلة ─────────────────────────────────────────
+  // ─── عداد السلة ──────────────────────────────────────────────
   useEffect(() => {
     setCartCount(getCartCount(cart));
   }, [cart]);
 
-  // ─── جلب بيانات الحساب ────────────────────────────────────────
+  // ─── بيانات الحساب ───────────────────────────────────────────
   useEffect(() => {
     const fetchAccount = async () => {
       try {
@@ -195,6 +190,21 @@ function Navbar({ setvalue }) {
     };
     fetchAccount();
   }, []);
+
+  const LogoutIcon = () => (
+    <svg
+      viewBox="0 0 24 24"
+      width="20"
+      height="20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="M16 17l5-5-5-5" />
+      <path d="M21 12H9" />
+    </svg>
+  );
 
   return (
     <div className="head">
@@ -217,6 +227,7 @@ function Navbar({ setvalue }) {
 
         {/* الإجراءات */}
         <div className="header-actions">
+          {/* سلة التسوق */}
           <Link href="/car">
             <div className="cart-icon">
               <ShoppingCartIcon />
@@ -225,48 +236,42 @@ function Navbar({ setvalue }) {
               </span>
             </div>
           </Link>
-          <div>
-            <IconButton
-              aria-label="more"
-              onClick={handleClick_tra}
-              style={{ padding: '0px' }}
-            >
-              <TranslateIcon />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-              {locales.map((loc) => (
-                <MenuItem key={loc} onClick={() => handleChangeLocale(loc)}>
-                  {t(`${loc}`)}
-                </MenuItem>
-              ))}
-            </Menu>
-          </div>
 
+          {/* اللغة */}
+          <IconButton
+            aria-label="language"
+            onClick={handleLangMenuOpen}
+            style={{ padding: 0 }}
+          >
+            <TranslateIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={langMenuOpen}
+            onClose={handleLangMenuClose}
+          >
+            {locales.map((loc) => (
+              <MenuItem key={loc} onClick={() => handleChangeLocale(loc)}>
+                {t(loc)}
+              </MenuItem>
+            ))}
+          </Menu>
+
+          {/* حالة الدخول */}
           {loged.isUser && loged.isLoggedIn ? (
             <>
               <img
-                onClick={() => router.push('/orders')}
                 src={account?.user?.image || '/default.jpg'}
                 alt="profile"
                 style={{ cursor: 'pointer' }}
+                onClick={() => router.push('/orders')}
               />
               <a
                 onClick={logout}
                 className="log-out-btn"
                 style={{ cursor: 'pointer' }}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <path d="M16 17l5-5-5-5" />
-                  <path d="M21 12H9" />
-                </svg>
+                <LogoutIcon />
                 {t('logout')}
               </a>
             </>
@@ -280,16 +285,17 @@ function Navbar({ setvalue }) {
             </a>
           )}
 
+          {/* زر قائمة الموبايل */}
           <button
             className="mobile-menu-btn"
-            onClick={() => setMobileMenuOpen((p) => !p)}
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
           >
             <MenuIcon />
           </button>
         </div>
       </div>
 
-      {/* القائمة المحمول */}
+      {/* قائمة الموبايل */}
       <nav className="mobile-nave" ref={navRef} style={{ display: 'none' }}>
         <Link href="/">
           <span className="nav-link">{t('home')}</span>
@@ -298,27 +304,14 @@ function Navbar({ setvalue }) {
           <span className="nav-link">{t('products')}</span>
         </Link>
         {loged.isUser && loged.isLoggedIn && (
-          <>
-            <a
-              onClick={logout}
-              className="log-out-btn-mobile"
-              style={{ cursor: 'pointer' }}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="20"
-                height="20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <path d="M16 17l5-5-5-5" />
-                <path d="M21 12H9" />
-              </svg>
-              {t('logout')}
-            </a>
-          </>
+          <a
+            onClick={logout}
+            className="log-out-btn-mobile"
+            style={{ cursor: 'pointer' }}
+          >
+            <LogoutIcon />
+            {t('logout')}
+          </a>
         )}
       </nav>
     </div>
@@ -413,7 +406,7 @@ const Pro = ({ prodect }) => {
   );
 };
 
-// ─── محتوى الفوتر ────────────────────────────────────────────────
+// ─── Footer ──────────────────────────────────────────────────────
 function Footer_content() {
   const t = useTranslations('footer');
   return (
@@ -441,13 +434,15 @@ function Footer_content() {
   );
 }
 
-// ─── مكوّن تسجيل الدخول / التسجيل ───────────────────────────────
+// ─── Login / Register ────────────────────────────────────────────
 const Login = ({ setvalue, value, token }) => {
   const t = useTranslations('login');
   const toastT = useTranslations('toast');
   const locale = useLocale();
   const { setmessge, setSeverity, setsnack } = Use_them();
-  const [scroll, setscroll] = useState(0);
+
+  // scroll: 0 = مرحلة البريد، 329 = مرحلة الكود
+  const [scroll, setScroll] = useState(0);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -462,7 +457,7 @@ const Login = ({ setvalue, value, token }) => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [activeForm, setActiveForm] = useState('signin'); // "signin" | "signup"
+  const [activeForm, setActiveForm] = useState('signin'); // 'signin' | 'signup'
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   const selectedWilaya = wilayas.find(
@@ -489,29 +484,18 @@ const Login = ({ setvalue, value, token }) => {
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  // ─── CSS Variables للتبديل بين الفورمين ──────────────────────
+  // ─── CSS vars للتبديل بين الفورمين ───────────────────────────
   useEffect(() => {
     const isSignIn = activeForm === 'signin';
-    document.documentElement.style.setProperty(
-      '--in',
-      isSignIn ? 'opacity_2' : 'opacity_1'
-    );
-    document.documentElement.style.setProperty(
-      '--up',
-      !isSignIn ? 'opacity_2' : 'opacity_1'
-    );
-    document.documentElement.style.setProperty('--login', 'opacity_2');
-    document.documentElement.style.setProperty(
-      '--in_display',
-      isSignIn ? 'flex' : 'none'
-    );
-    document.documentElement.style.setProperty(
-      '--up_display',
-      !isSignIn ? 'grid' : 'none'
-    );
+    const root = document.documentElement;
+    root.style.setProperty('--in', isSignIn ? 'opacity_2' : 'opacity_1');
+    root.style.setProperty('--up', isSignIn ? 'opacity_1' : 'opacity_2');
+    root.style.setProperty('--login', 'opacity_2');
+    root.style.setProperty('--in_display', isSignIn ? 'flex' : 'none');
+    root.style.setProperty('--up_display', isSignIn ? 'none' : 'grid');
   }, [activeForm]);
 
-  // ─── تعيين الحساب الافتراضي إن لم يكن هناك token ────────────
+  // ─── الحساب الافتراضي إن لم يكن هناك token ──────────────────
   useEffect(() => {
     if (!token) {
       localStorage.setItem('logeed', 'false');
@@ -522,12 +506,12 @@ const Login = ({ setvalue, value, token }) => {
         credentials: 'include',
       });
     }
-  }, []);
+  }, [token]);
 
-  // ─── تسجيل الدخول ─────────────────────────────────────────────
-  const validateSignIn = async () => {
+  // ─── تسجيل الدخول ────────────────────────────────────────────
+  const signIn = async () => {
     const newErrors = {};
-    const { password, email } = formData;
+    const { email, password } = formData;
 
     if (!email) newErrors.email = t('errors.email_required');
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase()))
@@ -556,6 +540,7 @@ const Login = ({ setvalue, value, token }) => {
         handleClick(toastT('login_failed'), 'error');
         return false;
       }
+      localStorage.setItem('logeed', 'true');
       handleClick(toastT('login_success'), 'success');
       setTimeout(() => location.reload(), 1000);
       return true;
@@ -565,51 +550,44 @@ const Login = ({ setvalue, value, token }) => {
     }
   };
 
-  // ─── إنشاء حساب ───────────────────────────────────────────────
-  const validateSignUp = async () => {
+  // ─── إنشاء حساب ──────────────────────────────────────────────
+  const signUp = async () => {
     const newErrors = {};
     const phoneRegex = /^0[5-7][0-9]{8}$/;
     const {
-      password,
-      confirmPassword,
       firstName,
       lastName,
+      email,
       wilaya,
       commune,
-      email,
       phone1,
       phone2,
+      password,
+      confirmPassword,
     } = formData;
 
     if (!firstName.trim())
       newErrors.firstName = t('errors.first_name_required');
     else if (firstName.trim().length < 2)
       newErrors.firstName = t('errors.first_name_min_length');
-
     if (!lastName.trim()) newErrors.lastName = t('errors.last_name_required');
     else if (lastName.trim().length < 2)
       newErrors.lastName = t('errors.last_name_min_length');
-
     if (!email) newErrors.email = t('errors.email_required');
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase()))
       newErrors.email = t('errors.email_invalid');
-
     if (!wilaya) newErrors.wilaya = t('errors.wilaya_required');
     if (!commune) newErrors.commune = t('errors.commune_required');
-
     if (!phone1.trim()) newErrors.phone1 = t('errors.phone1_required');
     else if (!phoneRegex.test(phone1))
       newErrors.phone1 = t('errors.phone_invalid');
-
     if (phone2.trim() && !phoneRegex.test(phone2))
       newErrors.phone2 = t('errors.phone_invalid');
     if (phone1 && phone2 && phone1 === phone2)
       newErrors.phone2 = t('errors.phone2_same_as_phone1');
-
     if (!password) newErrors.password = t('errors.password_required');
     else if (password.length < 6)
       newErrors.password = t('errors.password_min_length');
-
     if (!confirmPassword)
       newErrors.confirmPassword = t('errors.confirm_password_required');
     else if (password !== confirmPassword)
@@ -650,8 +628,7 @@ const Login = ({ setvalue, value, token }) => {
         return false;
       }
       handleClick(toastT('order_sent_success'), 'success');
-      // تسجيل الدخول تلقائياً بعد التسجيل
-      await validateSignIn();
+      await signIn();
       return true;
     } catch {
       handleClick(toastT('order_send_failed'), 'error');
@@ -659,103 +636,122 @@ const Login = ({ setvalue, value, token }) => {
     }
   };
 
-  const SandeCode = async () => {
+  // ─── إرسال كود إعادة التعيين ─────────────────────────────────
+  const sendResetCode = async () => {
     const newErrors = {};
-    if (!formData.email) newErrors.email = t('errors.email_required');
-    else if (!/^[^\s@]+@[^\s@]+.[^\s@]+$/.test(formData.email.toLowerCase()))
+    const { email } = formData;
+
+    if (!email) newErrors.email = t('errors.email_required');
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase()))
       newErrors.email = t('errors.email_invalid');
-    if (Object.keys(newErrors).length === 0) {
-      setLoading(true);
-      try {
-        const res = await apiFetch(`http://${URL}:8000/api/Send_otp_Code/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: formData.email }),
-        });
-        if (!res.ok) {
-          const errorData = await res.json();
-          newErrors.validate = errorData.error || t('errors.send_failed_retry');
-          newErrors.email = errorData.email || '';
-          throw new Error(errorData.message || 'Failed to update profile');
-        }
-        await res.json();
-        handleClick(toastT('code_sent_success'), 'success');
-        setscroll(329);
-        setLoading(false);
-      } catch {
-        handleClick(toastT('send_failed'), 'error');
-        setLoading(false);
-      }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return false;
     }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+
+    setLoading(true);
+    try {
+      const res = await apiFetch(`http://${URL}:8000/api/Send_otp_Code/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: email }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        setErrors({
+          validate: errorData.error || t('errors.send_failed_retry'),
+          email: errorData.email || '',
+        });
+        return false;
+      }
+      handleClick(toastT('code_sent_success'), 'success');
+      setScroll(329);
+      return true;
+    } catch {
+      handleClick(toastT('send_failed'), 'error');
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // ─── التحقق من الكود ─────────────────────────────────────────
+  const verifyCode = async () => {
+    const { code, email } = formData;
+    const newErrors = {};
+
+    if (!code) {
+      newErrors.code = t('errors.code_required');
+      setErrors(newErrors);
+      return false;
+    }
+
+    const send_data = new FormData();
+    send_data.append('username', email);
+    send_data.append('code', code);
+
+    setLoading(true);
+    try {
+      const res = await apiFetch(`http://${URL}:8000/api/VerifyOTPView/`, {
+        method: 'POST',
+        body: send_data,
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        setErrors({
+          validate: errorData.error || t('errors.send_failed_retry'),
+          code: errorData.code || '',
+        });
+        return false;
+      }
+      setvalue('none');
+      setShowPasswordModal(false);
+      setErrors({});
+      location.reload();
+      return true;
+    } catch {
+      handleClick(toastT('send_failed'), 'error');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ─── Handlers ────────────────────────────────────────────────
   const handleSubmitSignIn = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await validateSignIn();
+    await signIn();
     setLoading(false);
   };
 
   const handleSubmitSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await validateSignUp();
+    await signUp();
     setLoading(false);
   };
 
-  const handlecodeSande = async (e) => {
+  const handleSendCode = async (e) => {
     e.preventDefault();
-    SandeCode();
+    await sendResetCode();
   };
-  const ValidateCode = async () => {
-    const { code, email } = formData;
-    const newErrors = {};
-    if (!code) newErrors.code = t('errors.code_required');
-    const send_data = new FormData();
-    if (Object.keys(newErrors).length === 0) {
-      setLoading(true);
-      try {
-        send_data.append('username', email);
-        send_data.append('code', code);
-        const res = await apiFetch(`http://${URL}:8000/api/VerifyOTPView/`, {
-          method: 'POST',
-          body: send_data,
-        });
-        if (!res.ok) {
-          const errorData = await res.json();
-          newErrors.validate = errorData.error || t('errors.send_failed_retry');
-          newErrors.password = errorData.password || '';
-          newErrors.code = errorData.code || '';
-          throw new Error(errorData.message || 'Failed to update profile');
-        }
-        await res.json();
-        setvalue('none');
-        setErrors({});
-        setShowPasswordModal('none');
-        setLoading(false);
-        location.reload();
-      } catch {
-        handleClick(toastT('send_failed'), 'error');
-        setLoading(false);
-      }
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-  const handlecodeSubmit = async (e) => {
+
+  const handleVerifyCode = async (e) => {
     e.preventDefault();
-    if (!(await ValidateCode())) {
-      setLoading(false);
-      return;
-    }
-    setErrors({});
+    await verifyCode();
   };
 
   const closeModal = () => {
     setvalue('none');
     setActiveForm('signin');
+    setErrors({});
+  };
+
+  const closePasswordModal = () => {
+    setShowPasswordModal(false);
+    setScroll(0);
     setErrors({});
   };
 
@@ -1056,11 +1052,11 @@ const Login = ({ setvalue, value, token }) => {
         <div className="fixed-body" style={{ display: 'flex' }}>
           <form
             className="code-body"
-            onSubmit={scroll === 0 ? handlecodeSande : handlecodeSubmit}
+            onSubmit={scroll === 0 ? handleSendCode : handleVerifyCode}
             noValidate
           >
             <h3 style={{ fontSize: locale === 'ar' ? '' : 'x-small' }}>
-              {scroll === 310
+              {scroll !== 0
                 ? t('change_password.title_sent')
                 : t('change_password.title_send')}
             </h3>
@@ -1108,10 +1104,7 @@ const Login = ({ setvalue, value, token }) => {
               <div className="btn">
                 <button
                   type="button"
-                  onClick={() => {
-                    setShowPasswordModal(false);
-                    location.reload();
-                  }}
+                  onClick={closePasswordModal}
                   className="btn-submit cancel"
                   disabled={loading}
                 >
@@ -1197,56 +1190,6 @@ export const Features = () => {
 // ─── Footer ──────────────────────────────────────────────────────
 export const Footer = () => <Footer_content />;
 
-// ─── Settings (dev only) ─────────────────────────────────────────
-export const Settings = () => {
-  const deviceDimensions = useDeviceDimensions();
-  const viewportSize = useViewportSize();
-
-  if (process.env.NODE_ENV !== 'development' || viewportSize.width === 0)
-    return null;
-
-  const optimalDimensions = calculateOptimalDimensions(deviceDimensions);
-  const gridColumns = calculateOptimalGridColumns(
-    viewportSize.width - optimalDimensions.sidebarWidth,
-    optimalDimensions.cardMinWidth,
-    optimalDimensions.cardMaxWidth
-  );
-  const performanceSettings = getPerformanceSettings(deviceDimensions);
-
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        bottom: 10,
-        right: 10,
-        background: 'rgba(0,0,0,0.8)',
-        color: 'white',
-        padding: 10,
-        borderRadius: 5,
-        fontSize: 12,
-        zIndex: 1000,
-      }}
-    >
-      <div>Width: {viewportSize.width}px</div>
-      <div>Height: {viewportSize.height}px</div>
-      <div>
-        Device:{' '}
-        {deviceDimensions.isMobile
-          ? 'Mobile'
-          : deviceDimensions.isTablet
-            ? 'Tablet'
-            : 'Desktop'}
-      </div>
-      <div>Orientation: {deviceDimensions.orientation}</div>
-      <div>Pixel Ratio: {deviceDimensions.devicePixelRatio}</div>
-      <div>Grid Columns: {gridColumns}</div>
-      <div>Sidebar: {Math.round(optimalDimensions.sidebarWidth)}px</div>
-      <div>Card Min: {Math.round(optimalDimensions.cardMinWidth)}px</div>
-      <div>Performance: {performanceSettings.imageQuality}</div>
-    </div>
-  );
-};
-
 // ─── Snackbar ────────────────────────────────────────────────────
 export const Snack_bar = () => {
   const { message, severity, snack, setsnack } = Use_them();
@@ -1257,7 +1200,6 @@ export const Snack_bar = () => {
     },
     [setsnack]
   );
-
   return (
     <Snackbar open={snack} autoHideDuration={5000} onClose={handleClose}>
       <SnackbarAlert

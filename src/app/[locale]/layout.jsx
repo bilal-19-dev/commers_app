@@ -9,7 +9,7 @@ import "./shop/shop.css";
 import "./order_form/order_form.css";
 import { ThemProvider } from "../hooks/ThemProvider";
 import { OrderProvider } from "../hooks/order_hooks";
-import { Header, Footer, Settings, Snack_bar } from "../components/home";
+import { Header, Footer, Snack_bar } from "../components/home";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { locales } from "../config";
@@ -62,7 +62,6 @@ export default async function RootLayout({ children, params }) {
           <footer>
             <Footer />
           </footer>
-          <Settings />
         </NextIntlClientProvider>
       </body>
     </html>
