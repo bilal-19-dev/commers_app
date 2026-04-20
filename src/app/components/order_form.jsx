@@ -195,7 +195,7 @@ function OrderForm({ setDelivery, step }) {
     const orders = storedOrders ? JSON.parse(storedOrders) : [];
 
     try {
-      const res = await apiFetch(`http://${URL}/api/orders/`, {
+      const res = await apiFetch(`https://${URL}/api/orders/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

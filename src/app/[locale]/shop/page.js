@@ -2,7 +2,7 @@ import Shop_commponent from '../../components/shop.jsx';
 import { URL } from '../../data/URL.js';
 
 export default async function Shop() {
-  const res = await fetch(`http://${URL}/api/products`, {
+  const res = await fetch(`https://${URL}/api/products`, {
     cache: 'no-store',
     credentials: 'include',
   });

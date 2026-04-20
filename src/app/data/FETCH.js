@@ -9,7 +9,7 @@ export async function apiFetch(url, options = {}) {
   });
 
   if (res.status === 401) {
-    const refreshRes = await fetch(`http://${URL}/api/token/refresh/`, {
+    const refreshRes = await fetch(`https://${URL}/api/token/refresh/`, {
       method: 'POST',
       credentials: 'include',
     });
@@ -28,7 +28,7 @@ export async function apiFetch(url, options = {}) {
 
 export async function Account() {
   try {
-    const res = await apiFetch(`http://${URL}/api/account/me/`);
+    const res = await apiFetch(`https://${URL}/api/account/me/`);
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(JSON.stringify(errorData));

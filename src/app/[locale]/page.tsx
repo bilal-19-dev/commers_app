@@ -2,7 +2,7 @@ import Home_component from '../components/home';
 import { URL } from '../data/URL.js';
 
 export default async function Home() {
-  const res = await fetch(`http://${URL}/api/products`, {
+  const res = await fetch(`https://${URL}/api/products`, {
     cache: 'no-store',
     credentials: 'include',
   });

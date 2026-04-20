@@ -37,7 +37,7 @@ export default function Car_component() {
     const ids = [...new Set(productsInCart.map((item) => item.id))];
 
     try {
-      const res = await fetch(`http://${URL}/api/products/by-ids/`, {
+      const res = await fetch(`https://${URL}/api/products/by-ids/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids }),
