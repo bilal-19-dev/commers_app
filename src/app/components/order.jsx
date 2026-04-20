@@ -419,7 +419,7 @@ export default function Order_component() {
       handleClick(toastT('code_sent_success'), 'success');
       if (passwordFormRef.current) {
         passwordFormRef.current.style.height =
-          passwordFormRef.current.scrollHeight - 45 + 'px';
+          (passwordFormRef.current.scrollHeight - 45) + 'px';
       }
       setPasswordStep('verify');
     } catch {
