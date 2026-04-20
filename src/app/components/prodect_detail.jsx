@@ -403,7 +403,7 @@ export default function Prodect_detail_component({ data }) {
                 {t('color.label')}: <span>{form.color}</span>
               </div>
               <div className="color-options">
-                {data.colors.map((color) => {
+                {data?.colors?.map((color) => {
                   const colorVal = color.color || color.color_name;
                   if (!color.color) return null;
                   return (

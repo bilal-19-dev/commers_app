@@ -662,6 +662,7 @@ main .prodect-container {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .product-card:hover {
@@ -741,6 +742,7 @@ main .prodect-container {
   gap: 5px;
   margin-bottom: 10px;
   flex-wrap: wrap;
+  direction: ltr;
 }
 
 .product-card .color-dot {

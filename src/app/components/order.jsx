@@ -21,7 +21,7 @@ import {
   XIcon,
   PasswordStarsIcon,
 } from '../data/Icons.jsx';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/app/navigation';
 
 // ─── مكوّن بطاقة الطلب ───────────────────────────────────────────
@@ -29,7 +29,6 @@ const OrderCard = ({ order }) => {
   const t = useTranslations('orders');
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef(null);
-
   const toggleExpanded = () => {
     const el = contentRef.current;
     if (!el) return;
@@ -174,6 +173,7 @@ const SpinnerButton = ({
 // ─── المكوّن الرئيسي ──────────────────────────────────────────────
 export default function Order_component() {
   const t = useTranslations('orders');
+  const locale = useLocale();
   const toastT = useTranslations('toast');
   const { setmessge, setSeverity, setsnack } = Use_them();
   const router = useRouter();
@@ -419,7 +419,7 @@ export default function Order_component() {
       handleClick(toastT('code_sent_success'), 'success');
       if (passwordFormRef.current) {
         passwordFormRef.current.style.height =
-          passwordFormRef.current.scrollHeight + 'px';
+          passwordFormRef.current.scrollHeight - 45 + 'px';
       }
       setPasswordStep('verify');
     } catch {
@@ -428,6 +428,16 @@ export default function Order_component() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (passwordFormRef.current) {
+      // نضع الارتفاع auto أولاً ليحسب الـ scrollHeight الحقيقي الجديد
+      passwordFormRef.current.style.height = 'auto';
+      // ثم نطبق الارتفاع الجديد
+      passwordFormRef.current.style.height =
+        passwordFormRef.current.scrollHeight + 'px';
+    }
+  }, [errors]);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -654,7 +664,7 @@ export default function Order_component() {
               <img
                 src={
                   formData.image
-                    ? URL.createObjectURL(formData.image)
+                    ? window.URL.createObjectURL(formData.image)
                     : data.image || '/default.jpg'
                 }
                 alt="preview"
@@ -669,9 +679,13 @@ export default function Order_component() {
                 type="file"
                 name="image"
                 accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff,.tif,.webp,.ico"
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, image: e.target.files[0] }))
-                }
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    image: e.target.files[0],
+                  }));
+                  console.log(e.target.files[0]);
+                }}
               />
             </div>
           </div>
@@ -890,7 +904,17 @@ export default function Order_component() {
               : t('password_form.title_send')}
           </h3>
 
-          <div className="inputs">
+          <div
+            className="inputs"
+            style={{
+              transform:
+                passwordStep === 'verify'
+                  ? locale === 'ar'
+                    ? 'translateX(330px)'
+                    : 'translateX(-330px)'
+                  : '',
+            }}
+          >
             <Field
               label={t('password_form.email_label')}
               error={errors.email}
@@ -904,13 +928,15 @@ export default function Order_component() {
                 className="form-input"
               />
             </Field>
-
             <div
               ref={passwordFormRef}
               style={{
                 height: 0,
-                overflow: 'hidden',
+                overflow: passwordStep === 'verify' ? '' : 'hidden',
                 transition: 'height 0.3s ease',
+                display: 'flex',
+                gap: '10px',
+                flexDirection: 'column',
               }}
             >
               <Field
